@@ -3,7 +3,7 @@
 import { ZodError, ZodSchema } from "zod";
 
 import { UnAuthorizedError, ValidationError } from "../http-errors";
-import { Session } from "next-auth";
+
 
 import { connectToDb } from "@/database/connection";
 
@@ -25,7 +25,7 @@ export async function  action<T> ({params,schema,authorize = false}:ActionOption
                 throw new Error("schema validation failed")
             }       
           }}
-          let session: Session | null = null
+          let session = null
           if(authorize) {
               session = null
               if(!session) {
