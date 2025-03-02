@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { SignUpValidationSchema } from "@/lib/zod"
 import Link from "next/link"
-import { SignUpAction } from "@/actions/user.actions"
+
  
 
 const AuthForm = () => {
@@ -34,23 +34,8 @@ const AuthForm = () => {
  
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
-     try {
-       const result = await SignUpAction({
-         name: values.name,
-         lastName: values.lastName,
-         email: values.email,
-         phoneNumber: values.phoneNumber,
-         password: values.password,
-         gender: values.gender
-       })
-       if(!result.success) {
-          // toast task
-         console.log(result.error, "error here")
-       }
-       form.reset()
-     } catch (error) {
-        console.log(error)
-     }
+    
+       
   }
   return  (
     <Form {...form}>
