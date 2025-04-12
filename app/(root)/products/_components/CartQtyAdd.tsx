@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { IProduct } from '@/database/models/product.model'
 import { useAppDispatch } from '@/hooks/user-redux'
 import { addItemAsync, open } from '@/lib/store/cartSlice'
-import { CartItem } from '@/lib/store/cartStore'
+
 //import {  getOrCreateGuestId, useCartStore } from '@/lib/store/cartStore'
 import { Loader, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -33,7 +33,7 @@ const CartQtyAdd = ({item}: {
     }
     const handleAddToCart = async () => {
         setLoading(true);
-        const data: CartItem = {
+        const data = {
           image: item.images[0].url,
           brand: item.brand,
           prevPrice: item.prevPrice,
@@ -47,6 +47,7 @@ const CartQtyAdd = ({item}: {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       
         // Dispatch the async action correctly
+        // @ts-ignore
         dispatch(addItemAsync(data)); // Pass `data` directly, not `{data}`
       
         setLoading(false);
