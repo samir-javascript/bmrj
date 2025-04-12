@@ -1,58 +1,65 @@
-import mongoose, {Schema,Document} from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
+
 export interface IUser {
-    name: string;
-    _id: string
-    lastName: string;
-    email: string;
-    gender: "male" | "female";
-    password: string;
-    phoneNumber: string;
-    isAdmin: boolean;
-    isVerified: boolean;
-    token?: string;
+  _id: string;
+  gender: "male" | "female";
+  name: string;
+  lastName: string;
+  image: string;
+  phoneNumber?: string;
+  email: string;
+  password?: string;
+  isAdmin: boolean;
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
-const UserSchema = new mongoose.Schema<IUser>({
-    name: {
-        type: String,
-        required: true
+
+const UserSchema = new Schema<IUser>(
+  {
+    gender: {
+      type: String,
+      enum: ["female", "male"],
+       default: "male"
     },
-    
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+       type:String
+    },
     lastName: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    gender: {
-        type: String,
-        enum: ["male" , "female"],
-        required: true
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
     phoneNumber: {
-        type: String,
-        required: true
+      type: String,
+      sparse: true, 
+      unique: true,
+      trim: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
     },
     isAdmin: {
-        type: Boolean,
-       
-        default: false
+      type: Boolean,
+      default: false,
     },
     isVerified: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
-    token: {
-        type: String
-    }
-}, {
-    timestamps: true
-})
+  },
+  { timestamps: true }
+);
+
 const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema)
 export default User;

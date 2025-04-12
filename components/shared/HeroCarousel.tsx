@@ -10,34 +10,30 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import useMobile from "@/hooks/use-mobile"
+import Image from "next/image"
+import { CldImage } from "next-cloudinary"
+import { IHero } from "@/database/models/heroImages.model"
 
 
-export function HeroCarousel() {
+export function HeroCarousel({items}: {
+   items: IHero[]
+}) {
   const isMobile = useMobile()
-const heroItems = [
-    {
-        imgSrc: isMobile ? "https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_mobile.png" : 'https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_desktop.png',
-        alt: "first image carousel"
-    },
-    {
-        imgSrc: isMobile ? "https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_mobile.png" : 'https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_desktop.png',
-        alt: "first image carousel"
-    }
-    ,{
-        imgSrc: isMobile ? "https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_mobile.png" : 'https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_desktop.png',
-        alt: "first image carousel"
-    },{
-        imgSrc: isMobile ? "https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_mobile.png" : 'https://www.marjanemall.ma/media/wysiwyg/dar_darek/dar_darek_2025/Slider_New/AAANQ74234-_slider_desktop.png',
-        alt: "first image carousel"
-    }
-]
+
   return (
     <Carousel className="relative w-full overflow-hidden">
       <div className="absolute bottom-0 right-0 left-0 w-full h-[120px] bg-gradient-to-t from-white to-transparent z-10 " />
       <CarouselContent>
-        {heroItems.map((item,index) => (
-          <CarouselItem className="w-full" key={index}>
-              <img alt={item.alt} src={item.imgSrc} className="object-cover" />
+        {items.map((item) => (
+          <CarouselItem className="w-full h-full" key={item._id}>
+              {/* <CldImage priority loading="eager" alt={item.title}
+              
+               quality={1000}
+               format="webp"
+               src={isMobile ? item.imgUrl.mobile : item.imgUrl.desktop}
+              fill className="object-cover h-full w-full" /> */}
+               <img className="w-full h-full" loading="eager" src={isMobile ?
+                 item.imgUrl.mobile : item.imgUrl.desktop} alt={item.title} />
             </CarouselItem>
         ))}
         

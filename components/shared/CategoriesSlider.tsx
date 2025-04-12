@@ -25,7 +25,7 @@ const CategoriesSlider = () => {
   return (
     //  
     <div className="w-full max-w-[1270px] mx-auto">
-       <h2 className="h2-bold my-10  text-[#333]">Découvrez nos catégories</h2>
+       <h2 className="text-[24px] font-extrabold leading-[31.2px]  my-4  max-lg:px-3 text-[#333]">Découvrez nos catégories</h2>
     <div className="relative">
    
        <div className={cn(
@@ -35,9 +35,10 @@ const CategoriesSlider = () => {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-1/7 px-2"> {/* Each item takes 1/5 of width */}
               <div className="w-full h-auto flex flex-col items-center justify-center gap-2">
-                <Image
+                <img
                   src={item.imgSrc}
                   alt={item.name}
+                  loading="lazy"
                   width={150} // Adjust width if needed
                   height={150} // Adjust height if needed
             className="object-cover sm:w-[150px] sm:h-[150px] w-[100px] h-[100px] "

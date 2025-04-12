@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { TriangleDashed } from "lucide-react"
 
 const Form = FormProvider
 
@@ -157,10 +158,11 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn("text-sm flex  gap-1.5 font-medium text-red-500", className)}
       {...props}
     >
-      {body}
+     <TriangleDashed color="red" size={22} /> 
+     <span className="mt-[4px] ">{body}</span>  
     </p>
   )
 })

@@ -3,9 +3,12 @@
 import { ZodError, ZodSchema } from "zod";
 
 import { UnAuthorizedError, ValidationError } from "../http-errors";
+import connectToDb from "@/database/connect";
+import { Session } from "next-auth";
+import { auth } from "@/auth";
 
 
-import { connectToDb } from "@/database/connection";
+
 
 
 interface ActionOptions<T>  {
@@ -25,13 +28,13 @@ export async function  action<T> ({params,schema,authorize = false}:ActionOption
                 throw new Error("schema validation failed")
             }       
           }}
-          let session = null
+          let session: Session | null = null
           if(authorize) {
-              session = null
+              session = await auth()
               if(!session) {
                 return new UnAuthorizedError('Unauthorized')
               }
           }
           await connectToDb()
-          return {params,schema}
+          return {params,session}
 }

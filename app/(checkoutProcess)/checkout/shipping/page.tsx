@@ -1,8 +1,15 @@
-import React from 'react'
+import { getShippingAddress } from '@/actions/shipping.actions'
 
-const ShippingPage = () => {
+import React from 'react'
+import ShippingCheckout from './_components/ShippingCheckout'
+
+const ShippingPage = async() => {
+     const { data } = await getShippingAddress()
+    
   return (
-    <div>ShippingPage</div>
+    <section className="py-7 max-w-[1500px] mx-auto px-3 ">
+       <ShippingCheckout data={data?.shippingAddresses || []} />    
+    </section>
   )
 }
 

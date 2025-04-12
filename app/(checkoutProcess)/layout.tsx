@@ -1,9 +1,10 @@
 import React from 'react'
+import Navbar from './_components/Navbar'
 
 const CheckoutProcessLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <div>
-         Checkout Navbar
+         <Navbar />
          {children}
     </div>
   )
