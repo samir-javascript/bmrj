@@ -23,7 +23,7 @@ import { signUpWithCredentials } from "@/actions/auth.actions"
 import { useEffect, useState } from "react"
 import { OptVerification } from "../shared/OptVerification"
 import AuthFormBtns from "../btns/AuthFormBtns"
-import { useCartStore } from "@/lib/store/cartStore"
+
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
 import AlertMessage from "../shared/AlertMessage"
@@ -31,9 +31,7 @@ import { useAppDispatch } from "@/hooks/user-redux"
 import { syncWithUser } from "@/lib/store/cartSlice"
 
 
-const AuthForm = ({userCart}: {
-   userCart: any
-}) => {
+const AuthForm = () => {
   const [open,setOpen] = useState<boolean>(false)
   const [error,setError] = useState<string | undefined>(undefined)
   const {toast} = useToast()
@@ -50,16 +48,16 @@ const AuthForm = ({userCart}: {
   })
   const router = useRouter()
   
-  const cartStore = useCartStore()
+ 
   const session = useSession()
   const dispatch = useAppDispatch()
     // 2. Define a submit handler.
-    useEffect(() => {
-      if (session?.data?.user) { // Check if session exists
-          dispatch(syncWithUser());
-          cartStore.setStore({items: userCart})
-      }
-  }, [session, syncWithUser]); 
+  //   useEffect(() => {
+  //     if (session?.data?.user) { // Check if session exists
+  //         dispatch(syncWithUser());
+         
+  //     }
+  // }, [session, syncWithUser]); 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
      try {
