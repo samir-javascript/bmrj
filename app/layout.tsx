@@ -41,7 +41,7 @@ export default async function RootLayout({
       >
          <StoreProvider>
          <SessionProvider session={session}>
-       <CartSidebar data={result?.data}  />
+       <CartSidebar data={result?.data || null}  />
        <OrderDetailsSidebar   />
        <SyncCart />
         {children}

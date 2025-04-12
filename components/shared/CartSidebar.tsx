@@ -10,7 +10,7 @@ import { UserCartElement } from "@/types/Elements";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/user-redux";
 interface Props  {
-  data?: UserCartElement
+  data?: any
  
 }
 const CartSidebar = ({data}:Props) => {
@@ -63,7 +63,7 @@ const CartSidebar = ({data}:Props) => {
 
         {/* Scrollable Content */}
         <div className="flex-1 flex flex-col space-y-3 mt-10 pb-8 overflow-y-auto p-4" style={{ maxHeight: "calc(100vh - 240px)" }}>
-           {data?.userCart.items.map((item,index) => (
+           {data?.userCart.items.map((item:any,index:number) => (
               <div className="border-b border-gray-300 py-3" key={index}>
                <div >
                  <div className="flex items-start gap-2">

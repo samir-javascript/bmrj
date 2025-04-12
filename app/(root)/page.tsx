@@ -18,8 +18,8 @@ export default async function Home() {
     getHeroImages(),
   ]);
   
-   const { items } = res.data;
-   const { products} = result.data;
+   const { items } = res.data!;
+   const { products} = result.data!;
   
   return (
     <div className="w-full">
