@@ -49,6 +49,7 @@ export default function ProductImages({productId, hasSavedProductPromise,product
 
       {/* Thumbnail Swiper */}
       <Swiper
+       // @ts-ignore
         onSwiper={setThumbsSwiper}
         modules={[Thumbs, FreeMode]} // ✅ Modules should be passed here
         spaceBetween={10}
@@ -64,7 +65,7 @@ export default function ProductImages({productId, hasSavedProductPromise,product
         ))}
       </Swiper>
       <div className='lg:hidden flex'>
-               <SaveProductHeart hasSavedProductPromise={hasSavedProductPromise} productId={productId} isMobile={true} className='absolute lg:hidden flex z-[50] bottom-4 right-4'  /> 
+               <SaveProductHeart hasSavedProductPromise={hasSavedProductPromise} productId={productId}  className='absolute lg:hidden flex z-[50] bottom-4 right-4'  /> 
             </div>
                   
     </div>

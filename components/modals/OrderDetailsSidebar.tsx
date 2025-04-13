@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { useCartStore } from "@/lib/store/cartStore";
+
 import { HouseIcon, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
