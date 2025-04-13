@@ -20,7 +20,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { signInWithCredentials } from "@/actions/auth.actions"
 import AuthFormBtns from "../btns/AuthFormBtns"
-import { useCartStore } from "@/lib/store/cartStore"
+
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
 import AlertMessage from "../shared/AlertMessage"
@@ -48,6 +48,7 @@ const LoginForm = () => {
   // 2. Define a submit handler.
   useEffect(() => {
     if (session?.data?.user) { // Check if session exists
+      // @ts-ignore
        dispatch(syncWithUser());
     }
 }, [session, syncWithUser]); 
