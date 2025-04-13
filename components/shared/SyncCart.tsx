@@ -45,6 +45,7 @@ const CartSyncHandler = () => {
         console.log("Cart sync complete.");
         localStorage.removeItem("guest_id"); // 🔁 match key with your cartSlice
         dispatch(resetGuestId()); // 🔁 clear Redux guestId if needed
+        // @ts-ignore
         dispatch(syncWithUser());   // 🔁 optionally refetch synced cart to Redux
       }
     };

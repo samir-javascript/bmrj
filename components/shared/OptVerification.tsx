@@ -22,6 +22,7 @@ import { Loader, RotateCw, X } from "lucide-react";
 import { useState } from "react";
 import { VerifyEmail } from "@/actions/auth.actions";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 
 
@@ -33,20 +34,25 @@ export function OptVerification({open,setOpen}: {
 }) {
   const router = useRouter()
   const [value,setValue] = useState("")
-  console.log(value, "input values here")
+  const { toast } = useToast()
   const handleOtpChange = (value: string) => {
     const numericValue = value.replace(/\D/g, ""); // Remove non-numeric characters
     setValue(numericValue);
   };
   const [isLoading,setLoading] = useState<boolean>(false)
+  const [error,setError]= useState<string | null>()
   const handleEmailVerification = async()=> {
     setLoading(true)
       try {
-         const { success } =  await VerifyEmail({token: value})
-         if(!success) throw new Error('Email verification failed')
+         const { success, error } =  await VerifyEmail({token: value})
+         if(!success)  {
+           setError(error?.message)
+         }
           setOpen(false)
-        setValue("")
-        alert('you made it')
+          setValue("")
+         toast({
+          title: "success"
+         })
        
         setLoading(false)
         router.push("/")
