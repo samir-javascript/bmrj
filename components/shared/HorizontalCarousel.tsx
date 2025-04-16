@@ -27,14 +27,17 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
           <Swiper
             modules={[Navigation, Pagination]}
             spaceBetween={1}
+
             slidesPerView={6.5}
              pagination={showPagination}
            
             breakpoints={{
-              320: { slidesPerView: 2 },
-              480: { slidesPerView: 2.1 },
+              320: { slidesPerView: 1.9 },
+              430: { slidesPerView: 2.1 },
+              480: { slidesPerView: 2.3 },
               768: { slidesPerView: 3.8  },
-              1024: { slidesPerView: 6.5 },
+              1024: { slidesPerView: 5 },
+              1200: {slidesPerView: 6.2}
             }}
           >
             {data ? data.map((product) => (

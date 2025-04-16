@@ -15,6 +15,7 @@ const RightSidebar = () => {
     try {
        await signOut({redirectTo: "/"})
        dispatch(clearCart())
+       localStorage.removeItem('guest_cart');
     } catch (error) {
        console.log(error)
     }
@@ -38,7 +39,7 @@ const RightSidebar = () => {
                   ${isLast ? "border-b-0" : ""}
                 `}
               >
-                <p className="text-[18px] font-semibold">{item.name}</p>
+                <p className="text-[18px] capitalize font-semibold">{item.name}</p>
               </div>
             </Link>
           );

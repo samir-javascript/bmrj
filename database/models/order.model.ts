@@ -1,6 +1,7 @@
 import { model, models, Schema } from "mongoose";
 
 export interface IOrder {
+  _id:string;
   user: Schema.Types.ObjectId;
   orderStatus: "canceled" | "in preparation" | "confirmed" | "delivered";
   stripePaymentIntentId?:string;
@@ -17,7 +18,7 @@ export interface IOrder {
       name: string;
       price: number;
       qty: number;
-      images: string[];
+      images: string[]
       product: Schema.Types.ObjectId;
     }
   ];
@@ -46,10 +47,10 @@ const OrderSchema = new Schema<IOrder>(
     },
     orderItems: [
       {
-        name: { type: String },
-        price: { type: Number },
-        qty: { type: Number },
-        images: [{ type: String }],
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        qty: { type: Number, required: true },
+        images: [{type: String}],
         product: {
           type: Schema.Types.ObjectId,
           required: true,

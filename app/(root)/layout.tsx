@@ -16,7 +16,7 @@ const RootLayout = async({children}: {children: React.ReactNode}) => {
        <div className='max-lg:hidden flex'>
       <TopBar />
     </div>
-        <HomeNavbar qty={result?.data?.qty || 0} />
+        <HomeNavbar qty={result?.data?.qty} />
         {children}
       <Footer />
       <MobileFooter />

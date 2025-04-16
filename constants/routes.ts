@@ -8,7 +8,7 @@ export const ROUTES = {
     editProfile: (id:string) =>  `/customer/account/edit/${id}`,
     createShipping: "/customer/address/new",
     shipping: "/customer/address",
-    shipping_checkout: "/customer/shipping",
+    shipping_checkout: "/checkout/shipping",
     coupons : '/customer/account/coupons',
     payment_checkout: "/checkout/payment",
     signup: "/customer/account/sign-up",

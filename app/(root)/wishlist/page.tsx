@@ -11,7 +11,7 @@ const Page = async () => {
   const result = await getSavedProducts({});
   console.log(result, "result")
   return (
-    <div className='flex lg:flex-row flex-col lg:px-10 lg:py-8 gap-5'>
+    <div className='flex lg:flex-row flex-col lg:px-10 max-sm:pb-5 lg:py-8 gap-5'>
       <ProfileItems />
       <RightSidebar />
 
@@ -21,9 +21,9 @@ const Page = async () => {
       {/* Main content */}
       <div className='flex flex-col flex-1 px-3'>
         <div className='flex items-center mb-10 justify-between gap-3'>
-          <h2 className='h2-bold max-sm:!text-[18px] whitespace-nowrap'>Ma liste d'envies</h2>
+          <h2 className='h2-bold max-sm:!text-[15px] whitespace-nowrap'>Ma liste d'envies</h2>
           {result.data?.collection.length! > 0 && (
- <Button type='button' className='rounded-2xl bg-light_blue text-white hover:bg-light_blue '>
+ <Button type='button' className='rounded-2xl max-sm:text-xs bg-light_blue text-white hover:bg-light_blue '>
  Ajouter tous les produits au panier
 </Button>
           )}
@@ -37,7 +37,7 @@ const Page = async () => {
 
         <div>
           {result.data?.collection.length! > 0 ? (
-           <div className="flex items-center flex-wrap gap-3">
+           <div className="flex items-center max-sm:justify-center flex-wrap max-sm:gap-1.5 gap-3">
                      {result.data?.collection.map((product,index) => (
                          <div key={index}>
                                <ProductCard product={product.productId} />

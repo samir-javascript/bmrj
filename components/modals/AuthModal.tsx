@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dialog"
 
 import { Mail, User } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 import Image from "next/image";
 interface Props  {
     open:boolean;
@@ -19,7 +21,7 @@ interface Props  {
 }
 export function AuthModal({open,setOpen}:Props) {
   return (
-    <Dialog open={open} defaultOpen={false}  onOpenChange={()=> setOpen(false)}>
+    <Dialog open={open}   onOpenChange={()=> setOpen(false)}>
      
       <DialogContent className="sm:max-w-[425px] bg-white  flex flex-col space-y-2 items-center justify-center text-center">
         <DialogHeader>
@@ -29,7 +31,11 @@ export function AuthModal({open,setOpen}:Props) {
             </div>
             <DialogDescription className="font-bold text-[#222] text-[18px] text-center ">Connectez-vous ou créez votre compte en toute simplicité!</DialogDescription>
         </DialogHeader>
-         <Button className="flex no-focus hover:bg-transparent group w-[90%] items-center bg-transparent justify-center rounded-xl border-2 border-gray-300 px-3 py-2.5 h-[50px] ">
+         <Button onClick={() => {
+           signIn("google", {redirect:false})
+          
+         }} className="flex no-focus hover:bg-transparent group w-[90%]
+          items-center bg-transparent justify-center rounded-xl border-2 border-gray-300 px-3 py-2.5 h-[50px] ">
                <Image src="/google.svg" alt="Google" width={35} height={35} />
                <p className="group-hover:underline text-gray-600">Countinue with Google</p>
          </Button>
@@ -37,7 +43,7 @@ export function AuthModal({open,setOpen}:Props) {
          <div className="mb-3">
              <span className="font-normal text-normal text-[#111] ">OR</span>
          </div>
-         <Button className="text-white bg-light_blue !w-full rounded-2xl">
+         <Button className="text-white bg-light_blue h-[45px] !w-full rounded-2xl">
          <Mail size={30} />
            <p className="text-[15px] font-medium ">Use your Email Address</p> 
          </Button>

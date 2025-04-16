@@ -6,10 +6,10 @@ import { Heart, MenuIcon, ShoppingBag, User } from 'lucide-react'
 import TopBar from './TopBar'
 import Link from 'next/link'
 import { ROUTES } from '@/constants/routes'
-import {getOrCreateGuestId, open} from "@/lib/store/cartSlice"
+import {getOrCreateGuestId, getTotalItems, open} from "@/lib/store/cartSlice"
 
 import { setGuestId } from '@/lib/store/cartSlice'
-import { useAppDispatch } from '@/hooks/user-redux'
+import { useAppDispatch, useAppSelector } from '@/hooks/user-redux'
 //import { getOrCreateGuestId, useCartStore } from '@/lib/store'
 
 
@@ -18,12 +18,10 @@ const HomeNavbar = ({qty}: {
    qty: number | undefined
 }) => {
    const dispatch = useAppDispatch()
-   // const { getTotalItems, open, setGuestId } = useCartStore()
+   const totalItems = useAppSelector(getTotalItems)
    
     
-   // useEffect(() => {
-   //    useCartStore.persist.rehydrate();
-   // },[])
+    
       useEffect(() => {
          const guestId = getOrCreateGuestId();
          setGuestId(guestId as string);
@@ -67,7 +65,7 @@ const HomeNavbar = ({qty}: {
                      <ShoppingBag />
                      <span className='absolute top-[-4px] right-[-6px] flex items-center justify-center w-[16px] h-[16px]  rounded-full bg-red-500  '>
                       <span className='text-white text-xs'>
-                         {qty && qty > 0 ? qty : 4}
+                         {qty && qty > 0 ? qty : totalItems}
                       </span>
                  </span>
                   </div>

@@ -23,6 +23,7 @@
 // lib/dbConnect.js
 // lib/dbConnect.ts
 // lib/dbConnect.ts
+import { coupon } from '@/actions/coupon.actions';
 import mongoose, { Mongoose } from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URL;
@@ -59,6 +60,7 @@ async function dbConnect(): Promise<Mongoose> {
     });
   }
   cached.conn = await cached.promise;
+ 
   return cached.conn;
 }
 

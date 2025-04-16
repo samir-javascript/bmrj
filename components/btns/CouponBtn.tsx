@@ -1,20 +1,33 @@
 "use client"
 
 import { createCoupon } from "@/actions/coupon.actions"
+import { useAppDispatch, useAppSelector } from "@/hooks/user-redux"
+import {  getTotalItems } from "@/lib/store/cartSlice"
 import { FormEvent, useState } from "react"
 
-const CouponBtn = () => {
+const CouponBtn = ({userId,totalPrice}: {
+  userId:string
+  totalPrice:number
+}) => {
   const [coupon,setCoupon] = useState<string>("")
+  const dispatch = useAppDispatch()
+  const [error,setError] = useState<string | null>()
+
   const [Loading,setLoading] = useState<boolean>(false)
+  
+  const [textMessage,setTextMessage] = useState("")
   const handleApplyCoupon = async(e:FormEvent)=> {
     e.preventDefault()
       setLoading(true)
     try {
-      const { success } =  await createCoupon({code:coupon.toUpperCase()})
+      const { success, error, data } =  await createCoupon({code:coupon.toUpperCase(), userId})
       if(success) {
         setCoupon("")
         setLoading(false)
-        // todo: some toast
+        // dispatch(applyCoupon({code: coupon, discountAmount: data?.coupon.discount!}))
+        setTextMessage("coupon code has been applied")
+      }else {
+         setError(error?.message)
       }
     } catch (error) {
        console.log(error)
@@ -31,6 +44,16 @@ const CouponBtn = () => {
                 {Loading ? "Loading" : "Valider"}
              </button>
         </form>
+        {textMessage && (
+           <p className="text-green-500 text-sm font-medium">
+             {textMessage}
+           </p>
+        )}
+         {error && (
+           <p className="text-red-500 text-sm font-medium">
+             {error}
+           </p>
+        )}
     </div>
   )
 }

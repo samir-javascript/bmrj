@@ -14,21 +14,22 @@ import { useToast } from "@/hooks/use-toast"
 import LoadingAppState from "@/components/Loaders/LoadingAppState"
 import { createCheckoutSession } from "@/actions/stripe.actions"
 import AlertMessage from "@/components/shared/AlertMessage"
-const PaymentComponent = () => {
+import { useCartItems } from "@/hooks/useCartItems"
+import { UserCartElement } from "@/types/Elements"
+import { formatPrice } from "@/lib/utils"
+import { clearUserCart } from "@/actions/cart.actions"
+import { clearCart } from "@/lib/store/cartSlice"
+import { orderItemParams } from "@/types/action"
+interface props {
+  isAuthenticated:boolean;
+  data: UserCartElement | undefined
+  userId:string
+}
+const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
     const  { shippingAddress } = useAppSelector((state) => state.shipping)
     const [pending,setPending] = useState<boolean>(false)
-    const items = [
-       { _id: "67f997261564779971c5709d",
-        brand: "adidas",
-        prevPrice: 320,
-        title: "Chaussures adidas duramo sl m blanc",
-        image: "https://www.marjanemall.ma/media/catalog/product/cache/a8eb7e73a0b604192221fb710ed372ae/_/p/_pdt2_0_0_3_1_700x700_AAAPD01261-0003.jpg",
-        price: 218,
-        quantity:2,
-       
-      }
-    ]
-    console.log(items, "items here")
+   
+      const cartItems = useCartItems({isAuthenticated,data})
     const dispatch = useAppDispatch()
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"stripe" | "COD">("stripe");
 
@@ -40,8 +41,33 @@ const PaymentComponent = () => {
     const [open,setOpen] = useState<boolean>(false)
     const [loading,setLoading] = useState<boolean>(false)
     const [error,setError] = useState<string | undefined>(undefined)
+    const totalQty = cartItems?.reduce((acc:any, item:any) => acc + item.quantity, 0);
+    const totalPrice = cartItems?.reduce(
+      (acc:any, item:any) => acc + item.quantity * item.price,
+      0
+    );
     const { toast } = useToast()
+    interface props {
+       title:string;
+       price:string;
+       quantity:number,
+       image: string[]
+       _id:string
+    }
+    const items = cartItems.map((item:props)  => ({
+      name: item.title,
+      price: item.price,
+      qty: item.quantity,
+      images: [item.image],
+      product: item._id,
+    }))
+  
+       
+  
+
+  //  }
     const handleCreateOrder = async () => {
+       
         try {
           if (selectedPaymentMethod === "COD") {
              setPending(true)
@@ -50,22 +76,15 @@ const PaymentComponent = () => {
               paymentMethod: selectedPaymentMethod,
               orderStatus: "in preparation",
               shippingPrice: 15,
-              itemsPrice: 220,
-              totalPrice: 220 + 15,
-              orderItems: [
-                {
-                    _id:"67f997261564779971c5709d",
-                    name: "Chaussures adidas duramo sl m blanc",
-                    price: 320,
-                    qty: 4,
-                    images: ["https://www.marjanemall.ma/media/catalog/product/cache/a8eb7e73a0b604192221fb710ed372ae/_/p/_pdt2_0_0_3_1_700x700_AAAPD01261-0003.jpg"],
-                    product:"67f997261564779971c5709d"
-                  }
-              ],
+              itemsPrice: totalPrice,
+              totalPrice: totalPrice + 15,
+              orderItems: items
             });
       
             if (success) {
               setPending(false)
+              await clearUserCart({userId})
+              dispatch(clearCart())
               toast({
                 title: "Succès",
                 description: "Votre commande a été reçue. Consultez votre email pour la confirmation.",
@@ -80,8 +99,8 @@ const PaymentComponent = () => {
           } else {
              setPending(true)
              const { success, error, data} = await createCheckoutSession({
-                cartId: "kjkfj",
-                cart:  items,
+                cartId:"kfjdlkf",
+                cart:  cartItems,
                 totalPrice: 245,
              })
              if(success) {
@@ -110,7 +129,7 @@ const PaymentComponent = () => {
            
         )}
  <div className='flex lg:flex-row flex-col px-2 lg:px-5 items-start w-full gap-5'>
-        {loading || pending && (
+        {loading  && (
              <LoadingAppState />
         )}
         
@@ -118,7 +137,7 @@ const PaymentComponent = () => {
              <RadioGroup  onValueChange={async(value:"stripe" | "COD") => {
     setSelectedPaymentMethod(value);
     setLoading(true)
-    await new Promise((resolve)  => setTimeout(resolve, 700))
+    await new Promise((resolve)  => setTimeout(resolve, 1000))
     dispatch(setPaymentMethod(value));
     setLoading(false)
   }} defaultValue="stripe">
@@ -168,16 +187,22 @@ const PaymentComponent = () => {
            <div className='flex flex-col max-lg:w-full space-y-3'>
              <div className='border w-full lg:w-[450px] flex flex-col border-gray-200 rounded-lg px-3 py-10'>
                <div className='flex items-center justify-between border-b border-gray-100 pb-5'>
-                 <p className='text-sm text-[14px] text-[#555] font-semibold'>Total articles(10)</p>
-                 <p className='text-sm text-[14px] text-[#555] font-semibold'>1 954,92 Dh</p>
+                 <p className='text-sm text-[14px] text-[#555] font-semibold'>Total articles({totalQty})</p>
+                 <p className='text-sm text-[14px] text-[#555] font-semibold'>
+                   {formatPrice(totalPrice)}
+                 </p>
                </div>
                <div className='flex items-center justify-between w-full border-b border-gray-100 py-2'>
                  <p className='text-[12px] whitespace-nowrap text-[#999] font-normal'>Frais de livraison</p>
-                 <p className='text-[12px] text-[#999] font-normal'>Calculé après sélection d'adresse</p>
+                 <p className='text-[12px] text-[#999] font-normal'>
+                   {formatPrice(15)}
+                 </p>
                </div>
                <div className='flex items-center justify-between w-full pt-3'>
                  <h4 className='text-[18px] whitespace-nowrap text-light_blue font-bold'>Total à payer</h4>
-                 <p className='text-[18px] whitespace-nowrap text-light_blue font-bold'>1 954,92 Dh</p>
+                 <p className='text-[18px] whitespace-nowrap text-light_blue font-bold'>
+                   {formatPrice(totalPrice + 15)}
+                 </p>
                </div>
              </div>
              <Button onClick={handleCreateOrder}

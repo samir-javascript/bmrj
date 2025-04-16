@@ -5,12 +5,14 @@ import { Roboto } from 'next/font/google'
 import { SessionProvider } from "next-auth/react";
 import CartSidebar from "@/components/shared/CartSidebar";
 import { auth } from "@/auth";
-import SyncCart from "@/components/shared/SyncCart";
+import SyncCart  from "@/components/shared/SyncCart";
 import { getAuthenticatedUserCart } from "@/actions/cart.actions";
 import OrderDetailsSidebar from "@/components/modals/OrderDetailsSidebar";
 
 
 import StoreProvider from "@/components/shared/StoreProvider";
+import { UserCartElement } from "@/types/Elements";
+
 
 const roboto = Roboto({
   weight: ["400","500", "700", "900"],
@@ -28,7 +30,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
- 
+
   const session = await auth()
   const result = session ? await getAuthenticatedUserCart({userId:session?.user.id}) : null;
   
@@ -41,9 +43,11 @@ export default async function RootLayout({
       >
          <StoreProvider>
          <SessionProvider session={session}>
-       <CartSidebar data={result?.data || null}  />
+       <CartSidebar isAuthenticated={session?.user.id !== ""}
+        data={result?.data as unknown as UserCartElement || undefined}  />
        <OrderDetailsSidebar   />
        <SyncCart />
+       {/* <CartInit /> */}
         {children}
         <Toaster />
         </SessionProvider>

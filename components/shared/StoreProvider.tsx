@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { AppStore, makeStore } from '@/lib/store';
@@ -17,7 +15,7 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState<boolean>(false);
   const storeRef = useRef<AppStore | null>(null);
   // Add a ref for the persistor
   const persistorRef = useRef<ReturnType<typeof persistStore> | null>(null);

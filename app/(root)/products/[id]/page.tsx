@@ -12,6 +12,8 @@ import React from 'react'
 import CartQtyAdd from '../_components/CartQtyAdd';
 import ParseHtml from '@/components/forms/editor/ParseHtml';
 import { IProduct } from '@/database/models/product.model';
+import CartQtyMobile from '../_components/CartQtyMobile';
+import { products } from '@/constants';
 const ModePaiment = ({isMobile} : {isMobile:boolean}) => {
     return (
         <div className='bg-gray-100 rounded-md  w-full flex flex-col pt-2'>
@@ -57,38 +59,19 @@ const ModePaiment = ({isMobile} : {isMobile:boolean}) => {
    </div>
     )
 }
-const FixedCartBtns = ()=> {
-    return (
-        <div className='lg:hidden flex p-3 items-center gap-2 shadow-xl  bg-white z-50 fixed bottom-0 w-full '>
-               <div className="border  flex  justify-between items-center rounded-lg border-gray-300">
-      <span className="border-r flex items-center py-2 px-2 justify-center text-center flex-1 border-gray-300">
-          <Minus size={18} className="text-light_blue cursor-pointer text-center" />
-      </span>
-       <span className="flex-1 px-5 text-center py-2 font-semibold">
-         5
-       </span>
-       <span className="flex-1 flex py-2 px-2 items-center justify-center text-center border-l border-gray-300">
-          <Plus size={18} className="text-light_blue cursor-pointer text-center" />
-       </span>
- </div>
- <Button className="w-full flex-1 bg-light_blue hover:bg-light_blue text-white rounded-xl" type='button'>
-      Ajouter au panier
- </Button>
-        </div>
-    )
-}
+
 const page = async({params}: {params: Promise<{id:string}>}) => {
 
     const { id } = await params;
     const result = await getSingleProduct({productId:id})
-    const  hasSavedPromise = await hasSavedProduct({productId:id})
+    const hasSavedPromise = await hasSavedProduct({productId:id})
   
-        const product = result.data?.product;
+    const product = result.data?.product;
           
     if(!product) return notFound()
   return (
     <>
-     <FixedCartBtns />
+     <CartQtyMobile product={product} /> 
     <div className='my-7 w-full lg:px-5 px-3 max-w-[1500px] mx-auto flex flex-col '>
       
         <h3 className='text-[24px] lg:hidden block mb-3 lg:max-w-[350px]  max-sm:text-[18px] font-semibold text-[#333] '>

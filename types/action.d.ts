@@ -156,6 +156,7 @@ export interface GetUserCartParams  {
 }
 export interface CouponParams  {
    code:string;
+   userId:string
 }
 
 // ORDERS PARAMS;
@@ -168,18 +169,18 @@ export interface ReviewParams  {
   
    title: string;
    comment: string;
-   rating: number;
+   rating: string;
    productId:string
 }
+export interface orderItemParams {
+  name: string;
+  price: number;
+  qty: number;
+  images: string[];
+  product: mongoose.Schema.Types.ObjectId | string;
+}
 export interface CreateOrderParams {
-  orderItems: {
-    _id:string;
-    name: string;
-    price: number;
-    qty: number;
-    images: string[];
-    product: mongoose.Schema.Types.ObjectId | string;
-  }[];
+  orderItems: orderItemParams[];
   shippingPrice: number;
   totalPrice: number;
   itemsPrice: number;
@@ -202,4 +203,11 @@ export interface CreateOrderParams {
     update_time?: string;
     email_address?: string;
   };
+}
+
+export interface ClearUserCartParams {
+  userId:string;
+}
+export interface GetMyOrdersParams {
+  userId:string;
 }

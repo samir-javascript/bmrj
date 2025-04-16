@@ -13,8 +13,9 @@ import { Cart, ICart } from '@/database/models/cart.model';
 import Product, { IProduct } from '@/database/models/product.model';
 import { action } from '@/lib/handlers/action';
 import handleError from '@/lib/handlers/error';
-import { GetUserCartSchema } from '@/lib/zod';
-import { GetUserCartParams } from '@/types/action';
+import { CartItem } from '@/lib/store/cartSlice';
+import { ClearCartSchema, GetUserCartSchema } from '@/lib/zod';
+import { ClearUserCartParams, GetUserCartParams } from '@/types/action';
 import { CartElement, UserCartElement } from '@/types/Elements';
 import { revalidatePath } from 'next/cache'; // Optional, if you're revalidating pages
 
@@ -32,7 +33,7 @@ interface AddToCartParams {
   };
 }
 
-export async function addToCart({ guestId, item }: AddToCartParams) {
+export async function addToCart({ guestId, item }: AddToCartParams): Promise<ActionResponse> {
   try {
     const session = await auth()
     const userId = session?.user.id;
@@ -53,10 +54,7 @@ export async function addToCart({ guestId, item }: AddToCartParams) {
       if (!cart) {
         cart = new Cart({ guestId, items: [] });
       }
-    } else {
-      // If neither userId nor guestId is provided, throw an error
-      return { success: false, message: 'Missing guestId or userId.' };
-    }
+    } else throw new Error('Missing guestId or userId.')
 
     // ✅ 2. Check if the product already exists in the cart
     const existingItemIndex = cart.items.findIndex(
@@ -81,8 +79,7 @@ export async function addToCart({ guestId, item }: AddToCartParams) {
 
     return { success: true, cart: JSON.parse(JSON.stringify(cart)) };
   } catch (err) {
-    console.error('Error adding to cart:', err);
-    return { success: false, message: 'Failed to add item to cart.' };
+    return handleError(err) as ErrorResponse;
   }
 }
 // /actions/cart.actions.ts
@@ -97,7 +94,7 @@ export async function removeFromCart({
   
   guestId?: string;
   productId: string;
-}) {
+}): Promise<ActionResponse> {
   try {
     const session = await auth()
     const userId = session?.user.id;
@@ -112,9 +109,7 @@ export async function removeFromCart({
       cart = await Cart.findOne({ guestId });
     }
 
-    if (!cart) {
-      return { success: false, message: "Cart not found." };
-    }
+    if (!cart) throw new Error('Cart not found')
 
     // Filter out the item from items array
     cart.items = cart.items.filter(
@@ -125,8 +120,7 @@ export async function removeFromCart({
 
     return { success: true, cart: JSON.parse(JSON.stringify(cart)) };
   } catch (error) {
-    console.error(error);
-    return { success: false, message: "Failed to remove item from cart." };
+     return handleError(error) as ErrorResponse
   }
 }
 // /actions/cart.actions.ts
@@ -143,7 +137,7 @@ export async function updateCartItemQuantity({
   guestId?: string;
   productId: string;
   quantity: number;
-}) {
+}): Promise<ActionResponse<{cart: ICart}>> {
   try {
     const session = await auth()
     const userId = session?.user.id;
@@ -158,119 +152,33 @@ export async function updateCartItemQuantity({
       cart = await Cart.findOne({ guestId });
     }
 
-    if (!cart) {
-      return { success: false, message: "Cart not found." };
-    }
+    if (!cart) throw new Error('Cart not found')
 
     const item = cart.items.find(
       (item: any) => item.productId.toString() === productId
     );
 
-    if (!item) {
-      return { success: false, message: "Item not found in cart." };
-    }
+    if (!item) throw new Error('cart item not found')
 
     item.quantity = quantity;
 
     await cart.save();
 
-    return { success: true, cart };
+    return {
+       success: true,
+       data: {cart: JSON.parse(JSON.stringify(cart))}
+
+     };
   } catch (error) {
-    console.error(error);
-    return { success: false, message: "Failed to update item quantity." };
+    return handleError(error) as ErrorResponse
   }
 }
 
-
-
-
-
-
-
-// export const syncCarts = async (guestId: string | null) => {
-//   const session = await auth();
-//   const userId = session?.user?.id;
-
-//   if (!userId) {
-//     console.warn("No userId provided. Skipping sync.");
-//     return { success: false, message: "No userId provided." };
-//   }
-
-//   try {
-//     await connectToDb();
-
-//     // 1. Find both carts
-//     const guestCart = guestId ? await Cart.findOne({ guestId }) : null;
-//     let userCart = await Cart.findOne({ userId });
-
-//     console.log("guestCart:", guestCart);
-//     console.log("userCart before merge:", userCart);
-
-//     let mergedItems: any[] = [];
-
-//     if (userCart && userCart.items) {
-//       mergedItems = [...userCart.items]; // existing user items
-//     }
-
-//     if (guestCart && guestCart.items.length > 0) {
-//       console.log(`Merging ${guestCart.items.length} guest items`);
-
-//       guestCart.items.forEach((guestItem: any) => {
-//         const index = mergedItems.findIndex(
-//           (item: any) => item.productId.toString() === guestItem.productId.toString()
-//         );
-
-//         if (index > -1) {
-//           // Item already exists in user's cart; increment quantity
-//           mergedItems[index].quantity += guestItem.quantity;
-//         } else {
-//           // New item from guest cart
-//           mergedItems.push({
-//             productId: guestItem.productId,
-//             quantity: guestItem.quantity,
-//           });
-//         }
-//       });
-//     }
-
-//     // 2. Update or create user cart with merged items
-//     const updatedUserCart = await Cart.findOneAndUpdate(
-//       { userId },
-//       {
-//         $set: {
-//           userId,
-//           guestId: null, // Make sure guestId is null on user cart
-//           items: mergedItems,
-//         },
-//       },
-//       { new: true, upsert: true }
-//     );
-
-//     console.log("Updated userCart after merge:", updatedUserCart);
-
-//     // 3. Delete guest cart if it exists
-//     if (guestCart) {
-//       await Cart.deleteOne({ guestId: guestCart.guestId });
-//       console.log("Deleted guest cart:", guestCart.guestId);
-//     }
-
-//     return {
-//       success: true,
-//       cart: JSON.parse(JSON.stringify(updatedUserCart)),
-//     };
-//   } catch (error) {
-//     console.error("Error syncing carts:", error);
-//     return { success: false, message: "Failed to sync carts." };
-//   }
-// };
 export const syncCarts = async (guestId: string | null): Promise<ActionResponse<{mergedCart: any}>> => {
   const session = await auth();
   const userId = session?.user?.id;
 
-  if (!userId) {
-    console.warn("No userId provided. Skipping sync.");
-    return { success: false, message: "No userId provided." };
-  }
+  if (!userId) throw new Error('No userId provided. Skipping sync.')
 
   try {
     await connectToDb();
@@ -361,23 +269,29 @@ export const syncCarts = async (guestId: string | null): Promise<ActionResponse<
 
     return {
       success: true,
-      cart: JSON.parse(JSON.stringify(formattedItems)),
+      data: {mergedCart:JSON.parse(JSON.stringify(formattedItems))},
     };
   } catch (error) {
    return handleError(error) as ErrorResponse
   }
 };
+interface props {
+ 
+    _id: string,
+    title: string,
+        image: string[]
+        price: number,
+         quantity: number,
 
-export const getAuthenticatedUserCart = async(params:GetUserCartParams):Promise<ActionResponse<{userCart: UserCartElement, qty:number }>> => {
-  //  const validatedResult = await action({params,schema:GetUserCartSchema})
-  //  if(validatedResult instanceof Error) {
-  //     return handleError(validatedResult) as ErrorResponse
-  //  }
+}[]
+// CartItem[]
+export const getAuthenticatedUserCart = async(params:GetUserCartParams)
+:Promise<ActionResponse<{userCart: UserCartElement , qty:number }>> => {
+  
    const {userId} = params;
    if(!userId) return {
-      success:false,
-      message: "missing USER ID"
-   };
+     success: false
+   }
    try {
     await connectToDb()
     const userCart = await Cart.findOne({ userId })
@@ -386,6 +300,17 @@ export const getAuthenticatedUserCart = async(params:GetUserCartParams):Promise<
     });
        if(!userCart) throw new Error('USER CART NOT FOUND')
         const qty:number = userCart.items.reduce((current:number,item: {quantity:number}) => current + item.quantity,0)
+    //    const formattedItems = userCart.items.map((item:any) => ({
+    //     _id: item.productId._id,
+    //     title: item.productId.name,
+    //         image: item.productId.images[0] || "",
+    //         price: item.productId.price,
+    //         brand: item.productId.brand,
+    //          quantity: item.quantity,
+          
+    //          prevPrice: item.productId.prevPrice
+           
+    //  }))
         return {
         success:true,
        data: {userCart: JSON.parse(JSON.stringify(userCart)), qty}
@@ -395,3 +320,26 @@ export const getAuthenticatedUserCart = async(params:GetUserCartParams):Promise<
    }
 }
 
+export async function clearUserCart(params:ClearUserCartParams):Promise<ActionResponse> {
+  const validatedResult = await action({params,schema:ClearCartSchema,authorize:true})
+  if(validatedResult instanceof Error) {
+     return handleError(validatedResult) as ErrorResponse;
+  }
+   const { userId } = validatedResult.params!
+
+   try {
+     await connectToDb()
+     const cart = await Cart.findOne({userId})
+     if(!cart) throw new Error('no cart found to clear')
+      await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } }
+     )
+     return {
+       success: true,
+       message: "user cart has been cleared successfully"
+     }
+   } catch (error) {
+      return handleError(error) as ErrorResponse;
+   }
+}

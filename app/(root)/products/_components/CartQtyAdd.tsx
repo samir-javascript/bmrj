@@ -8,6 +8,7 @@ import { addItemAsync, open } from '@/lib/store/cartSlice'
 
 //import {  getOrCreateGuestId, useCartStore } from '@/lib/store/cartStore'
 import { Loader, Minus, Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const CartQtyAdd = ({item}: {
@@ -15,6 +16,7 @@ const CartQtyAdd = ({item}: {
 }) => {
     const [qty,setQty] = useState<number>(1)
     const dispatch = useAppDispatch()
+    const router = useRouter()
     const [loading,setLoading] = useState<boolean>(false)
     // const removeItem = useCartStore((state) => state.removeItem);
    
@@ -47,9 +49,9 @@ const CartQtyAdd = ({item}: {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       
         // Dispatch the async action correctly
-        // @ts-ignore
-        dispatch(addItemAsync(data)); // Pass `data` directly, not `{data}`
-      
+       
+        dispatch(addItemAsync(data) as any); // Pass `data` directly, not `{data}`
+        router.refresh()
         setLoading(false);
         dispatch(open());
       };

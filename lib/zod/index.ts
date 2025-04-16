@@ -70,7 +70,8 @@ export const GetUserCartSchema = z.object({
   userId: z.string().min(1, {message: "USER ID IS REQUIRED"})
 })
 export const CouponSchema = z.object({
-   code: z.string().min(1, {message: "coupon code is required"})
+   code: z.string().min(1, {message: "coupon code is required"}),
+   userId: z.string().min(1,{message: "user ID is required"})
 })
 
 
@@ -171,18 +172,22 @@ export const CategorySchemaValidation = z.object({
   })
 })
 
-
+export const ClearCartSchema = z.object({
+  userId: z.string().min(1, {message: "userId is required"})
+})
+export const GetMyOrdersValidationSchema = z.object({
+   userId: z.string().min(1, {message: "user ID is required"})
+})
 export const CreateOrderValidationSchema = z.object({
  
   orderItems: z.array(
     z.object({
-      _id: z.string(),
       name: z.string().min(1, "Item name is required"),
       price: z.number({ message: "Item price is required" }),
       qty: z.number({ message: "Item quantity is required" }),
       images: z.array(z.string().min(1, "Image URL is required")),
       product: z.string().min(1, "Product ID is required"), // ObjectId as string
-    })
+    }, {message: "this shit is required"})
   ),
 
   shippingPrice: z.number({ message: "Shipping price is required" }),
@@ -222,7 +227,7 @@ export const ReviewSchemaValidation = z.object({
   
    title:z.string().min(1, {message: "title is required"}),
    comment: z.string().min(1, {message: "comment is required"}),
-   rating: z.number().min(1).max(5),
+   rating: z.string().min(1).max(5),
    productId: z.string().min(1, {message: "PRODUCT IS IS REQUIRED"})
 })
 export const DeleteHeroBannerSchema = z.object({

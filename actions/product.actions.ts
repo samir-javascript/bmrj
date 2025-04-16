@@ -253,7 +253,7 @@ export async function addProductReview(prevState:any,formData:FormData): Promise
     user: formData.get('userId') as string,
     title: formData.get('title') as string,
     comment: formData.get('comment') as string,
-    rating: formData.get('rating') as unknown as number,
+    rating: formData.get('rating') as unknown as string,
     productId: formData.get('productId') as string
   }
 

@@ -1,4 +1,5 @@
 
+import { hasSavedProduct } from "@/actions/collection.actions";
 import { getProducts } from "@/actions/product.actions";
 import { getHeroImages } from "@/actions/uploads.actions";
 
@@ -29,14 +30,7 @@ export default async function Home() {
     
       <CategoriesSlider />
        <section className="max-w-7xl mx-auto">
-          {/* <h2>Nos Deals Ramadan</h2> */}
-          {/* <div className="flex items-center flex-wrap gap-3">
-          {result.data?.products.map((product,index) => (
-              <div key={index}>
-                    <ProductCard product={product} />
-              </div>
-          ))}
-          </div> */}
+         
           <HorizontalCarousel data={result.data?.products} showPagination={false} title="Nos Deals du printemps" />
           <GridDisplay />
           <HorizontalCarousel showPagination={true} title="Meilleures ventes" />

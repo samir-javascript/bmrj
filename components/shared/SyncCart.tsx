@@ -1,59 +1,41 @@
-"use client";
 
+"use client";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-
-//import { getOrCreateGuestId,  useCartStore } from "@/lib/store";
-import { syncCarts } from "@/actions/cart.actions";
-
 import { useAppDispatch } from "@/hooks/user-redux";
 import { getOrCreateGuestId, resetGuestId, setGuestId, syncWithUser } from "@/lib/store/cartSlice";
+import { syncCarts } from "@/actions/cart.actions";
 
 const CartSyncHandler = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
 
-  const dispatch = useAppDispatch()
- 
-  // useEffect(() => {
-  //   const handleSync = async () => {
-  //     if (!session?.user?.id) return;
+  // 🟢 Fix: Hydrate guestId on client mount
+  useEffect(() => {
+    const guestId = getOrCreateGuestId();
+    dispatch(setGuestId(guestId));
+  }, [dispatch]);
 
-  //     const guestId = getOrCreateGuestId();
-
-  //     // Fire server action to sync
-  //     const res = await syncCarts(guestId);
-
-  //     if (res.success) {
-  //       console.log("Cart sync complete.");
-
-  //       // Optional: clear guestId from localStorage
-  //       localStorage.removeItem("guestId");
-  //     }
-  //   };
-
-  //   handleSync();
-  // }, [session]);
   useEffect(() => {
     const handleSync = async () => {
-      if (!session?.user?.id) return;
-  
+      if (status === "loading" || status === "unauthenticated") return;
+
       const guestId = getOrCreateGuestId();
-  
-      const res = await syncCarts(guestId);
-  
-      if (res.success) {
-        console.log("Cart sync complete.");
-        localStorage.removeItem("guest_id"); // 🔁 match key with your cartSlice
-        dispatch(resetGuestId()); // 🔁 clear Redux guestId if needed
-        // @ts-ignore
-        dispatch(syncWithUser());   // 🔁 optionally refetch synced cart to Redux
+      const { success } = await syncCarts(guestId);
+
+      if (success) {
+        console.log("✅ Cart sync complete.");
+        localStorage.removeItem("guest_id");
+        dispatch(resetGuestId());
+        dispatch(syncWithUser() as any);
       }
     };
-  
+
     handleSync();
-  }, [session]);
-  
+  }, [status, dispatch]);
+
   return null;
 };
 
 export default CartSyncHandler;
+

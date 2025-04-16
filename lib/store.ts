@@ -13,14 +13,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import paymentMethodReducer from "@/lib/store/PaymentSlice"
-// export const makeStore = () => {
-//   return configureStore({
-//     reducer: {
-//         cart: cartReducer,
-//         shipping: shippingReducer
-//     }
-//   })
-// }
+
 const rootReducer = combineReducers({
   cart: cartReducer,
   shipping: shippingReducer,

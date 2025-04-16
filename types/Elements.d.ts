@@ -17,11 +17,20 @@ export interface CartElement {
 }
 export interface UserCartElement {
      qty:number;
-    userCart: {
+     userCart: {
+      items: [
+        {
+          productId: IProduct,
+          quantity: number,
+        },
+      ],
+     }
+    
+    // userCart: {
         
-        items: [{
-             productId: IProduct;
-                  quantity: number;
-        }]
-    }
+    //     items: [{
+    //          productId: IProduct;
+    //               quantity: number;
+    //     }]
+    // }
 }

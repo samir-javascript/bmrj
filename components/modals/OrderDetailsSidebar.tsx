@@ -7,30 +7,30 @@ import { Button } from "../ui/button";
 import { HouseIcon, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { closeOrderDetails } from "@/lib/store/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/user-redux";
 
 
 
 const OrderDetailsSidebar = () => {
-  // const { isOrderDetailsOpened,  closeOrderDetails } = useCartStore()
- 
-  // 1s delay;
-//  new Promise(resolve => setTimseout(resolve,1000))
+  const dispatch = useAppDispatch()
 const pathname = usePathname()
-// useEffect(() => {
-//    closeOrderDetails()
-// }, [pathname])
-//   useEffect(() => {
-//     if (isOrderDetailsOpened) {
-//       document.body.style.overflow = "hidden"; // Prevent scrolling of the main page
-//     } else {
-//       document.body.style.overflow = ""; // Restore scrolling when closed
-//     }
+const {isOrderDetailsOpened} = useAppSelector((state)  => state.cart)
+useEffect(() => {
+   dispatch(closeOrderDetails())
+}, [pathname])
+  useEffect(() => {
+    if (isOrderDetailsOpened) {
+      document.body.style.overflow = "hidden"; // Prevent scrolling of the main page
+    } else {
+      document.body.style.overflow = ""; // Restore scrolling when closed
+    }
 
-//     return () => {
-//       document.body.style.overflow = ""; // Cleanup on unmount
-//     };
-//   }, [isOrderDetailsOpened]);
- const isOrderDetailsOpened = false;
+    return () => {
+      document.body.style.overflow = ""; // Cleanup on unmount
+    };
+  }, [isOrderDetailsOpened]);
+
   return (
     <React.Fragment>
       {isOrderDetailsOpened && (
@@ -48,7 +48,7 @@ const pathname = usePathname()
         <header className="flex items-center justify-between ">
              <h3 className="font-semibold text-primary lg:text-[24px] text-[18px] leading-[1.7] ">Détail de la commande</h3>
              <X 
-             // onClick={()=> closeOrderDetails()} 
+             onClick={()=> dispatch(closeOrderDetails())} 
               className="cursor-pointer" color="gray" size={25} />
         </header>
          <p className="mt-2 text-black text-sm font-[500] ">N° : 001107535</p>
