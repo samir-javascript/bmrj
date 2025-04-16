@@ -37,7 +37,7 @@ const Page = async () => {
 
         <div>
           {result.data?.collection.length! > 0 ? (
-           <div className="flex items-center max-sm:justify-center flex-wrap max-sm:gap-1.5 gap-3">
+           <div className="flex items-center max-sm:justify-center flex-wrap max-sm:gap-1 gap-3">
                      {result.data?.collection.map((product,index) => (
                          <div key={index}>
                                <ProductCard product={product.productId} />

@@ -28,7 +28,7 @@ const page = async () => {
       {/* box info */}
       {result.data?.orders.length! > 0 ? (
         <div className="w-full px-2 flex-1">
-          <h2 className="h2-bold w-full lg:text-left text-center mb-5">{result.data?.orders.length!} Commandes</h2>
+          <h2 className="h2-bold w-full lg:text-left text-center mb-5">{result.data?.orders.length!} {result.data?.orders.length! > 1 ? 'Commandes': 'Commande'}</h2>
           <div className='flex flex-col space-y-3 w-full'>
             {result.data?.orders.map((item) => (
               <div className='rounded-lg border border-light_gray' key={item._id}>
@@ -94,9 +94,9 @@ const page = async () => {
  </div>
       </div>
  </div>
- <div className="flex flex-col max-sm:hidden gap-2">
+ <div className="flex flex-col max-sm:hidden gap-2 max-sm:gap-1">
    <Button className="h-fit py-1.5 border border-light_blue bg-transparent
-    hover:bg-transparent text-light_blue rounded-full text-xs font-bold " >
+    hover:bg-transparent max-sm:w-fit text-light_blue rounded-full text-xs font-bold " >
      suivi colis
    </Button>
     <CancelOrderBtn />
