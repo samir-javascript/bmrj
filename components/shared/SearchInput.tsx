@@ -71,7 +71,7 @@ useEffect(() => {
   return (
     <>
     {open && (
-       <div style={{backgroundColor: "rgba(0, 0, 0, .3)"}} className="fixed z-[999] top-0 left-0 inset-0 h-full w-full " />
+       <div style={{backgroundColor: "rgba(0, 0, 0, .3)"}} className="fixed  top-0 left-0 inset-0 h-full w-full " />
     )}
   <div ref={searchContainerRef} className={`flex-1 relative  flex items-center justify-between bg-white rounded-lg
       px-2.5 py-3 z-[90] ${open && "!z-[999999999999999999999999999999999999999]"}`}>

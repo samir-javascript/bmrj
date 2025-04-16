@@ -28,7 +28,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
     const totalPrice = 220
     
   return (
-    cartItems.length > 0 ? (
+   cartItems &&  cartItems.length > 0 ? (
         <div className='flex flex-col lg:flex-row items-start gap-10'>
         <div className='bg-gray-100 px-5 py-3'>
              <div className='flex items-center justify-between'>
