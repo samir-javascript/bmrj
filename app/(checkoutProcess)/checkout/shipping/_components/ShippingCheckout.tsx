@@ -7,7 +7,7 @@ import { IShipping } from '@/database/models/shippingAdress.model'
 import { useCartItems } from '@/hooks/useCartItems'
 import { useAppSelector } from '@/hooks/user-redux'
 import { formatPrice } from '@/lib/utils'
-import { UserCartElement } from '@/types/Elements'
+import { cartItemsProps, UserCartElement } from '@/types/Elements'
 import { Edit, LocateIcon, User } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -63,7 +63,7 @@ const ShippingCheckout = ({data,isAuthenticated,cartData}: {
                            <p className='text-[#333] font-normal '>{totalQty} produits</p>
                       </div>
                       {/* cart items */}
-                      {cartItems.map((item:any,index:number) => (
+                      {cartItems.map((item:cartItemsProps,index:number) => (
                <div key={index} className='border-gray-300 mt-3  rounded-lg bg-white p-3 '>
                <div className='flex items-start   justify-between gap-3'>
                <div className='bg-gray-100 rounded-lg lg:w-[120px] w-[80px] h-[80px] lg:h-[120px] '>

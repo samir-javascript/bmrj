@@ -5,14 +5,16 @@ import ShippingCheckout from './_components/ShippingCheckout'
 import { auth } from '@/auth'
 import { getAuthenticatedUserCart } from '@/actions/cart.actions'
 import { UserCartElement } from '@/types/Elements'
+import { redirect } from 'next/navigation'
 
 const ShippingPage = async() => {
   const session = await auth()
+  if(!session) redirect("/checkout/cart")
      const { data } = await getShippingAddress()
-    const result = await getAuthenticatedUserCart({userId: session?.user.id!})
+    const result = await getAuthenticatedUserCart({userId: session?.user.id})
   return (
     <section className="py-7 max-w-[1500px] mx-auto px-3 ">
-       <ShippingCheckout cartData={result.data as unknown as  UserCartElement || undefined}  isAuthenticated={session?.user.id !== ""} data={data?.shippingAddresses || []} />    
+       <ShippingCheckout cartData={result.data as unknown as  UserCartElement || undefined}  isAuthenticated={session.user.id !== ""} data={data?.shippingAddresses || []} />    
     </section>
   )
 }

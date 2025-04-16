@@ -15,6 +15,15 @@ export interface CartElement {
          items: IProduct[]
     }
 }
+export interface cartItemsProps {
+  _id: string,
+  brand: string,
+  title: string,
+  image: string,
+  prevPrice: number,
+  price: number,
+  quantity: number,
+}
 export interface UserCartElement {
      qty:number;
      userCart: {

@@ -16,6 +16,7 @@ export const useCartItems = ({isAuthenticated,data}:props)=> {
             brand: item.productId.brand,
             title: item.productId.name,
             image: item.productId.images[0]?.url,
+            prevPrice: item.productId.prevPrice,
             price: item.productId.price,
             quantity: item.quantity,
           })) ?? items
