@@ -3,6 +3,7 @@ import { model, models, Schema } from "mongoose";
 export interface IOrder {
   _id:string;
   user: Schema.Types.ObjectId;
+  createdAt: Date;
   orderStatus: "canceled" | "in preparation" | "confirmed" | "delivered";
   stripePaymentIntentId?:string;
   paymentMethod: "stripe" | "COD";
@@ -36,6 +37,7 @@ export interface IOrder {
     update_time: string;
     email_address: string;
   };
+
 }
 
 const OrderSchema = new Schema<IOrder>(

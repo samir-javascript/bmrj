@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toggleSaveCollection } from "@/actions/collection.actions"
 import { Heart } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -8,7 +8,8 @@ import { useToast } from "@/hooks/use-toast"
 import LoadingAppState from "../Loaders/LoadingAppState"
 
 
-const HeartCart = ({hasSaved,productId}:{hasSaved:boolean,productId:string}) => {
+const HeartCart = ({productId}:{productId:string}) => {
+  const [hasSaved,setHasSaved] = useState<boolean>(false)
   const [open,setOpen] = useState<boolean>(false)
   const [loading,setLoading] = useState(false)
   const session = useSession()
@@ -42,6 +43,7 @@ const HeartCart = ({hasSaved,productId}:{hasSaved:boolean,productId:string}) => 
             setLoading(false)
           }
       }
+   
   return (  
      <div onClick={handleToggleSaveProduct} className="absolute w-[35px] h-[35px]
       right-0 bottom-0 m-3 bg-white rounded-full flex items-center justify-center ">

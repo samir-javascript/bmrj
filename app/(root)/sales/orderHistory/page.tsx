@@ -9,7 +9,7 @@ import Alert from '@/components/shared/Alert';
 import { Button } from '@/components/ui/button';
 
 import { ROUTES } from '@/constants/routes';
-import { formatPrice } from '@/lib/utils';
+import { formatDate, formatPrice } from '@/lib/utils';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -40,7 +40,7 @@ const page = async () => {
                     </div>
                     <div className='border-l max-sm:hidden border-gray-200 h-full'></div>
                     <div className='flex flex-col max-sm:gap-1'>
-                    <p className='font-bold text-[#333] lg:text-sm text-xs whitespace-nowrap '>Effectuée le 02-04-2025</p>
+                    <p className='font-bold text-[#333] lg:text-sm text-xs whitespace-nowrap '>Effectuée le {formatDate(item.createdAt)} </p>
                     <p className='font-light lg:hidden block text-sm text-gray-600 '><span>Total :</span> {formatPrice(item.totalPrice)}
                     </p>
                     <div>
@@ -52,7 +52,7 @@ const page = async () => {
                   <div className='flex lg:pr-2 pr-1 items-center gap-4'>
                        <p className='font-light lg:block hidden text-sm text-gray-600 '><span>Total :</span> {formatPrice(item.totalPrice)}
                        </p>
-                       <OpenOrderDetailsBtn />
+                      <OpenOrderDetailsBtn  orderId={item._id} />
                   </div>
                 </div>
                 {item.orderItems.map((x,index) => (
