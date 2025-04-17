@@ -8,8 +8,8 @@ import { useToast } from "@/hooks/use-toast"
 import LoadingAppState from "../Loaders/LoadingAppState"
 
 
-const HeartCart = ({productId}:{productId:string}) => {
-  const [hasSaved,setHasSaved] = useState<boolean>(false)
+const HeartCart = ({productId, hasSaved = false}:{productId:string, hasSaved?:boolean}) => {
+  
   const [open,setOpen] = useState<boolean>(false)
   const [loading,setLoading] = useState(false)
   const session = useSession()
