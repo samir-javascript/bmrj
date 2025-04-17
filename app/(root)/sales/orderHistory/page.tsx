@@ -62,7 +62,7 @@ const page = async () => {
         <img loading='lazy' className='w-full object-contain h-full' src={x.images[0]} alt={x.name} />
       </div>
       <div className="flex flex-col gap-[2px] " >
-        <div className='w-full flex items-center max-sm:justify-between'>
+        <div className=' flex items-center max-sm:justify-between'>
         <div className='bg-green-500 w-fit flex items-center justify-center rounded-md text-white px-2  '>
             <span className="text-xs font-semibold">
                {item.orderStatus}
@@ -78,7 +78,7 @@ const page = async () => {
         
         </div>
         
-          <p className='max-w-[500px] text-[#333] text-sm font-medium '>
+          <p className='max-w-[500px] max-sm:max-w-[350px] text-[#333] text-sm font-medium '>
             {x.name}
           </p>
           <p className="text-gray-500 font-light max-sm:hidden text-sm"><span>QTY :</span> {x.qty}</p>

@@ -19,7 +19,7 @@ const Page = async () => {
       <div className='w-full lg:hidden h-[10px] bg-gray-100' />
 
       {/* Main content */}
-      <div className='flex flex-col flex-1 px-3'>
+      <div className='flex flex-col flex-1 max-sm:px-2 px-3'>
         <div className='flex items-center mb-10 justify-between gap-3'>
           <h2 className='h2-bold max-sm:!text-[15px] whitespace-nowrap'>Ma liste d'envies</h2>
           {result.data?.collection.length! > 0 && (
@@ -37,7 +37,7 @@ const Page = async () => {
 
         <div>
           {result.data?.collection.length! > 0 ? (
-           <div className="flex items-center max-sm:justify-center flex-wrap max-sm:gap-1 gap-3">
+           <div className="flex items-center  flex-wrap max-sm:gap-1 gap-3">
                      {result.data?.collection.map((product,index) => (
                          <div key={index}>
                                <ProductCard product={product.productId} />
