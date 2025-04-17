@@ -75,7 +75,7 @@ export async function addToCart({ guestId, item }: AddToCartParams): Promise<Act
     await cart.save();
 
     // Optional: revalidate cached paths if needed
-    // revalidatePath('/cart');
+    revalidatePath('/cart');
 
     return { success: true, cart: JSON.parse(JSON.stringify(cart)) };
   } catch (err) {
@@ -117,7 +117,8 @@ export async function removeFromCart({
     );
 
     await cart.save();
-
+    revalidatePath('/cart');
+    revalidatePath("/")
     return { success: true, cart: JSON.parse(JSON.stringify(cart)) };
   } catch (error) {
      return handleError(error) as ErrorResponse
@@ -260,9 +261,10 @@ export const syncCarts = async (guestId: string | null): Promise<ActionResponse<
     //   })),
     // };
     const formattedItems = populatedCart.items.map((item:any) => ({
-       _id: item.productId._id,
-       title: item.productId.name,
+         _id: item.productId._id,
+          title: item.productId.name,
            image: item.productId.images[0] || "",
+           prevPrice: item.productId.prevPrice,
            price: item.productId.price,
             quantity: item.quantity,
     }))

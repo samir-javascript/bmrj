@@ -1,17 +1,21 @@
 "use client"
 import CouponBtn from '@/components/btns/CouponBtn'
+import LoadingAppState from '@/components/Loaders/LoadingAppState'
 import Features from '@/components/shared/Features'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { useCartItems } from '@/hooks/useCartItems'
+import { useAppDispatch } from '@/hooks/user-redux'
+import { removeItemAsync } from '@/lib/store/cartSlice'
 
 import { formatPrice } from '@/lib/utils'
-import { UserCartElement } from '@/types/Elements'
+import { cartItemsProps, UserCartElement } from '@/types/Elements'
 //import { useCartStore } from '@/lib/store/cartStore'
 
 import { Minus, Plus, TrashIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 
 const CartItems = ({data,isAuthenticated,userId}: {
     data?: UserCartElement;
@@ -19,16 +23,34 @@ const CartItems = ({data,isAuthenticated,userId}: {
     userId:string
 }) => {
   
-   
+    const [pending,setPending] = useState(false)
+    const router = useRouter()
     const cartItems  = useCartItems({isAuthenticated,data})
 
    
     const totalQty = cartItems?.reduce((acc:number, item:{quantity:number}) => acc + item.quantity, 0);
     const totalPrice = 220
-    
+     const dispatch = useAppDispatch()
+     const handleRemoveItem = async(productId:string)=> {
+      try {
+         setPending(true)
+         await new Promise(resolve => setTimeout(resolve, 500) )
+         dispatch(removeItemAsync(productId) as any)
+         setPending(false)
+         router.refresh()
+      } catch (error) {
+          console.log(error)
+      }finally {
+         setPending(false)
+      }
+        
+     }
   return (
    cartItems &&  cartItems.length > 0 ? (
         <div className='flex flex-col lg:flex-row items-start gap-10'>
+          {pending && (
+             <LoadingAppState />
+          )}
         <div className='bg-gray-100 px-5 py-3'>
              <div className='flex items-center justify-between'>
                   <p className='font-bold text-[18px] leading-[16px] text-[#333] '>Expedié depuis le Maroc</p>
@@ -36,7 +58,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
                   <p className='text-[#333] font-normal '>{totalQty} produits</p>
              </div>
              {/* cart items */}
-             {cartItems.map((item:any,index:number) => (
+             {cartItems.map((item:cartItemsProps,index:number) => (
       <div key={index} className='border-gray-300 mt-3  rounded-lg bg-white p-3 '>
       <div className='flex items-start   justify-between gap-3'>
       <div className='bg-gray-100 rounded-lg w-[120px] h-[120px] '>
@@ -53,12 +75,14 @@ const CartItems = ({data,isAuthenticated,userId}: {
       <h5 className='text-[16px] font-bold text-[#222] '>Livraison entre le vendredi 7 mars 2025 et le lundi 10 mars 2025</h5>
       </div>
       </div>
-      <div className='lg:hidden flex w-fit justify-end'>
-      <TrashIcon size={20} color="red" />
+      <div className='lg:hidden flex w-fit cursor-pointer justify-end'>
+      <TrashIcon onClick={()=> handleRemoveItem(item._id)} size={20} color="red" />
       </div>
-      <div className='lg:flex hidden flex-col gap-1.5 justify-end items-end'>
+      <div className='lg:flex hidden flex-col  gap-1.5 justify-end items-end'>
           <div>
-              <TrashIcon color="red" />
+              <TrashIcon color="red" className='cursor-pointer' onClick={()=> handleRemoveItem(item._id)} />
+                 
+              
           </div>
           <div className="border  flex w-[130px] justify-between items-center rounded-lg border-gray-300">
       <span className="border-r flex items-center py-2 px-2 justify-center text-center flex-1 border-gray-300">

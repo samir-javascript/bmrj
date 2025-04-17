@@ -259,8 +259,8 @@ export const addItemAsync = createAsyncThunk(
   'cart/addItem',
   async (item: CartItem, { getState }) => {
     const state = getState() as { cart: CartState };
-    // const guestId = state.cart.guestId || getOrCreateGuestId();
-    const guestId = "73176b57-09ee-4a5c-bc37-05b7f28800fd"
+     const guestId = state.cart.guestId || getOrCreateGuestId();
+  
     await addToCart({
       guestId,
       item: { productId: item._id, quantity: item.quantity },
