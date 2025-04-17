@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       // TODO: Create order in DB
       // TODO: Empty cart
       // TODO: order email confirmation using RESEND.
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, data: {cartId,userId } });
     }
 
     return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
