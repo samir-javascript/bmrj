@@ -102,5 +102,5 @@ const ProductSchema = new mongoose.Schema<IProduct> ({
    },
    reviews: [reviewsSchema]
 }, {timestamps: true})
-const Product = models.Product || model("Product",ProductSchema)
+const Product = models?.Product || model("Product",ProductSchema)
 export default Product;
