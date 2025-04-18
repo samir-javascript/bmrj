@@ -52,52 +52,52 @@ export async function POST(req: Request) {
       await connectToDb()
       // 🛒 Grab cart from persistent storage
       const cart = await Cart.findOne({ userId }).populate('items.productId');
-
-      if (!cart || cart.items.length === 0) {
-        throw new Error('No cart items found for user');
-      }
-      const paymentIntent = await stripe.paymentIntents.retrieve(
-        session.payment_intent as string
-      );
+        
+    //   if (!cart || cart.items.length === 0) {
+    //     throw new Error('No cart items found for user');
+    //   }
+    //   const paymentIntent = await stripe.paymentIntents.retrieve(
+    //     session.payment_intent as string
+    //   );
       
-      // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
-      const email = session.customer_details?.email ?? "no-email@unknown.com";
-     const order = await Order.create({
-          user: userId,
-          paymentMethod: "stripe",
-          orderStatus: "in preparation",
-          stripePaymentIntentId: session.payment_intent,
-          paidAt: Date.now(),
-          isPaid: true,
-          // orderItems: cart.items.map((item: props) => ({
-          //   name: item.productId.name,
-          //   price: item.productId.price,
-          //   qty: item.quantity,
-          //   images: item.productId.images,
-          //   product: item.productId._id,
-          // })),
-          orderItems: [],
+    //   // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
+    //   const email = session.customer_details?.email ?? "no-email@unknown.com";
+    //  const order = await Order.create({
+    //       user: userId,
+    //       paymentMethod: "stripe",
+    //       orderStatus: "in preparation",
+    //       stripePaymentIntentId: session.payment_intent,
+    //       paidAt: Date.now(),
+    //       isPaid: true,
+    //       // orderItems: cart.items.map((item: props) => ({
+    //       //   name: item.productId.name,
+    //       //   price: item.productId.price,
+    //       //   qty: item.quantity,
+    //       //   images: item.productId.images,
+    //       //   product: item.productId._id,
+    //       // })),
+    //       orderItems: [],
 
-          itemsPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0),
-          shippingPrice: 15,
-          totalPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0) + 15,
-          paymentResult: {
-            id: paymentIntent.id,
-            status: paymentIntent.status,
-            update_time: new Date(paymentIntent.created * 1000).toISOString(),
-            email_address: email,
-          },
-          shippingAddress: shippingAddress, // if stored in cart
-     })
+    //       itemsPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0),
+    //       shippingPrice: 15,
+    //       totalPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0) + 15,
+    //       paymentResult: {
+    //         id: paymentIntent.id,
+    //         status: paymentIntent.status,
+    //         update_time: new Date(paymentIntent.created * 1000).toISOString(),
+    //         email_address: email,
+    //       },
+    //       shippingAddress: shippingAddress, // if stored in cart
+    //  })
       
 
-      // TODO: Create order in DB
-      if(!order) throw new Error("Failed to create new Order")
+    //   // TODO: Create order in DB
+    //   if(!order) throw new Error("Failed to create new Order")
        
-      // TODO: Empty cart
-      await clearUserCart({userId:userId as string})
-      // TODO: order email confirmation using RESEND.
-      return NextResponse.json({ success: true });
+    //   // TODO: Empty cart
+    //   await clearUserCart({userId:userId as string})
+    //   // TODO: order email confirmation using RESEND.
+      return NextResponse.json({ success: true, data: cart, message: "let's create order" });
     }
 
     return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
