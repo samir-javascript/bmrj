@@ -41,7 +41,13 @@ export async function POST(req: Request) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
-      const shippingAddress = session.metadata?.shipping;
+      let shippingAddress;
+      try {
+        shippingAddress = JSON.parse(session.metadata?.shipping || '{}');
+      } catch (error) {
+        console.error("Failed to parse shipping address", error);
+        shippingAddress = {};
+      }
       await connectToDb()
       // 🛒 Grab cart from persistent storage
       const cart = await Cart.findOne({ userId }).populate('items.productId');

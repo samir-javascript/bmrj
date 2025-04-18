@@ -117,7 +117,7 @@ export async function createCheckoutSession(
       customer_email: userSession.user.email!,
       metadata: {
         userId: userSession.user.id,
-        shipping: JSON.parse(JSON.stringify(shippingAddress))
+        shipping: JSON.stringify(shippingAddress)
       },
       shipping_options: [
         {
