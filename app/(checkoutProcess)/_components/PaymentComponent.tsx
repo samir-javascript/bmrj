@@ -99,9 +99,8 @@ const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
           } else {
              setPending(true)
              const { success, error, data} = await createCheckoutSession({
-                cartId:"kfjdlkf",
                 cart:  cartItems,
-                totalPrice: 245,
+                shippingAddress
              })
              if(success) {
                window.location.href = data?.url as string;

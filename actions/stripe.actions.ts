@@ -77,9 +77,15 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 interface Props {
-   cartId: string,
    cart: CartItem[],
-   totalPrice: number
+   shippingAddress: {
+    city: string;
+    postalCode: string;
+    country: string;
+    address: string;
+    phoneNumber: string;
+   }
+   
 }
 export async function createCheckoutSession(
  params:Props
@@ -87,11 +93,11 @@ export async function createCheckoutSession(
   const userSession = await auth();
   if (!userSession)
     throw new Error("Please log in to your account to proceed.");
-  const { cart, cartId, totalPrice} = params;
+  const { cart, shippingAddress } = params;
   try {
     if (cart.length === 0)
       throw new Error("Cannot proceed to Stripe checkout, cart is empty!");
-
+  // @ts-ignore
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
@@ -110,8 +116,8 @@ export async function createCheckoutSession(
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
       customer_email: userSession.user.email!,
       metadata: {
-        cartId,
         userId: userSession.user.id,
+        shipping: shippingAddress
       },
       shipping_options: [
         {
@@ -119,9 +125,9 @@ export async function createCheckoutSession(
             type: "fixed_amount",
             fixed_amount: {
               currency: "usd",
-              amount: totalPrice >= 15 ? 0 : 500,
+              amount: 150,
             },
-            display_name: totalPrice >= 15 ? "FREE SHIPPING" : "STANDARD SHIPPING",
+            display_name: "STANDARD SHIPPING",
             delivery_estimate: {
               minimum: {
                 unit: "business_day",
