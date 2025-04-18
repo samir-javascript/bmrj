@@ -5,6 +5,7 @@ import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, Car
 import Image from "next/image";
 import { categories } from "@/constants";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 
 const CategoriesSlider = () => {
@@ -34,7 +35,7 @@ const CategoriesSlider = () => {
         <CarouselContent className="flex items-center ml-4">
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-1/7 px-2"> {/* Each item takes 1/5 of width */}
-              <div className="w-full h-auto flex flex-col items-center justify-center gap-2">
+              <Link href={`/category/${item.name}`} className="w-full h-auto flex flex-col items-center justify-center gap-2">
                 <img
                   src={item.imgSrc}
                   alt={item.name}
@@ -46,7 +47,7 @@ const CategoriesSlider = () => {
                 <p className="paragraph-medium"> 
                   {item.name}
                 </p>
-              </div>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

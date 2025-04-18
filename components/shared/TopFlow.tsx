@@ -6,6 +6,7 @@ import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, Car
 import { cn } from "@/lib/utils";
 import useMobile from "@/hooks/use-mobile";
 import Image from "next/image";
+import Link from "next/link";
 
 const TopFlow = () => {
     const isMobile = useMobile()
@@ -45,7 +46,7 @@ const TopFlow = () => {
      <CarouselContent className="flex items-center ml-4">
        {items.map((item, index) => (
          <CarouselItem key={index} className="lg:basis-1/5 md:basis-1/4 px-2 basis-1/2"> {/* Each item takes 1/5 of width */}
-           <div className="w-full h-auto flex flex-col items-center justify-center ">
+           <Link href={`/boutique-officielle/${item.name}`} className="w-full h-auto flex flex-col items-center justify-center ">
             <div className="bg-white w-full p-2">
             <p className="paragraph-medium whitespace-nowrap max-sm:text-[12px] text-[14px] capitalize"> 
                {item.name}
@@ -62,7 +63,7 @@ const TopFlow = () => {
          className="object-cover"
              />
              
-           </div>
+           </Link>
          </CarouselItem>
        ))}
      </CarouselContent>
