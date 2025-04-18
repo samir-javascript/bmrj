@@ -1,5 +1,5 @@
 "use client"
-import React, { use } from 'react';
+import React, { use, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 
@@ -14,6 +14,9 @@ import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { IProduct } from '@/database/models/product.model';
 import { hasSavedProduct } from '@/actions/collection.actions';
+import { addItemAsync, open } from '@/lib/store/cartSlice';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/hooks/user-redux';
 interface Props {
     title:string;
     showPagination:boolean;
@@ -23,7 +26,34 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
 
 
 
-
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
+  
+  const handleAddToCart = async (product: IProduct) => {
+    const data = {
+      image: product.images[0]?.url,
+      brand: product.brand,
+      prevPrice: product.prevPrice,
+      price: product.price,
+      title: product.name,
+      quantity: 1,
+      _id: product._id,
+    };
+  
+    try {
+      setLoadingProductId(product._id); // shows loader if needed
+     // await new Promise((resolve) => setTimeout(resolve, 500)); // simulate delay
+      await dispatch(addItemAsync(data) as any);
+      dispatch(open());
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingProductId(null);
+    }
+  };
+  
   return (
      <div className='mx-2'>
           <h2 className='h2-bold my-7'>
@@ -80,9 +110,26 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
               <div className='rounded-[3px] bg-[#d70073] w-[45px]  h-[18px] flex items-center justify-center px-[2px] py-[4px] '>
                  <span className='text-white font-medium text-[14px]'>-22%</span>
               </div>
-              <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
+              {/* <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
                  <ShoppingCart size={20} />
-              </div>
+              </div> */}
+              <button
+  onClick={() => handleAddToCart(product)}
+  disabled={loadingProductId === product._id}
+  className={`relative flex w-[35px] h-[35px] ml-[3px] items-center justify-center
+     bg-light_blue rounded-full text-white transition-opacity duration-300 ${
+    loadingProductId === product._id ? 'opacity-60 pointer-events-none' : ''
+  }`}
+>
+  <div
+    className={`cart-spinner-wrapper ${
+      loadingProductId === product._id ? 'loading' : ''
+    }`}
+  >
+    <ShoppingCart size={20} />
+  </div>
+</button>
+
          </div>
        </div>
        
@@ -128,6 +175,8 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
               <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
                  <ShoppingCart size={20} />
               </div>
+              
+
          </div>
        </div>
        

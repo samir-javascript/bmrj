@@ -451,6 +451,48 @@ pre[class*="language-"] {
 .token.variable {
   color: #d6e7ff;
 }
+/* global.css or inside a module */
+/* .loader-cart {
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+} */
+.cart-spinner-wrapper {
+  position: relative;
+}
+
+.cart-spinner-wrapper.loading::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  /* width: 45px;
+  height: 45px; */
+ 
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  border: 2px solid #9ec3ff; /* blue-500 */
+  border-top-color: transparent;
+  border-radius: 9999px;
+  animation: spin 0.8s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 @layer base {
   :root {

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { useCartItems } from '@/hooks/useCartItems'
 import { useAppDispatch } from '@/hooks/user-redux'
-import { removeItemAsync } from '@/lib/store/cartSlice'
+import { removeItemAsync, updateQuantityAsync } from '@/lib/store/cartSlice'
 
 import { formatPrice } from '@/lib/utils'
 import { cartItemsProps, UserCartElement } from '@/types/Elements'
@@ -45,6 +45,18 @@ const CartItems = ({data,isAuthenticated,userId}: {
       }
         
      }
+     const handleUpdateQuantity = async (productId: string, quantity: number) => {
+      try {
+        setPending(true);
+        await dispatch(updateQuantityAsync({ id: productId, quantity }) as any);
+        setPending(false);
+        router.refresh()
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setPending(false);
+      }
+    };
   return (
    cartItems &&  cartItems.length > 0 ? (
         <div className='flex flex-col lg:flex-row items-start gap-10'>
@@ -62,7 +74,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
       <div key={index} className='border-gray-300 mt-3  rounded-lg bg-white p-3 '>
       <div className='flex items-start   justify-between gap-3'>
       <div className='bg-gray-100 rounded-lg w-[120px] h-[120px] '>
-      <img  className='object-contain w-full h-full' src={"https://www.marjanemall.ma/media/catalog/product/cache/2d24969db123d312c3d8c8732be47ef4/_/p/_pdt2_3_8_7_1_700x700_AAANE25387_6.jpg"} alt={item.title} />
+      <img  className='object-contain w-full h-full' src={item.image} alt={item.title} />
       </div>
       <div className='flex-1 justify-between h-full flex flex-col'>
       <Link href={`/products/${item._id}`}>
@@ -86,13 +98,24 @@ const CartItems = ({data,isAuthenticated,userId}: {
           </div>
           <div className="border  flex w-[130px] justify-between items-center rounded-lg border-gray-300">
       <span className="border-r flex items-center py-2 px-2 justify-center text-center flex-1 border-gray-300">
-         <Minus size={18} className="text-light_blue cursor-pointer text-center" />
+         <Minus 
+          size={18}
+          onClick={() =>
+            item.quantity > 1 &&
+            handleUpdateQuantity(item._id, item.quantity - 1)
+          }
+           className="text-light_blue cursor-pointer text-center" />
       </span>
       <span className="flex-1 px-5 text-center py-2 font-semibold">
         {item.quantity}
       </span>
       <span className="flex-1 flex py-2 px-2 items-center justify-center text-center border-l border-gray-300">
-         <Plus size={18} className="text-light_blue cursor-pointer text-center" />
+         <Plus 
+           onClick={() =>
+            handleUpdateQuantity(item._id, item.quantity + 1)
+           }
+          size={18}
+          className="text-light_blue cursor-pointer text-center" />
       </span>
       </div>
       <div className='flex flex-col items-end '>

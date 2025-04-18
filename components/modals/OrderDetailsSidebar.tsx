@@ -11,6 +11,7 @@ import { closeOrderDetails, endLoadingOrderDetails, saveOrderId } from "@/lib/st
 import { useAppDispatch, useAppSelector } from "@/hooks/user-redux";
 import { IOrder } from "@/database/models/order.model";
 import { formatPrice } from "@/lib/utils";
+import OrderDetailsSidebarSkeleton from "../skeletons/OrderDetailsSidebarSkeleton";
 
 
 
@@ -46,7 +47,7 @@ useEffect(() => {
         const {data} = await response.json()
 
      setOrder(data)
-     await new Promise((resolve) => setTimeout(resolve,200))
+     
      dispatch(endLoadingOrderDetails())
     }
    if(orderId) fetchOrder()
@@ -74,7 +75,7 @@ useEffect(() => {
             </p>
          )}
         {loadOrderDetails ? (
-          <div>loading skeleton goes here</div>
+          <OrderDetailsSidebarSkeleton />
         ): (
           <div>
           <header className="flex items-center justify-between ">

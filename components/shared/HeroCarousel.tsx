@@ -24,7 +24,7 @@ export function HeroCarousel({items}: {
     <Carousel className="relative w-full overflow-hidden">
       <div className="absolute bottom-0 right-0 left-0 w-full h-[120px] bg-gradient-to-t from-white to-transparent z-10 " />
       <CarouselContent>
-        {items.map((item) => (
+        {items?.map((item) => (
           <CarouselItem className="w-full h-full" key={item._id}>
               {/* <CldImage priority loading="eager" alt={item.title}
               

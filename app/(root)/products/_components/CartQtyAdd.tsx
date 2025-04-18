@@ -50,7 +50,7 @@ const CartQtyAdd = ({item}: {
       
         // Dispatch the async action correctly
        
-        dispatch(addItemAsync(data) as any); // Pass `data` directly, not `{data}`
+        await dispatch(addItemAsync(data) as any); // Pass `data` directly, not `{data}`
         router.refresh()
         setLoading(false);
         dispatch(open());

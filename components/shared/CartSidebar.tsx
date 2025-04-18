@@ -2,14 +2,15 @@
 
 import { Minus, Plus, TrashIcon, X } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { close } from "@/lib/store/cartSlice";
+import { close, removeItemAsync, updateQuantityAsync } from "@/lib/store/cartSlice";
 import { formatPrice } from "@/lib/utils";
-import { UserCartElement } from "@/types/Elements";
-import { usePathname } from "next/navigation";
+import { cartItemsProps, UserCartElement } from "@/types/Elements";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/user-redux";
 import { useCartItems } from "@/hooks/useCartItems";
+import LoadingAppState from "../Loaders/LoadingAppState";
 
 interface Props {
   data?: UserCartElement;
@@ -25,6 +26,8 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
     _id:string
  }
   const { isOpen } = useAppSelector((state) => state.cart);
+  const [pending,setPending] = useState(false)
+  const router = useRouter()
   const pathname = usePathname();
   const dispatch = useAppDispatch();
 
@@ -49,7 +52,32 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
     (acc:number, item:{quantity:number,price:number}) => acc + item.quantity * item.price,
     0
   );
-
+    const handleRemoveItem = async(productId:string)=> {
+        try {
+           setPending(true)
+           await new Promise(resolve => setTimeout(resolve, 500) )
+           dispatch(removeItemAsync(productId) as any)
+           setPending(false)
+           router.refresh()
+        } catch (error) {
+            console.log(error)
+        }finally {
+           setPending(false)
+        }
+          
+       }
+    const handleUpdateItemQty = async(productId:string,quantity:number)=> {
+       try {
+         setPending(true)
+        await  dispatch(updateQuantityAsync({id:productId, quantity}) as any)
+         setPending(false)
+         router.refresh()
+       } catch (error) {
+          console.error(error)
+       }finally {
+         setPending(false)
+       }
+    }
   return (
     <>
       {isOpen && (
@@ -58,6 +86,9 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
           className="fixed inset-0 bg-black bg-opacity-50 z-50 backdrop-blur-sm transition-opacity"
         />
       )}
+       {pending && (
+          <LoadingAppState />
+       )}
       <div
         className={`fixed right-0 top-0 w-full h-full sm:w-[450px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -80,7 +111,7 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
      className="flex-1 flex flex-col space-y-3 mt-10 pb-8 overflow-y-auto p-4"
      style={{ maxHeight: "calc(100vh - 240px)" }}
    >
-     {cartItems?.map((item: any, index:number) => (
+     {cartItems?.map((item: cartItemsProps, index:number) => (
        <div className="border-b border-gray-300 py-3" key={index}>
          <div className="flex items-start gap-2">
            <div className="rounded-lg bg-gray-100 w-[350px]">
@@ -101,13 +132,14 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
              </p>
            </div>
            <div>
-             <TrashIcon className="cursor-pointer" size={20} color="red" />
+             <TrashIcon onClick={()=> handleRemoveItem(item._id)} className="cursor-pointer" size={20} color="red" />
            </div>
          </div>
          <div className="flex items-center mt-5 justify-between">
            <div className="border h-[40px] flex w-[130px] justify-between items-center rounded-lg border-gray-300">
              <span className="border-r flex items-center justify-center text-center flex-1 border-gray-300">
                <Minus
+                 onClick={()=> item.quantity > 1 && handleUpdateItemQty(item._id, item.quantity - 1) }
                  size={18}
                  className="text-light_blue cursor-pointer text-center"
                />
@@ -116,7 +148,8 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
                {item.quantity}
              </span>
              <span className="flex-1 flex items-center justify-center text-center border-l border-gray-300">
-               <Plus
+               <Plus 
+                onClick={()=> handleUpdateItemQty(item._id, item.quantity + 1) }
                  size={18}
                  className="text-light_blue cursor-pointer text-center"
                />

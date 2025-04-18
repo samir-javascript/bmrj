@@ -19,19 +19,19 @@ export default async function Home() {
     getHeroImages(),
   ]);
   
-   const { items } = res.data!;
+   const  items  = res.data?.items;
    const { products} = result.data!;
   
   return (
     <div className="w-full">
       
-        <HeroCarousel items={items!} />
+        <HeroCarousel items={items || []} />
         <TopFlow />
     
       <CategoriesSlider />
        <section className="max-w-7xl mx-auto">
          
-          <HorizontalCarousel data={result.data?.products} showPagination={false} title="Nos Deals du printemps" />
+          <HorizontalCarousel data={products} showPagination={false} title="Nos Deals du printemps" />
           <GridDisplay />
           <HorizontalCarousel showPagination={true} title="Meilleures ventes" />
           <HorizontalCarousel showPagination={true} title="Notre sélection mode" />
