@@ -55,7 +55,6 @@ const OrderSchema = new Schema<IOrder>(
         images: [{type: String}],
         product: {
           type: Schema.Types.ObjectId,
-          required: true,
           ref: "Product",
         },
       },
