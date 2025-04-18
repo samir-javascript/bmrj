@@ -25,7 +25,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
   
     const [pending,setPending] = useState(false)
     const router = useRouter()
-    const cartItems  = useCartItems({isAuthenticated,data})
+    const cartItems: cartItemsProps[]  = useCartItems({isAuthenticated,data})
 
    
     const totalQty = cartItems?.reduce((acc:number, item:{quantity:number}) => acc + item.quantity, 0);
@@ -58,7 +58,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
       }
     };
   return (
-   cartItems &&  cartItems.length > 0 ? (
+    cartItems.length !== 0 ? (
         <div className='flex flex-col lg:flex-row items-start gap-10'>
           {pending && (
              <LoadingAppState />
@@ -181,8 +181,10 @@ const CartItems = ({data,isAuthenticated,userId}: {
                   </p>
              </div>
         </div>
-        <Button disabled={cartItems.length === 0} className='w-full bg-light_blue text-white rounded-2xl font-bold h-[46px]  ' type='button'>
-           <Link href={ROUTES.shipping_checkout}>
+        <Button asChild disabled={cartItems.length === 0} 
+        className='w-full bg-light_blue text-white rounded-2xl font-bold h-[46px]  '
+         type='button'>
+           <Link  href={ROUTES.shipping_checkout} >
               Valider mon panier
            </Link>   
         </Button>
