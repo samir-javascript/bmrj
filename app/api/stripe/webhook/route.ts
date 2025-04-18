@@ -69,13 +69,15 @@ export async function POST(req: Request) {
           stripePaymentIntentId: session.payment_intent,
           paidAt: Date.now(),
           isPaid: true,
-          orderItems: cart.items.map((item: props) => ({
-            name: item.productId.name,
-            price: item.productId.price,
-            qty: item.quantity,
-            images: item.productId.images,
-            product: item.productId._id,
-          })),
+          // orderItems: cart.items.map((item: props) => ({
+          //   name: item.productId.name,
+          //   price: item.productId.price,
+          //   qty: item.quantity,
+          //   images: item.productId.images,
+          //   product: item.productId._id,
+          // })),
+          orderItems: [],
+
           itemsPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0),
           shippingPrice: 15,
           totalPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0) + 15,
