@@ -29,7 +29,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
 
    
     const totalQty = cartItems?.reduce((acc:number, item:{quantity:number}) => acc + item.quantity, 0);
-    const totalPrice = 220
+    const totalPrice = cartItems?.reduce((acc:number, item:{quantity:number,price:number}) => acc + item.price * item.quantity, 0);
      const dispatch = useAppDispatch()
      const handleRemoveItem = async(productId:string)=> {
       try {
@@ -120,10 +120,10 @@ const CartItems = ({data,isAuthenticated,userId}: {
       </div>
       <div className='flex flex-col items-end '>
          <h3 className='text-2xl font-extrabold text-[#111] '>
-             {formatPrice(item.price)}
+             {formatPrice(item.price * item.quantity)}
          </h3>
          <p className='text-gray-400 line-through text-sm font-normal '>
-             {formatPrice(totalPrice)}
+             {formatPrice(item.prevPrice * item.quantity)}
          </p>
       </div>
       </div>
@@ -142,9 +142,9 @@ const CartItems = ({data,isAuthenticated,userId}: {
       </span>
       </div>
       <div className='flex flex-col items-end '>
-         <h3 className='text-[16px] font-semibold text-[#111] '>{formatPrice(item.price)}</h3>
+         <h3 className='text-[16px] font-semibold text-[#111] '>{formatPrice(item.price * item.quantity)}</h3>
          <p className='text-gray-400 line-through text-sm font-normal '>
-             {formatPrice(totalPrice)}
+             {formatPrice(item.prevPrice * item.quantity)}
          </p>
       </div>
       </div>

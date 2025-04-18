@@ -11,9 +11,10 @@ const EditShippingBtn = ({data}: {
     const [open,setOpen] = useState<boolean>(false)
   return (
    <div>
-             <Button onClick={()=> setOpen(true)} className='bg-transparent lg:flex hidden hover:bg-transparent border-2 text-black font-medium rounded-xl w-[120px] border-black' type="button">
+             <Button onClick={()=> setOpen(true)} className='bg-transparent lg:flex max-lg:w-fit
+              hover:bg-transparent lg:border-2 text-black font-medium rounded-xl w-[120px] border-black' type="button">
                    <Edit />
-                   Edit
+                   <span className="lg:flex hidden">Edit</span>
                </Button>
                <ChooseShippingsModal data={data} open={open} setOpen={setOpen} />
    </div>

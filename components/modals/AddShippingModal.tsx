@@ -31,7 +31,7 @@ export function AddShippingsModal({open,setOpen,type,id,shipping, SetOpenShippin
   return (
     <Dialog open={open} defaultOpen={false}  onOpenChange={()=> setOpen(false)}>
      
-      <DialogContent className="sm:max-w-[500px] px-2 bg-white   flex flex-col
+      <DialogContent className="sm:max-w-[500px] w-[95%] px-2 bg-white   flex flex-col
        space-y-4  ">
         <DialogHeader className=" w-full">
           <DialogTitle></DialogTitle>

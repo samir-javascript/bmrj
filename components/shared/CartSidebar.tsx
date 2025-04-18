@@ -155,9 +155,13 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
                />
              </span>
            </div>
+          
            <h3 className="font-semibold text-light_blue text-[20px]">
-             {formatPrice(item.price)}
+             {formatPrice(item.price * item.quantity)}
            </h3>
+          
+           
+          
          </div>
        </div>
      ))}

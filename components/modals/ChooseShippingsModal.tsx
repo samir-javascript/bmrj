@@ -52,7 +52,7 @@ export function ChooseShippingsModal({open,setOpen,data}:Props) {
        )}
   <Dialog open={open} defaultOpen={false}  onOpenChange={()=> setOpen(false)}>
      
-     <DialogContent className="sm:max-w-[800px] px-2 bg-white   flex flex-col
+     <DialogContent className="sm:max-w-[800px] w-[95%] px-2 bg-white   flex flex-col
       space-y-4 items-center justify-center text-center">
        <DialogHeader className=" w-full">
          <DialogTitle></DialogTitle>

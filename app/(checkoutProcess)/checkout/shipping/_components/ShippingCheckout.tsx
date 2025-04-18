@@ -38,8 +38,10 @@ const ShippingCheckout = ({data,isAuthenticated,cartData}: {
                <div className='rounded-lg flex flex-col gap-3 bg-gray-200 px-2 py-3'>
                <div className='flex items-center justify-between'>
               <h3 className='text-[16px] font-bold text-black '>Adresse de livraison</h3>
-                  
-                      <Edit className='lg:hidden flex' />
+                 <div className='lg:hidden flex'>
+                    <EditShippingBtn data={data} />
+                 </div>
+               
                      
               </div>
                   <div className='flex items-center gap-2.5'>
@@ -53,7 +55,10 @@ const ShippingCheckout = ({data,isAuthenticated,cartData}: {
                        <LocateIcon className='text-light_blue' />
                         <p className='font-medium text-black text-sm '> {shippingAddress?.city}, {shippingAddress?.address}, {shippingAddress?.country}, {shippingAddress?.postalCode}</p>
                   </div>
-                  <EditShippingBtn data={data} />
+                  <div className='lg:flex hidden'>
+                    <EditShippingBtn data={data} />
+                  </div>
+                 
                   </div>
                  
                </div>
