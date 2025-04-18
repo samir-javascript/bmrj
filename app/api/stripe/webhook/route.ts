@@ -1,7 +1,8 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import connectToDb from "@/database/connect"
+import connectToDb from "@/database/connect";
 import Stripe from "stripe";
+import Product from "@/database/models/product.model";
 import Order from "@/database/models/order.model";
 import { Cart } from "@/database/models/cart.model";
 import { clearUserCart } from "@/actions/cart.actions";
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
   try {
+     await connectToDb()
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
 
     if (event.type === "checkout.session.completed") {
@@ -49,61 +51,59 @@ export async function POST(req: Request) {
         console.error("Failed to parse shipping address", error);
         shippingAddress = {};
       }
-      await connectToDb()
+    
       // 🛒 Grab cart from persistent storage
-      const cart = await Cart.findOne({ userId }).populate('items.productId');
+      const cart = await Cart.findOne({ userId })
+      .populate({path: "items.productId", model: Product});
         
-    //   if (!cart || cart.items.length === 0) {
-    //     throw new Error('No cart items found for user');
-    //   }
-    //   const paymentIntent = await stripe.paymentIntents.retrieve(
-    //     session.payment_intent as string
-    //   );
+      if (!cart || cart.items.length === 0) {
+        throw new Error('No cart items found for user');
+      }
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        session.payment_intent as string
+      );
       
-    //   // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
-    //   const email = session.customer_details?.email ?? "no-email@unknown.com";
-    //  const order = await Order.create({
-    //       user: userId,
-    //       paymentMethod: "stripe",
-    //       orderStatus: "in preparation",
-    //       stripePaymentIntentId: session.payment_intent,
-    //       paidAt: Date.now(),
-    //       isPaid: true,
-    //       // orderItems: cart.items.map((item: props) => ({
-    //       //   name: item.productId.name,
-    //       //   price: item.productId.price,
-    //       //   qty: item.quantity,
-    //       //   images: item.productId.images,
-    //       //   product: item.productId._id,
-    //       // })),
-    //       orderItems: [],
-
-    //       itemsPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0),
-    //       shippingPrice: 15,
-    //       totalPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0) + 15,
-    //       paymentResult: {
-    //         id: paymentIntent.id,
-    //         status: paymentIntent.status,
-    //         update_time: new Date(paymentIntent.created * 1000).toISOString(),
-    //         email_address: email,
-    //       },
-    //       shippingAddress: shippingAddress, // if stored in cart
-    //  })
+      // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
+      const email = session.customer_details?.email ?? "no-email@unknown.com";
+     const order = await Order.create({
+          user: userId,
+          paymentMethod: "stripe",
+          orderStatus: "in preparation",
+          stripePaymentIntentId: session.payment_intent,
+          paidAt: Date.now(),
+          isPaid: true,
+          orderItems: cart.items.map((item: props) => ({
+            name: item.productId.name,
+            price: item.productId.price,
+            qty: item.quantity,
+            images: item.productId.images,
+            product: item.productId._id,
+          })),
+         
+          itemsPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0),
+          shippingPrice: 15,
+          totalPrice: cart.items.reduce((sum:number, item:props) => sum + item.productId.price * item.quantity, 0) + 15,
+          paymentResult: {
+            id: paymentIntent.id,
+            status: paymentIntent.status,
+            update_time: new Date(paymentIntent.created * 1000).toISOString(),
+            email_address: email,
+          },
+          shippingAddress: shippingAddress, // if stored in cart
+     })
       
 
-    //   // TODO: Create order in DB
-    //   if(!order) throw new Error("Failed to create new Order")
+      // TODO: Create order in DB
+      if(!order) throw new Error("Failed to create new Order")
        
-    //   // TODO: Empty cart
-    //   await clearUserCart({userId:userId as string})
-    //   // TODO: order email confirmation using RESEND.
+      // TODO: Empty cart
+      await clearUserCart({userId:userId as string})
+      // TODO: order email confirmation using RESEND.
       return NextResponse.json({ success: true, data: cart, message: "let's create order" });
     }
 
     return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
   } catch (error) {
-   // return handleError(error, "api") as APIErrorResponse
-    console.error("Stripe Webhook Error:", error);
-    return NextResponse.json({ error: "Webhook handler error" }, { status: 400 });
+    return handleError(error, "api") as APIErrorResponse
   }
 }

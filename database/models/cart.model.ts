@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { model, models, Schema } from 'mongoose';
 export interface ICart {
   _id:string;
   userId: mongoose.Schema.Types.ObjectId;
@@ -9,7 +9,7 @@ export interface ICart {
   }[];
   
 }
-const cartSchema = new mongoose.Schema<ICart>({
+const cartSchema = new Schema<ICart>({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   guestId: { type: String, default: null },
   items: [
@@ -20,5 +20,5 @@ const cartSchema = new mongoose.Schema<ICart>({
   ],
 }, { timestamps: true });
 
-export const Cart = mongoose.models.Cart || mongoose.model('Cart', cartSchema);
+export const Cart = models.Cart || model<ICart>('Cart', cartSchema);
 
