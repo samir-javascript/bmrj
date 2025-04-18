@@ -3,7 +3,7 @@ import LoadingAppState from '@/components/Loaders/LoadingAppState'
 import { Button } from '@/components/ui/button'
 import { IProduct } from '@/database/models/product.model'
 import { useAppDispatch, useAppSelector } from '@/hooks/user-redux'
-import { open } from '@/lib/store/cartSlice'
+import { addItemAsync, open } from '@/lib/store/cartSlice'
 import { Minus, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -44,8 +44,8 @@ const CartQtyMobile = ({product}:  {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           
             // Dispatch the async action correctly
-            // @ts-ignore
-            dispatch(addItemAsync(data)); // Pass `data` directly, not `{data}`
+           
+            await dispatch(addItemAsync(data) as any); // Pass `data` directly, not `{data}`
           
             setLoading(false);
             router.refresh()
