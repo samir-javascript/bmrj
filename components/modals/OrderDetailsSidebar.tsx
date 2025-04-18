@@ -50,7 +50,7 @@ useEffect(() => {
      
      dispatch(endLoadingOrderDetails())
     }
-   if(orderId) fetchOrder()
+   if(orderId && pathname.startsWith("/sales")) fetchOrder()
    
  },
 [orderId])

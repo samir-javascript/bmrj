@@ -123,7 +123,7 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
            </div>
            <div className="flex flex-col gap-3">
              <Link href={`/products/${item._id}`}>
-               <p className="hover:underline hover:text-light_blue font-medium line-clamp-1">
+               <p className="hover:underline max-sm:text-sm hover:text-light_blue font-medium line-clamp-3">
                  {item.title}
                </p>
              </Link>
@@ -180,7 +180,7 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
      </div>
      <Link href="/checkout/cart" className="flex items-center p-8 justify-center">
        <Button
-         className="bg-light_blue h-[45px] sm:w-[200px] text-white rounded-lg"
+         className="bg-light_blue h-[45px] sm:w-[200px] text-white rounded-full font-semibold"
          type="button"
        >
          Voir le panier

@@ -13,7 +13,10 @@ interface props {
      price:number,
      qty:number;
      _id:string;
-     images: string[]
+     images: {
+       url:string;
+       public_id:string
+     }[]
   }
   quantity:number;
 }
@@ -62,7 +65,7 @@ export async function POST(req: Request) {
       const paymentIntent = await stripe.paymentIntents.retrieve(
         session.payment_intent as string
       );
-      
+     
       // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
       const email = session.customer_details?.email ?? "no-email@unknown.com";
      const order = await Order.create({
@@ -76,7 +79,7 @@ export async function POST(req: Request) {
             name: item.productId.name,
             price: item.productId.price,
             qty: item.quantity,
-            images: item.productId.images,
+            images: item.productId.images.map((img) => img.url),
             product: item.productId._id,
           })),
          
@@ -97,9 +100,10 @@ export async function POST(req: Request) {
       if(!order) throw new Error("Failed to create new Order")
        
       // TODO: Empty cart
-      await clearUserCart({userId:userId as string})
+     const { success } =   await clearUserCart({userId:userId as string})
+     console.log(success,  "-----> clear cart success status")
       // TODO: order email confirmation using RESEND.
-      return NextResponse.json({ success: true, data: cart, message: "let's create order" });
+      return NextResponse.json({ success: true });
     }
 
     return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
