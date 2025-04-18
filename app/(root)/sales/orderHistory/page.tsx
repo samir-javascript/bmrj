@@ -19,18 +19,25 @@ const page = async () => {
   const session = await auth();
   if (!session) redirect(ROUTES.signup);
 
-  const result = await getMyOrders({userId: session.user.id})
+  const  {data} = await getMyOrders({userId: session.user.id})
+   if( !data || data.orders.length === 0) {
+     return (
+      <div className='w-full h-fit flex-1 '>
+        <Alert message="You haven't placed any orders yet" />
+      </div>
+     )
+   }
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 lg:py-8 gap-5'>
       <ProfileItems />
       <RightSidebar />
       <div className='w-full lg:hidden h-[10px] bg-gray-100' />
       {/* box info */}
-      {result.data?.orders.length! > 0 ? (
+      {data.orders.length as number > 0 && (
         <div className="w-full px-2 flex-1">
-          <h2 className="h2-bold w-full lg:text-left text-center mb-5">{result.data?.orders.length!} {result.data?.orders.length! > 1 ? 'Commandes': 'Commande'}</h2>
+          <h2 className="h2-bold w-full lg:text-left text-center mb-5">{data?.orders.length as number} {data?.orders.length as number > 1 ? 'Commandes': 'Commande'}</h2>
           <div className='flex flex-col space-y-3 w-full'>
-            {result.data?.orders.map((item) => (
+            {data?.orders.map((item) => (
               <div className='rounded-lg border border-light_gray' key={item._id}>
                 <div className='bg-[#f2f2f2] border-b border-gray-200 max-sm:h-auto h-[50px] 
                  flex items-center justify-between rounded-tr-lg rounded-tl-lg'>
@@ -108,11 +115,6 @@ const page = async () => {
             ))}
           </div>
         </div>
-      ) : (
-        <div className='w-full h-fit flex-1 '>
-          <Alert message="You haven't placed any orders yet" />
-        </div>
-        
       )}
     </div>
   );

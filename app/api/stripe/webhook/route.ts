@@ -100,8 +100,8 @@ export async function POST(req: Request) {
       if(!order) throw new Error("Failed to create new Order")
        
       // TODO: Empty cart
-     const { success } =   await clearUserCart({userId:userId as string})
-     console.log(success,  "-----> clear cart success status")
+      await clearUserCart({ userId: userId! }, { authorize: false });
+    
       // TODO: order email confirmation using RESEND.
       return NextResponse.json({ success: true });
     }

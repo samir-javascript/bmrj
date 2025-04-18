@@ -277,15 +277,7 @@ export const syncCarts = async (guestId: string | null): Promise<ActionResponse<
    return handleError(error) as ErrorResponse
   }
 };
-interface props {
- 
-    _id: string,
-    title: string,
-        image: string[]
-        price: number,
-         quantity: number,
 
-}[]
 // CartItem[]
 export const getAuthenticatedUserCart = async(params:GetUserCartParams)
 :Promise<ActionResponse<{userCart: UserCartElement , qty:number }>> => {
@@ -322,13 +314,13 @@ export const getAuthenticatedUserCart = async(params:GetUserCartParams)
    }
 }
 
-export async function clearUserCart(params:ClearUserCartParams):Promise<ActionResponse> {
-  const validatedResult = await action({params,schema:ClearCartSchema,authorize:true})
+export async function clearUserCart(params:ClearUserCartParams,options: { authorize?: boolean } = {}):Promise<ActionResponse> {
+  const validatedResult = await action({params,schema:ClearCartSchema,authorize: options.authorize ?? true})
   if(validatedResult instanceof Error) {
      return handleError(validatedResult) as ErrorResponse;
   }
-   const { userId } = validatedResult.params!
-
+   const { userId } = validatedResult.params ?? {}
+   if(!userId) throw new Error('User ID is missing to clear cart')
    try {
      await connectToDb()
      const cart = await Cart.findOne({userId})
