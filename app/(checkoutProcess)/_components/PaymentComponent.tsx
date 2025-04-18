@@ -99,7 +99,7 @@ const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
           } else {
              setPending(true)
              const { success, error, data} = await createCheckoutSession({
-                cart:  cartItems,
+                cart:  items,
                 shippingAddress
              })
              if(success) {

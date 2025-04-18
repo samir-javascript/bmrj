@@ -5,6 +5,7 @@ import Stripe from "stripe";
 import Order from "@/database/models/order.model";
 import { Cart } from "@/database/models/cart.model";
 import { clearUserCart } from "@/actions/cart.actions";
+import handleError from "@/lib/handlers/error";
 interface props {
   productId: {
      name:string;
@@ -99,7 +100,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ error: "Unhandled event type" }, { status: 400 });
   } catch (error) {
-    console.error("Stripe Webhook Error:", error);
-    return NextResponse.json({ error: "Webhook handler error" }, { status: 400 });
+    return handleError(error, "api") as APIErrorResponse
+    // console.error("Stripe Webhook Error:", error);
+    // return NextResponse.json({ error: "Webhook handler error" }, { status: 400 });
   }
 }
