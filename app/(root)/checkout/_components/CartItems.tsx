@@ -19,8 +19,8 @@ import React, { useState } from 'react'
 
 const CartItems = ({data,isAuthenticated,userId}: {
     data?: UserCartElement;
-    isAuthenticated: boolean
-    userId:string
+    isAuthenticated: boolean;
+    userId:string;
 }) => {
   
     const [pending,setPending] = useState(false)
@@ -132,13 +132,18 @@ const CartItems = ({data,isAuthenticated,userId}: {
       <div className='lg:hidden flex mt-3 items-center justify-between gap-2'>
       <div className="border  flex w-[130px] justify-between items-center rounded-lg border-gray-300">
       <span className="border-r flex items-center py-2 px-2 justify-center text-center flex-1 border-gray-300">
-         <Minus size={18} className="text-light_blue cursor-pointer text-center" />
+         <Minus onClick={() =>
+            item.quantity > 1 &&
+            handleUpdateQuantity(item._id, item.quantity - 1)
+          } size={18} className="text-light_blue cursor-pointer text-center" />
       </span>
       <span className="flex-1 px-5 text-center py-2 font-semibold">
         {item.quantity}
       </span>
       <span className="flex-1 flex py-2 px-2 items-center justify-center text-center border-l border-gray-300">
-         <Plus size={18} className="text-light_blue cursor-pointer text-center" />
+         <Plus  onClick={() =>
+            handleUpdateQuantity(item._id, item.quantity + 1)
+           } size={18} className="text-light_blue cursor-pointer text-center" />
       </span>
       </div>
       <div className='flex flex-col items-end '>

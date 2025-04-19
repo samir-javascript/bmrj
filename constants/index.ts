@@ -1,5 +1,5 @@
 
-import { Tv, ShoppingCart,ThumbsUp , ChartNoAxesCombined, BadgeCheck,  BookOpenText , Heart, Truck,  LocateIcon, LogOut, Book, UserRoundSearch, CircleDollarSign, Settings, BadgeDollarSign, Computer, ImagePlay, Grid2x2 } from "lucide-react"
+import { Tv, ShoppingCart,ThumbsUp , UserRound, ChartNoAxesCombined, BadgeCheck,  BookOpenText , Heart, Truck,  LocateIcon, LogOut, Book, UserRoundSearch, CircleDollarSign, Settings, BadgeDollarSign, Computer, ImagePlay, Grid2x2, BadgeInfo, BookUser, MapPin } from "lucide-react"
 import { ROUTES } from "./routes"
 
 export const categories = [
@@ -95,7 +95,7 @@ export const categories = [
 export const ProfileItems = [
      {
         name: "mon compte",
-        icon: Tv,
+        icon: UserRound,
         pathname: ROUTES.userProfile
      },
      {
@@ -108,12 +108,12 @@ export const ProfileItems = [
         pathname: ROUTES.wishlist
      },  {
         name: "Carnet d'addresses",
-        icon: LocateIcon,
+        icon: MapPin,
         pathname: ROUTES.shipping
      }, 
       {
         name: "Information du compte",
-        icon: LocateIcon,
+        icon: BadgeInfo,
         pathname: ROUTES.editProfile("kjkffd")
      }, 
      {
