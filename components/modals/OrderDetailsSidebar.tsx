@@ -40,17 +40,17 @@ useEffect(() => {
  useEffect(() => {
     const fetchOrder = async()=> {
         const response = await fetch(`/api/order/${orderId}`)
-        if(!response.ok) {
-            setError("Error fetching order details")
-            return
-        }
+        // if(!response.ok) {
+        //     setError("Error fetching order details")
+        //     return
+        // }
         const {data} = await response.json()
 
      setOrder(data)
      
      dispatch(endLoadingOrderDetails())
     }
-   if(orderId && pathname.startsWith("/sales")) fetchOrder()
+   if(orderId) fetchOrder()
    
  },
 [orderId])
