@@ -6,10 +6,11 @@ import { auth } from '@/auth'
 import { getAuthenticatedUserCart } from '@/actions/cart.actions'
 import { UserCartElement } from '@/types/Elements'
 import { redirect } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 const ShippingPage = async() => {
   const session = await auth()
-  if(!session) redirect("/checkout/cart")
+  if(!session) redirect(`${ROUTES.signup}?shipping=true`)
      const { data } = await getShippingAddress()
     const result = await getAuthenticatedUserCart({userId: session?.user.id})
   return (

@@ -12,6 +12,7 @@ export const ROUTES = {
     coupons : '/customer/account/coupons',
     payment_checkout: "/checkout/payment",
     signup: "/customer/account/sign-up",
+    signin: "/customer/account/login",
     orders: "/sales/orderHistory",
     orderDetails: (id:string) => `/sales/orderHistory/orderId/${id}`,
     wishlist: "/wishlist"

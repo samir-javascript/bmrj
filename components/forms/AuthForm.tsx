@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
 import { SignUpValidationSchema } from "@/lib/zod"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signUpWithCredentials } from "@/actions/auth.actions"
 import { useEffect, useState } from "react"
 import { OptVerification } from "../shared/OptVerification"
@@ -29,11 +28,16 @@ import { useToast } from "@/hooks/use-toast"
 import AlertMessage from "../shared/AlertMessage"
 import { useAppDispatch } from "@/hooks/user-redux"
 import { syncWithUser } from "@/lib/store/cartSlice"
+import { ROUTES } from "@/constants/routes"
 
 
 const AuthForm = () => {
   const [open,setOpen] = useState<boolean>(false)
+ 
   const [error,setError] = useState<string | undefined>(undefined)
+  const searchParams = useSearchParams()
+  const isShipping = searchParams.get("shipping")
+  const redirect = isShipping ? "/checkout/shipping" : "/"
   const {toast} = useToast()
   const form = useForm<z.infer<typeof SignUpValidationSchema>>({
     resolver: zodResolver(SignUpValidationSchema),
@@ -47,6 +51,7 @@ const AuthForm = () => {
     },
   })
   const router = useRouter()
+
   
  
   const session = useSession()
@@ -76,7 +81,7 @@ const AuthForm = () => {
               title: "success",
               description: "you've have been signed in successfully"
             })
-           return router.push("/")
+           return router.push(redirect)
 
         }else {
           setError(error?.message)
@@ -188,7 +193,7 @@ const AuthForm = () => {
         </Button>
       </form>
       <div className="mt-3">
-         <p className="text-[#333] font-medium text-[15px] ">Already have an account? <span className="underline text-light_blue"><Link href="/customer/account/login">LogIn</Link> </span> </p>
+         <p className="text-[#333] font-medium text-[15px] ">Already have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signin}?shipping=true` : ROUTES.signin}>LogIn</Link> </span> </p>
       </div>
     </Form>
      <AuthFormBtns />

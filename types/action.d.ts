@@ -129,7 +129,9 @@ export interface CreateShippingParams {
 export interface GetSingleShippingParams {
   id: string;
 }
-
+export interface searchParamsProps  {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
 export interface EditShippingParams extends CreateShippingParams {
   id: string;
 }

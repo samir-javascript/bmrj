@@ -17,7 +17,7 @@ import { LoginValidationSchema } from "@/lib/zod"
 import Link from "next/link"
 import { OptVerification } from "../shared/OptVerification"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signInWithCredentials } from "@/actions/auth.actions"
 import AuthFormBtns from "../btns/AuthFormBtns"
 
@@ -26,11 +26,15 @@ import { useToast } from "@/hooks/use-toast"
 import AlertMessage from "../shared/AlertMessage"
 import { useAppDispatch } from "@/hooks/user-redux"
 import { syncWithUser } from "@/lib/store/cartSlice"
+import { ROUTES } from "@/constants/routes"
  
 
 const LoginForm = () => {
   const [open,setOpen] = useState<boolean>(false)
   const [error,setError] = useState<string | undefined>(undefined)
+  const searchParams = useSearchParams()
+  const isShipping = searchParams.get("shipping")
+  const redirect = isShipping ? "/checkout/shipping" : "/"
   const {toast} = useToast()
   const dispatch = useAppDispatch()
   const router = useRouter()
@@ -65,7 +69,7 @@ const LoginForm = () => {
               title: "success",
               description: "you've been logged in successfuly"
             })
-            return router.push("/")
+            return router.push(redirect)
  
          }else {
              setError(error?.message)
@@ -119,7 +123,7 @@ const LoginForm = () => {
         </Button>
       </form>
       <div className="mt-3">
-         <p className="text-[#333] font-medium text-[15px] ">Don't have an account? <span className="underline text-light_blue"><Link href="/customer/account/sign-up">Sign up</Link> </span> </p>
+         <p className="text-[#333] font-medium text-[15px] ">Don't have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signup}?shipping=true` : ROUTES.signup}>Sign up</Link> </span> </p>
       </div>
      
     </Form>
