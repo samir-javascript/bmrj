@@ -70,13 +70,13 @@ const page = async () => {
                {item.orderStatus}
             </span>
          </div>
-         <div className='flex items-center gap-1 sm:hidden'>
+         {/* <div className='flex items-center gap-1 sm:hidden'>
          <p className="text-gray-500 font-light text-sm"><span>QTY :</span> {x.qty}</p>
           <span className='text-gray-500'>|</span>
          <h4 className='font-bold text-black  text-sm m-0'>
              {formatPrice(x.price)}
           </h4>
-         </div>
+         </div> */}
         
         </div>
         
