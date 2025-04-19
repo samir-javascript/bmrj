@@ -7,6 +7,7 @@ import { CreateOrderValidationSchema, GetMyOrdersValidationSchema } from "@/lib/
 import { CreateOrderParams, GetMyOrdersParams } from "@/types/action";
 import connectToDb from "@/database/connect"
 import { auth } from "@/auth";
+import Product from "@/database/models/product.model";
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
     // if(validatedResult instanceof Error) {
@@ -46,17 +47,16 @@ export async function createCODorder(params:CreateOrderParams): Promise<ActionRe
 }
 
 export const getMyOrders = async(params:GetMyOrdersParams): Promise<ActionResponse<{orders: IOrder[]}>>=> {
-    const validatedResult = await action({params,schema: GetMyOrdersValidationSchema,authorize:true})
+    const validatedResult = await action({params,schema: GetMyOrdersValidationSchema})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
     const { userId } = validatedResult.params!
-    const userSession = validatedResult.session?.user;
-    if(!userSession) throw new Error('User session is missing')
+    if(!userId) throw new Error("user ID is required")
     try {
      await connectToDb()
      const orders = await Order.find({user: userId})
-     .populate('orderItems.product')
+     .populate({path: "orderItems.product", model: Product})
      .sort({createdAt: -1})
 
         return {

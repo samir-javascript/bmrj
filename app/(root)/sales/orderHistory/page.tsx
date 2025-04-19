@@ -20,6 +20,7 @@ const page = async () => {
   if (!session) redirect(ROUTES.signup);
 
   const  {data} = await getMyOrders({userId: session.user.id})
+  console.log(data, "orders data")
  
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 lg:py-8 gap-5'>
@@ -27,7 +28,7 @@ const page = async () => {
       <RightSidebar />
       <div className='w-full lg:hidden h-[10px] bg-gray-100' />
       {/* box info */}
-      {data?.orders.length === 0 ? (
+      {data ? (
         <div className="w-full px-2 flex-1">
           <h2 className="h2-bold w-full lg:text-left text-center mb-5">{data?.orders.length as number} {data?.orders.length as number > 1 ? 'Commandes': 'Commande'}</h2>
           <div className='flex flex-col space-y-3 w-full'>
