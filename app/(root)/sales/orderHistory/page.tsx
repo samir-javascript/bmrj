@@ -110,7 +110,7 @@ const page = async () => {
           </div>
         </div>
       ): (
-        <div className='w-full h-fit flex-1 '>
+        <div className='w-full h-fit flex-1 my-3 '>
         <Alert message="You haven't placed any orders yet" />
       </div>
       )}
