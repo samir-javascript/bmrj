@@ -1,12 +1,13 @@
 "use server";
 
 import { auth } from "@/auth";
-import Order, { IOrder } from "@/database/models/order.model";
+import Order , { IOrder } from "@/database/models/order.model";
 import handleError from "@/lib/handlers/error";
 import { CartItem } from "@/lib/store/cartSlice";
 import Stripe from "stripe";
 import connectToDb from "@/database/connect"
 import Product from "@/database/models/product.model";
+import { Order as OrderType } from "@/types/Elements";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 interface Props {
    cart: CartItem[],
@@ -86,7 +87,7 @@ export async function createCheckoutSession(
   }
 }
 
-export async function getLastOrderToDisplay(): Promise<ActionResponse<{order:IOrder}>> {
+export async function getLastOrderToDisplay(): Promise<ActionResponse<{order:OrderType}>> {
   const session = await auth()
   if(!session) throw new Error('UnAuthorized')
   try {

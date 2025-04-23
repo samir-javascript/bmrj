@@ -8,6 +8,7 @@ export interface IUser {
   hasNewsLetter:boolean;
   image: string;
   phoneNumber?: string;
+  hasOrdered: boolean,
   email: string;
   password?: string;
   isAdmin: boolean;
@@ -35,6 +36,10 @@ const UserSchema = new Schema<IUser>(
       required: true,
     },
     hasNewsLetter: {
+      type: Boolean,
+      default: false,
+    },
+    hasOrdered: {
       type: Boolean,
       default: false,
     },

@@ -15,6 +15,46 @@ export interface CartElement {
          items: IProduct[]
     }
 }
+
+export interface Order {
+  _id:string;
+  user: IUser;
+  createdAt: Date;
+  orderStatus: "canceled" | "in preparation" | "confirmed" | "delivered";
+  stripePaymentIntentId?:string;
+  paymentMethod: "stripe" | "COD";
+  shippingAddress: {
+    city: string;
+    postalCode: string;
+    country: string;
+    address: string;
+    phoneNumber: string;
+  };
+  orderItems: [
+    {
+      name: string;
+      price: number;
+      qty: number;
+      images: string[]
+      product:IProduct;
+    }
+  ];
+  shippingPrice: number;
+  totalPrice: number;
+  itemsPrice: number;
+ 
+  isPaid: boolean;
+  paidAt?: Date;
+  isDelivered: boolean;
+  deliveredAt?: Date;
+  paymentResult?: {
+    id: string;
+    status: string;
+    update_time: string;
+    email_address: string;
+  };
+
+}
 export interface cartItemsProps {
   _id: string,
   brand: string,
