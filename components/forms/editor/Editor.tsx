@@ -38,7 +38,7 @@ interface Props {
 const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
   const { resolvedTheme } = useTheme();
 
-  const editorClassName = resolvedTheme === "dark" ? "light-border-2 mdx-editor-tall markdown-editor dark-editor w-full border" : "bg-white  mdx-editor-tall light-border-2 markdown-editor light-editor w-full border"
+  const editorClassName = resolvedTheme === "dark" ? "light-border-2 mdx-editor-tall markdown-editor !bg-[rgb(49,49,49)] dark-editor w-full border !text-white" : "!bg-[rgb(49,49,49)] !text-white mdx-editor-tall light-border-2 markdown-editor light-editor w-full border"
 
   return (
     <MDXEditor
@@ -46,6 +46,7 @@ const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
       markdown={value}
       ref={editorRef}
       className={editorClassName}
+     
       onChange={fieldChange}
       plugins={[
         headingsPlugin(),

@@ -19,6 +19,7 @@ interface CartState {
   isOrderDetailsOpened: boolean;
   orderId:string | null;
   loadOrderDetails:boolean;
+  isAdminSidebarOpen:boolean;
   isOpen: boolean;
   cartId: string | null;
   guestId: string | null;
@@ -27,6 +28,7 @@ interface CartState {
 const initialState: CartState = {
   items: [],
   isLoaded: false,
+  isAdminSidebarOpen: false,
   loadOrderDetails:false,
   orderId:null,
   isOrderDetailsOpened: false,
@@ -131,6 +133,9 @@ const cartSlice = createSlice({
     saveOrderId: (state,action)=> {
         state.orderId = action.payload
     },
+    toggleAdminSidebar: (state) => {
+      state.isAdminSidebarOpen = !state.isAdminSidebarOpen;
+    },    
     clearCart: (state) => {
       state.items = [];
       state.cartId = null;
@@ -173,6 +178,7 @@ export const {
   clearCart,
   saveOrderId,
   resetGuestId,
+  toggleAdminSidebar,
   setLoaded,
   openOrderDetails,
   closeOrderDetails,

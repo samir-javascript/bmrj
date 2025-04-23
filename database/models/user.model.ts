@@ -5,6 +5,7 @@ export interface IUser {
   gender: "male" | "female";
   name: string;
   lastName: string;
+  hasNewsLetter:boolean;
   image: string;
   phoneNumber?: string;
   email: string;
@@ -32,6 +33,10 @@ const UserSchema = new Schema<IUser>(
     lastName: {
       type: String,
       required: true,
+    },
+    hasNewsLetter: {
+      type: Boolean,
+      default: false,
     },
     email: {
       type: String,

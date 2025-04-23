@@ -152,7 +152,9 @@ export interface PaginatedSchemaParams {
   sort?: string;
 }
 
-
+export interface CancelOrderParams {
+  orderId:string;
+}
 export interface GetUserCartParams  {
   userId:string;
 }

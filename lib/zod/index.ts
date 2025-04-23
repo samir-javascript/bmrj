@@ -13,6 +13,9 @@ export const SignUpValidationSchema = z.object({
         "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
 })
+export const CancelOrderSchemaValidation = z.object({
+   orderId: z.string().min(1, {message: "order ID is required"})
+})
 export const CreateCategorySchema  = z.object({
    name: z.string().min(1, {message: "name is required"}),
    image: z.string().url({message: "invalid URL"})

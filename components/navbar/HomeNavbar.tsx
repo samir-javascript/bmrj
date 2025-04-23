@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-import SearchInput from '../shared/SearchInput'
+import SearchInput from '../search/SearchInput'
 import { Heart, MenuIcon, ShoppingBag, User } from 'lucide-react'
 import TopBar from './TopBar'
 import Link from 'next/link'

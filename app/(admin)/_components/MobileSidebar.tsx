@@ -1,3 +1,4 @@
+
 import React from 'react'
 import {
     Sheet,
@@ -8,22 +9,21 @@ import {
     SheetTrigger,
   } from "@/components/ui/sheet"
 import { Menu } from 'lucide-react'
+import NavLinks from './NavLinks'
   
 const MobileSidebar = () => {
   return (
-    <div className='sm:hidden block'>
+    <div className='sm:hidden flex'>
         <Sheet>
   <SheetTrigger>
       <Menu color="white" size={26} className='cursor-pointer' />
   </SheetTrigger>
-  <SheetContent className='bg-white'>
-    <SheetHeader>
-      <SheetTitle>Are you absolutely sure?</SheetTitle>
-      <SheetDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
-      </SheetDescription>
-    </SheetHeader>
+  <SheetContent className='bg-[(rgb(48,48,48))] '>
+        <section className={` h-screen 
+       flex flex-col gap-6 justify-between 
+        max-lg:pt-10 overflow-y-auto custom-scrollbar`}>
+             <NavLinks />
+        </section>
   </SheetContent>
 </Sheet>
     </div>

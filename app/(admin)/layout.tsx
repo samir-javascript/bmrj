@@ -11,7 +11,7 @@ const AdminLayout = async({children}: {children: React.ReactNode}) => {
   return (
     <main className=''>
         <Navbar />
-        <div className='flex w-full'>
+        <div style={{background: "rgb(49, 49, 49)"}} className='flex lg:gap-5 min-h-[100vh] w-full'>
           <Sidebar />
            {children}
         </div>

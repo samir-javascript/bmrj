@@ -1,5 +1,9 @@
 
-import { Tv, ShoppingCart,ThumbsUp , UserRound, ChartNoAxesCombined, BadgeCheck,  BookOpenText , Heart, Truck,  LocateIcon, LogOut, Book, UserRoundSearch, CircleDollarSign, Settings, BadgeDollarSign, Computer, ImagePlay, Grid2x2, BadgeInfo, BookUser, MapPin } from "lucide-react"
+import { Tv, ShoppingCart,ThumbsUp , UserRound, ChartNoAxesCombined,
+     BadgeCheck,  BookOpenText , Heart, Truck,  LocateIcon, 
+     LogOut, Book, UserRoundSearch, CircleDollarSign, Settings, BadgeDollarSign, 
+     Computer, ImagePlay, Grid2x2, BadgeInfo, BookUser, MapPin, DollarSign,
+      GalleryThumbnails, GalleryHorizontalIcon, Users, MessageSquare } from "lucide-react"
 import { ROUTES } from "./routes"
 
 export const categories = [
@@ -153,43 +157,116 @@ export const features = [
     },
    
 ]
+// export const sidebarLinks = [
+//       {
+//         imgURL: ChartNoAxesCombined,
+//         route: "/admin/dashbord",
+//         label: "Dashbord",
+//       },
+//      {
+//         imgURL: DollarSign ,
+//         route: "/admin/productsManagement/products/create",
+//         label: "Sales",
+//       },
+//       {
+//         imgURL: ImagePlay,
+//         route: "/admin/productsManagement/products/categories",
+//         label: "Catalog",
+//       },
+//       {
+//         imgURL: Users ,
+//         route: "/admin/productsManagement/products/heroBanner",
+//         label: "Customers",
+//       },
+//       {
+//         imgURL: MessageSquare,
+//         route: "/admin/ordersManagement/orders",
+//         label: "Reviews",
+//       },
+//       {
+//         imgURL: UserRoundSearch,
+//         route: "/admin/usersManagement/users",
+//         label: "Users",
+//       },
+//       {
+//         imgURL: Settings ,
+//         route: "/admin/settings",
+//         label: "Settings",
+//       },
+// ]
 export const sidebarLinks = [
-      {
-        imgURL: ChartNoAxesCombined,
-        route: "/admin/dashbord",
-        label: "Dashbord",
-      },
-     {
-        imgURL: ShoppingCart ,
-        route: "/admin/productsManagement/products/create",
-        label: "Products",
-      },
-      {
-        imgURL: Grid2x2,
-        route: "/admin/productsManagement/products/categories",
-        label: "Categories",
-      },
-      {
-        imgURL: ImagePlay ,
-        route: "/admin/productsManagement/products/heroBanner",
-        label: "Hero Config",
-      },
-      {
-        imgURL: CircleDollarSign,
-        route: "/admin/ordersManagement/orders",
-        label: "Orders",
-      },
-      {
-        imgURL: UserRoundSearch,
-        route: "/admin/usersManagement/users",
-        label: "Users",
-      },
-      {
-        imgURL: Settings ,
-        route: "/admin/settings",
-        label: "Settings",
-      },
-]
+    {
+      imgURL: ChartNoAxesCombined,
+      route: "/admin/dashbord",
+      label: "Dashboard",
+    },
+    {
+      imgURL: DollarSign,
+      label: "Sales",
+      children: [
+        {
+          label: "Orders",
+          route: "/admin/ordersManagement/orders",
+          imgURL: DollarSign,
+        },
+        {
+          label: "Invoices",
+          route: "/admin/sales/invoices",
+          imgURL:  DollarSign,
+        },
+      ],
+    },
+    {
+      imgURL: ImagePlay,
+    //   route: "/admin/productsManagement/products/categories",
+      label: "Catalog",
+      children: [
+        {
+          label: "Posters",
+          route: "/admin/sales/orders",
+          imgURL: DollarSign,
+        },
+        {
+          label: "Categories",
+          route: "/admin/sales/invoices",
+          imgURL:  DollarSign,
+        },
+      ],
+    },
+    {
+      imgURL: Users,
+    //   route: "/admin/productsManagement/products/heroBanner",
+      label: "Customers",
+      children: [
+        {
+          label: "Customers",
+          route: "/admin/sales/orders",
+          imgURL: DollarSign,
+        },
+        {
+          label: "Segments",
+          route: "/admin/sales/invoices",
+          imgURL:  DollarSign,
+        },
+      ],
+    },
+    {
+      imgURL: MessageSquare,
+      route: "/admin/products/reviews",
+      label: "Reviews",
+    },
+    {
+      imgURL: UserRoundSearch,
+      route: "/admin/usersManagement/users",
+      label: "Users",
+    },
+    {
+      imgURL: Settings,
+      route: "/admin/settings",
+      label: "Settings",
+    },
+  ];
+  
 export const products = [
     {
         brand: "Nike",

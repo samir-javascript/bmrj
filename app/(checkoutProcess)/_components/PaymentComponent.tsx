@@ -71,7 +71,7 @@ const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
         try {
           if (selectedPaymentMethod === "COD") {
              setPending(true)
-            const { success, error } = await createCODorder({
+            const { success, error, data } = await createCODorder({
               shippingAddress,
               paymentMethod: selectedPaymentMethod,
               orderStatus: "in preparation",
@@ -89,7 +89,7 @@ const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
                 title: "Succès",
                 description: "Votre commande a été reçue. Consultez votre email pour la confirmation.",
               });
-              router.replace("/checkout/success");
+              router.replace(`/checkout/success?order_id=${data?.order._id}`);
               return;
             } else {
               setError(error?.message);
@@ -102,7 +102,7 @@ const PaymentComponent = ({isAuthenticated,data,userId}:props) => {
                 cart:  cartItems,
                 shippingAddress
              })
-             if(success) {
+             if(success ) {
                window.location.href = data?.url as string;
                return
              }else {

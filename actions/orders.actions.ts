@@ -3,12 +3,14 @@
 import Order, { IOrder } from "@/database/models/order.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
-import { CreateOrderValidationSchema, GetMyOrdersValidationSchema } from "@/lib/zod";
-import { CreateOrderParams, GetMyOrdersParams } from "@/types/action";
+import { CancelOrderSchemaValidation, CreateOrderValidationSchema, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { CancelOrderParams, CreateOrderParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
 import connectToDb from "@/database/connect"
 import { auth } from "@/auth";
 import Product from "@/database/models/product.model";
-export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse> {
+import { UnAuthorizedError } from "@/lib/http-errors";
+import { revalidatePath } from "next/cache";
+export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
     // if(validatedResult instanceof Error) {
     //     return handleError(validatedResult) as ErrorResponse
@@ -39,7 +41,7 @@ export async function createCODorder(params:CreateOrderParams): Promise<ActionRe
 
          return {
             success: true,
-            data: JSON.parse(JSON.stringify(newOrder))
+            data: {order: JSON.parse(JSON.stringify(newOrder))} 
          }
      } catch (error) {
          return handleError(error) as ErrorResponse
@@ -67,3 +69,70 @@ export const getMyOrders = async(params:GetMyOrdersParams): Promise<ActionRespon
          return handleError(error) as ErrorResponse
     }
 }
+
+export const getAllOrders = async(params:PaginatedSchemaParams):Promise<ActionResponse<{orders:IOrder[], isNext: boolean}>> =>{
+    const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
+    if(validatedResult instanceof Error) {
+        return handleError(validatedResult) as ErrorResponse
+    }
+    const { page = 1, pageSize = 10, filter, sort, query} = validatedResult.params!
+    const skip = pageSize * (page - 1)
+   try {
+      await connectToDb()
+      const orders = await Order.find()
+      .limit(pageSize)
+      .skip(skip)
+      
+      return {
+        success: true,
+        data: {orders: JSON.parse(JSON.stringify(orders)), isNext: false}
+      }
+   } catch (error) {
+      return handleError(error) as ErrorResponse;
+   }
+}
+
+export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResponse> => {
+    const validatedResult = await action({
+      params,
+      schema: CancelOrderSchemaValidation,
+      authorize: true,
+    })
+  
+    if (validatedResult instanceof Error) {
+      return handleError(validatedResult) as ErrorResponse
+    }
+  
+    const { orderId } = validatedResult.params!
+    const session = validatedResult.session
+    if (!session) throw new UnAuthorizedError()
+  
+    try {
+      await connectToDb()
+  
+      const order = await Order.findById(orderId)
+      if (!order) throw new Error('Order not found')
+  
+      if (order.user.toString() !== session.user.id) {
+        throw new UnAuthorizedError("You cannot cancel this order.")
+      }
+  
+      if (order.orderStatus === 'delivered') {
+        throw new Error('Order already delivered. Cannot cancel.')
+      }
+  
+      if (order.orderStatus === 'canceled') {
+        throw new Error('Order is already canceled.')
+      }
+  
+      await order.updateOne({ orderStatus: 'canceled' })
+       revalidatePath("/sales/orderHistory")
+      return {
+        success: true,
+        message: 'Order has been canceled',
+      }
+    } catch (error) {
+      return handleError(error) as ErrorResponse
+    }
+  }
+  

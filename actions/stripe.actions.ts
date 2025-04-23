@@ -1,10 +1,12 @@
 "use server";
 
 import { auth } from "@/auth";
+import Order, { IOrder } from "@/database/models/order.model";
 import handleError from "@/lib/handlers/error";
 import { CartItem } from "@/lib/store/cartSlice";
 import Stripe from "stripe";
-
+import connectToDb from "@/database/connect"
+import Product from "@/database/models/product.model";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 interface Props {
    cart: CartItem[],
@@ -81,5 +83,28 @@ export async function createCheckoutSession(
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getLastOrderToDisplay(): Promise<ActionResponse<{order:IOrder}>> {
+  const session = await auth()
+  if(!session) throw new Error('UnAuthorized')
+  try {
+     await connectToDb()
+     const order = await Order.find({ user: session.user.id })
+     .populate({ path: "orderItems.product", model: Product })
+     .sort({ createdAt: -1 })
+     .limit(1)
+   
+   const [latestOrder] = order
+   if (!latestOrder) throw new Error('Order not found')
+   
+   return {
+     success: true,
+     data: { order: JSON.parse(JSON.stringify(latestOrder)) }
+   }
+   
+  } catch (error) {
+     return handleError(error) as ErrorResponse
   }
 }

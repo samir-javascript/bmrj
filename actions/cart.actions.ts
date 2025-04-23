@@ -315,7 +315,7 @@ export const getAuthenticatedUserCart = async(params:GetUserCartParams)
 }
 
 export async function clearUserCart(params:ClearUserCartParams,options: { authorize?: boolean } = {}):Promise<ActionResponse> {
-  const validatedResult = await action({params,schema:ClearCartSchema,authorize: options.authorize ?? true})
+  const validatedResult = await action({params,schema:ClearCartSchema,authorize: options.authorize ?? false})
   if(validatedResult instanceof Error) {
      return handleError(validatedResult) as ErrorResponse;
   }

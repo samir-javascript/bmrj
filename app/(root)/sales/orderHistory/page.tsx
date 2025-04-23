@@ -92,7 +92,7 @@ const page = async () => {
     hover:bg-transparent text-light_blue rounded-full text-xs font-bold " >
      suivi colis
    </Button>
-    <CancelOrderBtn />
+    <CancelOrderBtn orderId={item._id} />
  </div>
       </div>
  </div>
@@ -101,7 +101,7 @@ const page = async () => {
     hover:bg-transparent max-sm:w-fit text-light_blue rounded-full text-xs font-bold " >
      suivi colis
    </Button>
-    <CancelOrderBtn />
+    <CancelOrderBtn orderId={item._id}  />
  </div>
 </div>
                 ))}

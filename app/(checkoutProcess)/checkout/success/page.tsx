@@ -1,12 +1,25 @@
+import { getLastOrderToDisplay } from '@/actions/stripe.actions'
+import { auth } from '@/auth'
+import Alert from '@/components/shared/Alert'
 import { Button } from '@/components/ui/button'
+import { formatPrice } from '@/lib/utils'
 import { CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-const page = () => {
+const page = async() => {
+    const { data , error } = await getLastOrderToDisplay()
+    const session = await auth()
+
   return (
     <section className='w-full'>
-        <div style={{background: "rgba(0, 175, 170, .1)"}} className=' flex lg:flex-row lg:gap-2 flex-col items-center
+         {error ? (
+             <div className='py-10'>
+                <Alert message={error.message} />
+             </div>
+         ):(
+            <>
+   <div style={{background: "rgba(0, 175, 170, .1)"}} className=' flex lg:flex-row lg:gap-2 flex-col items-center
          justify-center leading-[1.8] text-center p-[16px] '>
           <CreditCard className='text-light_blue lg:text-[25px] text-[20px] ' />
             <p className='text-light_blue font-[700] lg:text-[20px] text-[16px] '>Paiement à la livraison</p>
@@ -19,13 +32,17 @@ const page = () => {
              <div>
                 <h4 className='text-[22px] font-[500] text-primary leading-[1.8] '>Livrée à</h4>
                 <div>
-                    <p className="text-[#333] font-[400]  text-[16px] ">Mr. Soufiane said</p>
-                    <p className="text-[#333] font-[400]  text-[16px] ">Maison sidi baba</p>
-                    <p className="text-[#333] font-[400]  text-[16px] ">MEKNES, 50999 Maroc</p>
-                    <p className="text-[#333] font-[400]  text-[16px] ">+212607558899</p>
+                    <p className="text-[#333] font-[400]  text-[16px] ">Mr. {session?.user.name}</p>
+                    <p className="text-[#333] font-[400]  text-[16px] ">
+                         {data?.order.shippingAddress.address}
+                    </p>
+                    <p className="text-[#333] font-[400]  text-[16px] ">{data?.order.shippingAddress.city}, {data?.order.shippingAddress.postalCode} {data?.order.shippingAddress.country} </p>
+                    <p className="text-[#333] font-[400]  text-[16px] ">
+                    +212{data?.order.shippingAddress.phoneNumber}
+                    </p>
                     <div className='flex items-center gap-2.5'>
                        <span className='text-light_blue font-light text-[16px] '>Total frais de livraison</span>
-                       <span  className='text-light_blue font-light text-[16px] '>24,00 Dh</span>
+                       <span  className='text-light_blue font-light text-[16px] '>15,00 Dh</span>
                     </div>
                 </div>
              </div>
@@ -34,11 +51,34 @@ const page = () => {
           <div className='bg-gray-200 rounded-tr-lg mb-4 rounded-tl-lg p-[16px] flex items-center justify-between w-full '>
                <p className='font-semibold text-[#333] text-[16px] '>Commande</p>
                <Link className='underline text-light_blue font-medium text-[16px] ' href={`/`}>
-                  <span>001107534</span>
+                  <span>
+                     {data?.order._id}
+                  </span>
                </Link>
           </div>
            <div className='grid lg:grid-cols-2 grid-cols-1 gap-2.5'>
-                <div className='border border-light_gray rounded-xl p-[16px] flex items-start gap-4 '>
+             {data?.order.orderItems.map((x,index) => (
+                  <div key={index} className='border border-light_gray rounded-xl p-[16px] flex items-start gap-4 '>
+                  <div className='border border-light_gray  w-[140px]  '>
+                     <img className='w-full h-full object-contain' src={x.images[0]} alt={x.name} />
+                  </div>
+                  <div className='flex flex-col gap-2 justify-between'>
+                      <p className='font-semibold text-[#222] text-sm '>
+                         {x.name}
+                      </p>
+                      <div>
+                         
+                          <p className='font-light text-gray-400 text-xs '>Vendu par {x.product?.brand}.</p>
+                          <p className='font-light text-gray-400 text-xs '><span>Qté :</span>{x.qty}</p>
+                          <h4 className='font-semibold text-black text-[18px]'>
+                             {formatPrice(x.price)}
+                          </h4>
+                      </div>
+                  </div>
+             </div>
+             ))}
+               
+                {/* <div className='border border-light_gray rounded-xl p-[16px] flex items-start gap-4 '>
                      <div className='border border-light_gray  w-[140px]  '>
                         <img className='w-full h-full object-contain' src="https://www.marjanemall.ma/media/catalog/product/cache/217553b69ac53547513500483223f4df/_/p/_pdt2_4_1_2_1_700x700_AAAAG87412_2.jpg" alt="" />
                      </div>
@@ -50,27 +90,18 @@ const page = () => {
                              <h4 className='font-semibold text-black text-[18px]'>45,95 Dh</h4>
                          </div>
                      </div>
-                </div>
-                <div className='border border-light_gray rounded-xl p-[16px] flex items-start gap-4 '>
-                     <div className='border border-light_gray  w-[140px]  '>
-                        <img className='w-full h-full object-contain' src="https://www.marjanemall.ma/media/catalog/product/cache/217553b69ac53547513500483223f4df/_/p/_pdt2_4_1_2_1_700x700_AAAAG87412_2.jpg" alt="" />
-                     </div>
-                     <div className='flex flex-col gap-2 justify-between'>
-                         <p className='font-semibold text-[#222] text-sm '>Verres à Eau - TUA FH - Set de 6 - Transparent - Verre Plat - Compatible Lave-Vaisselle</p>
-                         <div>
-                             <p className='font-light text-gray-400 text-xs '>Vendu par Marjane.</p>
-                             <p className='font-light text-gray-400 text-xs '><span>Qté :</span>1</p>
-                             <h4 className='font-semibold text-black text-[18px]'>45,95 Dh</h4>
-                         </div>
-                     </div>
-                </div>
+                </div> */}
            </div>
             <Link href="/">
-                <Button className='bg-light_blue  my-10 rounded-full w-[300px] h-[48px] hover:bg-light_blue text-white font-medium ' type="button">
+                <Button className='bg-light_blue  my-10 rounded-full
+                 w-[300px] h-[48px] hover:bg-light_blue text-white font-medium ' type="button">
                     Retour aux achats
                 </Button>
             </Link>
         </div>
+            </>
+         )}
+       
     </section>
   )
 }

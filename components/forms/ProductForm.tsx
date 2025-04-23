@@ -101,7 +101,8 @@ const ProductForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="flex flex-col space-y-5 mt-7 lg:w-[60%]"
+        style={{background: "rgb(18, 18, 18)"}}
+        className="flex flex-col  space-y-5 lg:w-[95%] mt-7 w-full px-4 py-3 rounded-lg"
       >
         {/* Product Name */}
         <FormField
@@ -109,9 +110,9 @@ const ProductForm = () => {
           name="productName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Name</FormLabel>
+              <FormLabel className="text-white">Product Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Product Name" {...field} />
+                <Input  className="admin-input" placeholder="Enter Product Name" {...field} />
               </FormControl>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -124,7 +125,7 @@ const ProductForm = () => {
           name="productDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Description</FormLabel>
+              <FormLabel className="text-white">Product Description</FormLabel>
               <FormControl>
               <Editor
                   value={field.value}
@@ -144,10 +145,11 @@ const ProductForm = () => {
             name="productPrice"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Product Price</FormLabel>
+                <FormLabel className="text-white">Product Price</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
+                    className="admin-input"
                     placeholder="Enter Product Price"
                     {...field}
                   />
@@ -162,10 +164,11 @@ const ProductForm = () => {
             name="productPrevPrice"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Product Previous Price</FormLabel>
+                <FormLabel className="text-white">Product Previous Price</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
+                    className="admin-input"
                     placeholder="Enter Previous Price"
                     {...field}
                   />
@@ -182,9 +185,9 @@ const ProductForm = () => {
           name="productCategory"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Category</FormLabel>
+              <FormLabel className="text-white">Product Category</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Product Category" {...field} />
+                <Input className="admin-input" placeholder="Enter Product Category" {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -197,9 +200,9 @@ const ProductForm = () => {
           name="productBrand"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Brand</FormLabel>
+              <FormLabel className="text-white">Product Brand</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Product Brand" {...field} />
+                <Input className="admin-input" placeholder="Enter Product Brand" {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -212,9 +215,9 @@ const ProductForm = () => {
           name="productPosition"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product UI Position</FormLabel>
+              <FormLabel className="text-white">Product UI Position</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Product Position" {...field} />
+                <Input className="admin-input" placeholder="Enter Product Position" {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -227,10 +230,11 @@ const ProductForm = () => {
           name="qty"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Quantity</FormLabel>
+              <FormLabel className="text-white">Product Quantity</FormLabel>
               <FormControl>
                 <Input
                   type="number"
+                  className="admin-input"
                   placeholder="Enter Product Quantity"
                   {...field}
                 />
@@ -246,7 +250,7 @@ const ProductForm = () => {
   name="productImages"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Product Images</FormLabel>
+      <FormLabel className="text-white">Product Images</FormLabel>
       <FormControl>
        
           {/* <CldUploadWidget
@@ -289,7 +293,8 @@ const ProductForm = () => {
   {({ open }) => (
     <Button
       onClick={() => open()}
-      className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
+      className="w-full bg-[rgb(49,49,49)] shadow-lg text-white
+        rounded-lg min-h-[45px] "
       type="button"
     >
       Upload images <Upload />

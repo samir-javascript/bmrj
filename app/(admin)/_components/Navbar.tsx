@@ -1,20 +1,34 @@
+"use client"
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button'
-import { Bell, LogOut, Menu } from 'lucide-react'
+import { Bell, LogOut, Menu, MenuIcon } from 'lucide-react'
 import MobileSidebar from './MobileSidebar'
+import { useAppDispatch } from '@/hooks/user-redux'
+import { toggleAdminSidebar } from '@/lib/store/cartSlice'
 
 const Navbar = () => {
+  const dispatch = useAppDispatch()
+
   return (
     <div className='w-full'>
-    <header className='bg-primary  gap-4 flex flex-col px-4 py-3 max-lg:border-b border-gray-100'>
+    <header style={{background: "rgb(18, 18, 18)", boxShadow:"0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)"}}
+     className='gap-4 flex text-white flex-col px-4 py-3 max-lg:border-b border-gray-100'>
     <nav className='items-center gap-4  flex justify-between'>
       
        <div className='flex items-center gap-2'>
-       
-        <MobileSidebar />
+       <div className="flex items-center max-sm:hidden justify-center w-[45px] h-[45px] rounded-full
+          bg-transparent hover:bg-secondary transition-all group cursor-pointer duration-150 ">
+           <MenuIcon 
+           onClick={()=> {
+             dispatch(toggleAdminSidebar())
+           }}
+            className=' text-white ' size={26}  />
+           
+       </div>
+       <MobileSidebar />
        <Link href="/">
         <Image alt="marjanemall logo"
           width={220}

@@ -2,7 +2,9 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
 import CancelOrderModal from "../modals/CancelOrderModal"
-const CancelOrderBtn = () => {
+const CancelOrderBtn = ({orderId}: {
+  orderId:string
+}) => {
     const [open,setOpen] = useState<boolean>(false)
   return (
     <>
@@ -10,7 +12,7 @@ const CancelOrderBtn = () => {
                       hover:bg-transparent text-light_blue max-sm:w-fit rounded-full text-xs font-bold">
                         annuler <br className="max-sm:block hidden" /> la commande
          </Button>
-         <CancelOrderModal open={open} setOpen={setOpen} />
+         <CancelOrderModal orderId={orderId} open={open} setOpen={setOpen} />
     </>
   )
 }
