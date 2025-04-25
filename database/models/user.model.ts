@@ -2,6 +2,8 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser {
   _id: string;
+  firstSeen: Date,
+  lastSeen: Date,
   gender: "male" | "female";
   name: string;
   lastName: string;
@@ -66,6 +68,15 @@ const UserSchema = new Schema<IUser>(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    firstSeen: {
+      type: Date,
+      default: Date.now,
+      immutable: true,
+    },
+    lastSeen: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }

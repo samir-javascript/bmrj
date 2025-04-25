@@ -1,27 +1,42 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { ProfileItems as Items } from "@/constants";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { clearCart } from "@/lib/store/cartSlice";
 import { useAppDispatch } from "@/hooks/user-redux";
+import User from "@/database/models/user.model";
+import LoadingAppState from "../Loaders/LoadingAppState";
 
 
 const RightSidebar = () => {
   const pathname = usePathname();
+  const [loading,setLoading] = useState(false)
+  const session = useSession()
   const dispatch = useAppDispatch()
   const handleLogOut = async()=> {
+     setLoading(true)
     try {
        await signOut({redirectTo: "/"})
+       if(session.status !== "loading" && session.status === "authenticated")  {
+        await User.findByIdAndUpdate(session?.data?.user?.id!, { lastSeen: new Date() });
+       }
+     
+
        dispatch(clearCart())
        localStorage.removeItem('guest_cart');
     } catch (error) {
        console.log(error)
+    }finally  {
+      setLoading(false)
     }
   }
   return (
     <div className="lg:block hidden w-[300px]">
+       {loading && (
+         <LoadingAppState />
+       )}
       <div className="flex flex-col border border-gray-200 rounded-lg">
         {Items.map((item, index) => {
           const isActive = item.pathname === pathname;
