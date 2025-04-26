@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
 import Alert from "../shared/Alert";
+import { LoaderIcon } from "lucide-react";
 
 
 const CancelOrderModal = ({open,setOpen,orderId}: {
@@ -47,7 +48,7 @@ const CancelOrderModal = ({open,setOpen,orderId}: {
   return (
     <Dialog open={open} defaultOpen={false}  onOpenChange={()=> setOpen(false)}>
      
-    <DialogContent className="sm:max-w-[425px] bg-white  flex flex-col space-y-2 items-center justify-center text-center">
+    <DialogContent className="sm:max-w-[425px] w-[95%] bg-white  flex flex-col space-y-2 items-center justify-center text-center">
       <DialogHeader>
         <DialogTitle></DialogTitle>
           {error && (
@@ -63,8 +64,8 @@ const CancelOrderModal = ({open,setOpen,orderId}: {
        <Button onClick={() => setOpen(false)} className="text-black border border-light_blue w-[150px] hover:bg-transparent bg-transparent  rounded-2xl">
            Annuler
        </Button>
-       <Button onClick={() => handleCancelOrder()} className="text-white w-[150px] bg-light_blue rounded-2xl">
-           {loading ? 'pending...' : 'Valider'}
+       <Button onClick={() => handleCancelOrder()} className="text-white  w-[150px] bg-light_blue rounded-2xl">
+           {loading ? <><LoaderIcon className="text-white  animate-spin" /> Pending...</> : "Valider"}
        </Button>
        </div>
      

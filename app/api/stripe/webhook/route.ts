@@ -7,6 +7,8 @@ import Order from "@/database/models/order.model";
 import { Cart } from "@/database/models/cart.model";
 import { clearUserCart } from "@/actions/cart.actions";
 import handleError from "@/lib/handlers/error";
+import { revalidatePath } from "next/cache";
+import { ROUTES } from "@/constants/routes";
 interface props {
   productId: {
      name:string;
@@ -68,6 +70,7 @@ export async function POST(req: Request) {
      
       // Fetch the customer email from the session (or you can get it from paymentIntent if needed)
       const email = session.customer_details?.email ?? "no-email@unknown.com";
+       // TODO: Create order in DB
      const order = await Order.create({
           user: userId,
           paymentMethod: "stripe",
@@ -96,13 +99,18 @@ export async function POST(req: Request) {
      })
       
 
-      // TODO: Create order in DB
+     
       if(!order) throw new Error("Failed to create new Order")
        
       // TODO: Empty cart
       await clearUserCart({ userId: userId! }, { authorize: false });
     
       // TODO: order email confirmation using RESEND.
+
+
+      // revalidate paths
+      revalidatePath(ROUTES.orders)
+      revalidatePath(ROUTES.adminOrdersList)
       return NextResponse.json({ success: true });
     }
 

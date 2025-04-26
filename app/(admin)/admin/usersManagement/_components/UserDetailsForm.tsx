@@ -147,7 +147,7 @@ const UserDetailsForm = ({
           </div>
 
           <div className="flex items-center w-full gap-2 flex-wrap">
-            <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
+            <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
               <FormField
                 control={form.control}
                 name="email"
@@ -166,8 +166,27 @@ const UserDetailsForm = ({
                 )}
               />
             </div>
-
-            <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
+            <div  className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
+       <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-200 font-medium text-sm">Phone Number</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    className="admin-input  no-focus"
+                    placeholder="Enter Your Phone Number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+       </div>
+            <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
               <FormField
                 control={form.control}
                 name="gender" // Consider renaming this if it's not meant to be gender
@@ -204,49 +223,7 @@ const UserDetailsForm = ({
               />
             </div>
           </div>
-   <div className="flex items-center w-full gap-2 flex-wrap">
-       <div  className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
-       <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-200 font-medium text-sm">Phone Number</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    className="admin-input  no-focus"
-                    placeholder="Enter Your Phone Number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-       </div>
-       <div  className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
-       <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-200 text-sm font-medium">Email Address</FormLabel>
-                <FormControl>
-                  <Input
-                    type='email'
-                    className="admin-input  no-focus"
-                    placeholder="Enter Your Email Address"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-       </div>
-   </div>
-        
+ 
         <>
         <h3 className="text-white font-medium text-[18px] tracking-wide ">Address</h3>
         <FormField

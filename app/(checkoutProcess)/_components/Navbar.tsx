@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { Check, Phone } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
 
@@ -68,12 +70,18 @@ const Navbar = () => {
     return (
       <header className="w-full">
         <nav className="bg-primary w-full text-white px-2 py-2">
-          <img
-            loading="lazy"
+          <Link href="/">
+          <Image
+            loading="eager"
+            width={350}
+            priority
+            height={350}
             className="max-sm:w-[180px] w-[280px] object-contain"
             src="https://www.marjanemall.ma/static/version1742910845/frontend/Marjane/default/fr_FR/images/marjane-logo.svg"
             alt="marjanemall logo"
           />
+          </Link>
+          
         </nav>
       </header>
     )
@@ -82,13 +90,17 @@ const Navbar = () => {
   return (
     <header className="w-full">
       <nav className="bg-primary w-full text-white flex-1 lg:gap-14 flex items-center justify-between px-2 py-2">
-        <img
-          loading="lazy"
-          className="max-sm:w-[180px] object-contain"
-          src="https://www.marjanemall.ma/static/version1742910845/frontend/Marjane/default/fr_FR/images/marjane-logo.svg"
-          alt="marjanemall logo"
-        />
-
+      <Link href="/">
+          <Image
+            loading="eager"
+            width={350}
+            priority
+            height={350}
+            className="max-sm:w-[180px] w-[280px] object-contain"
+            src="https://www.marjanemall.ma/static/version1742910845/frontend/Marjane/default/fr_FR/images/marjane-logo.svg"
+            alt="marjanemall logo"
+          />
+          </Link>
         {/* Desktop Steps */}
         <div className="px-2 py-2.5 lg:flex hidden items-center w-full justify-between">
           {steps.map((step, idx) => (

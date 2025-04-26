@@ -212,6 +212,6 @@ export interface CreateOrderParams {
 export interface ClearUserCartParams {
   userId:string;
 }
-export interface GetMyOrdersParams {
+export interface GetMyOrdersParams extends PaginatedSchemaParams {
   userId:string;
 }

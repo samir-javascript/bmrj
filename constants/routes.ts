@@ -14,6 +14,7 @@ export const ROUTES = {
     signup: "/customer/account/sign-up",
     signin: "/customer/account/login",
     orders: "/sales/orderHistory",
-    orderDetails: (id:string) => `/sales/orderHistory/orderId/${id}`,
-    wishlist: "/wishlist"
+    orderDetails: (id:string) => `/sales/order/view/order_id/${id}`,
+    wishlist: "/wishlist",
+    adminOrdersList: '/admin/ordersManagement/orders'
 }

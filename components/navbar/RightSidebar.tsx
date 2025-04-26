@@ -3,40 +3,43 @@ import React, { useState } from "react";
 import { ProfileItems as Items } from "@/constants";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { clearCart } from "@/lib/store/cartSlice";
 import { useAppDispatch } from "@/hooks/user-redux";
-import User from "@/database/models/user.model";
 import LoadingAppState from "../Loaders/LoadingAppState";
-
+import { signOut } from "next-auth/react";
 
 const RightSidebar = () => {
   const pathname = usePathname();
-  const [loading,setLoading] = useState(false)
-  const session = useSession()
-  const dispatch = useAppDispatch()
-  const handleLogOut = async()=> {
-     setLoading(true)
-    try {
-       await signOut({redirectTo: "/"})
-       if(session.status !== "loading" && session.status === "authenticated")  {
-        await User.findByIdAndUpdate(session?.data?.user?.id!, { lastSeen: new Date() });
-       }
-     
+  const [loading, setLoading] = useState(false);
+  const session = useSession();
+  const dispatch = useAppDispatch();
 
-       dispatch(clearCart())
-       localStorage.removeItem('guest_cart');
+  const handleLogOut = async () => {
+    setLoading(true);
+    try {
+      // Call server API to update user lastSeen
+      if (session.status === "authenticated") {
+        await fetch("/api/logout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: session.data.user.id }),
+        });
+      }
+
+      dispatch(clearCart());
+      localStorage.removeItem("guest_cart");
+      await signOut({ callbackUrl: "/" });
     } catch (error) {
-       console.log(error)
-    }finally  {
-      setLoading(false)
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
   return (
     <div className="lg:block hidden w-[300px]">
-       {loading && (
-         <LoadingAppState />
-       )}
+      {loading && <LoadingAppState />}
       <div className="flex flex-col border border-gray-200 rounded-lg">
         {Items.map((item, index) => {
           const isActive = item.pathname === pathname;
@@ -44,8 +47,7 @@ const RightSidebar = () => {
           const isLast = index === Items.length - 1;
 
           return (
-            
-            <Link  key={index} href={item.pathname} className="block">
+            <Link key={index} href={item.pathname} className="block">
               <div
                 className={`p-4 border-b border-gray-200 transition-all duration-300
                   ${isActive ? "bg-light_blue text-white font-semibold" : "text-[#333]"}
@@ -59,17 +61,14 @@ const RightSidebar = () => {
             </Link>
           );
         })}
-       <div onClick={handleLogOut}
-                className={`p-4 border-t border-gray-200 transition-all duration-300
-                   text-[#333] cursor-pointer `}
-                 
-                 
-                
-              >
-                <p className="text-[18px] font-semibold">LogOut</p>
-              </div>
+
+        <button
+          onClick={handleLogOut}
+          className="p-4 border-t border-gray-200 transition-all duration-300 text-[#333] cursor-pointer"
+        >
+          <p className="text-[18px] font-semibold">LogOut</p>
+        </button>
       </div>
-    
     </div>
   );
 };

@@ -2,9 +2,7 @@ import React from 'react';
 import ProfileItems from '@/components/navbar/ProfileItems';
 import RightSidebar from '@/components/navbar/RightSidebar';
 
-import { getSavedProducts } from '@/actions/collection.actions';
-import ProductCard from '@/components/cards/ProductCard';
-import { Button } from '@/components/ui/button';
+
 import Alert from '@/components/shared/Alert';
 
 const Page = async () => {

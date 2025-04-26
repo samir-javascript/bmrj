@@ -10,6 +10,7 @@ import { auth } from "@/auth";
 import Product from "@/database/models/product.model";
 import { UnAuthorizedError } from "@/lib/http-errors";
 import { revalidatePath } from "next/cache";
+import { cache } from "@/lib/cache";
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
     // if(validatedResult instanceof Error) {
@@ -38,7 +39,7 @@ export async function createCODorder(params:CreateOrderParams): Promise<ActionRe
              totalPrice,
          })
          if (!newOrder) throw new Error("Order creation failed");
-
+           revalidatePath("/sales/orderHistory")
          return {
             success: true,
             data: {order: JSON.parse(JSON.stringify(newOrder))} 
@@ -48,29 +49,36 @@ export async function createCODorder(params:CreateOrderParams): Promise<ActionRe
      }
 }
 
-export const getMyOrders = async(params:GetMyOrdersParams): Promise<ActionResponse<{orders: IOrder[]}>>=> {
+export const getMyOrders = cache(async(params:GetMyOrdersParams): Promise<ActionResponse<{orders: IOrder[],
+   isNext:boolean, ordersLength:number}>>=> {
     const validatedResult = await action({params,schema: GetMyOrdersValidationSchema})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
-    const { userId } = validatedResult.params!
+    const { userId , page = 1 , pageSize = 5} = validatedResult.params!
+    const skip = pageSize * (page - 1)
     if(!userId) throw new Error("user ID is required")
     try {
      await connectToDb()
+     const ordersCount = await Order.countDocuments({user:userId})
      const orders = await Order.find({user: userId})
      .populate({path: "orderItems.product", model: Product})
+     .skip(skip)
+     .limit(pageSize)
      .sort({createdAt: -1})
+
+     const isNext = ordersCount > skip + orders.length;
 
         return {
             success: true,
-            data: {orders: JSON.parse(JSON.stringify(orders))}
+            data: {orders: JSON.parse(JSON.stringify(orders)), isNext, ordersLength:ordersCount}
         }
     } catch (error) {
          return handleError(error) as ErrorResponse
     }
-}
+}, ['/sales/orderHistory', "getMyOrders"], {revalidate: 60 * 60 * 24})
 
-export const getAllOrders = async(params:PaginatedSchemaParams):Promise<ActionResponse<{orders:IOrder[], isNext: boolean}>> =>{
+export const getAllOrders = cache(async(params:PaginatedSchemaParams):Promise<ActionResponse<{orders:IOrder[], isNext: boolean}>> =>{
     const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
@@ -90,7 +98,7 @@ export const getAllOrders = async(params:PaginatedSchemaParams):Promise<ActionRe
    } catch (error) {
       return handleError(error) as ErrorResponse;
    }
-}
+}, ["getAllOrders", "/admin/ordersManagement/orders"], {revalidate: 60 * 60 * 24})
 
 export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResponse> => {
     const validatedResult = await action({

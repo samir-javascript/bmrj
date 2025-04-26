@@ -30,12 +30,16 @@ const Navbar = () => {
        </div>
        <MobileSidebar />
        <Link href="/">
-        <Image alt="marjanemall logo"
-          width={220}
-          className='object-contain max-md:w-[170px]   lg:mr-7'
-          height={220}
-          src="https://www.marjanemall.ma/static/version1739434205/frontend/Marjane/default/fr_FR/images/marjane-logo.svg" />
-        </Link>
+          <Image
+            loading="eager"
+            width={220}
+            priority
+            height={220}
+            className="max-sm:w-[180px] w-[280px] object-contain"
+            src="https://www.marjanemall.ma/static/version1742910845/frontend/Marjane/default/fr_FR/images/marjane-logo.svg"
+            alt="marjanemall logo"
+          />
+          </Link>
        </div>
       
        <div className='flex items-center gap-2 sm:gap-3'>

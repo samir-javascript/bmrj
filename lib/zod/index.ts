@@ -178,7 +178,7 @@ export const CategorySchemaValidation = z.object({
 export const ClearCartSchema = z.object({
   userId: z.string().min(1, {message: "userId is required"})
 })
-export const GetMyOrdersValidationSchema = z.object({
+export const GetMyOrdersValidationSchema = PaginatedSchemaValidation.extend({
    userId: z.string().min(1, {message: "user ID is required"})
 })
 export const CreateOrderValidationSchema = z.object({

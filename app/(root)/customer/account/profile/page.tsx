@@ -73,40 +73,7 @@ const page = async() => {
                       
 
                     </div>
-            {/* <div className='flex pb-5 flex-col lg:flex-row lg:justify-between  gap-7'>
-                  
-                
-                 <div className='flex  flex-col gap-2'>
-                    
-                    
-                     <div className='flex lg:mr-[120px] flex-col space-y-2 mt-3'>
-                        <h4 className='text-[15px] font-semibold text-[#333] '>Adresse de livraison par défaut</h4>
-                         <p className='small-medium text-gray-500'>Mr soufiane hmamou</p>
-                         <p className='small-medium text-gray-500'>Meknès Médina , rue de Imam boussayr</p>
-                         <p className='small-medium text-gray-500'>MEKNES, 50999 Maroc</p>
-                         <p className='small-medium text-gray-500'>+212715120495</p>
-                          
-                         <Link href={`${ROUTES.editShipping('545dfd')}`} className='text-light_blue paragraph-semibold underline' >Modifier l'address</Link>
-                               
-                          
-                     </div>
-                 </div>
-                 <div className='flex  flex-col gap-2'>
-                    
-                    
-                    <div className='flex lg:mr-[120px] flex-col space-y-2 mt-3'>
-                       <h4 className='text-[15px] font-semibold text-[#333] '>Adresse de livraison par défaut</h4>
-                        <p className='small-medium text-gray-500'>Mr soufiane hmamou</p>
-                        <p className='small-medium text-gray-500'>Meknès Médina , rue de Imam boussayr</p>
-                        <p className='small-medium text-gray-500'>MEKNES, 50999 Maroc</p>
-                        <p className='small-medium text-gray-500'>+212715120495</p>
-                         
-                        <Link href={`${ROUTES.editShipping('545dfd')}`} className='text-light_blue paragraph-semibold underline' >Modifier l'address</Link>
-                              
-                         
-                    </div>
-                </div>
-            </div> */}
+         
             <AddressComponent address={data?.data?.shippingAddresses[0]} />
             </div>
           

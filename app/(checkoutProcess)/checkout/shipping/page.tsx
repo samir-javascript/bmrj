@@ -15,7 +15,8 @@ const ShippingPage = async() => {
     const result = await getAuthenticatedUserCart({userId: session?.user.id})
   return (
     <section className="py-7 max-w-[1500px] mx-auto px-3 ">
-       <ShippingCheckout cartData={result.data as unknown as  UserCartElement || undefined}  isAuthenticated={session.user.id !== ""} data={data?.shippingAddresses || []} />    
+       <ShippingCheckout cartData={result.data as unknown as  UserCartElement || undefined}
+         isAuthenticated={session.user.id !== ""} data={data?.shippingAddresses || []} />    
     </section>
   )
 }

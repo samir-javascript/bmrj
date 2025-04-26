@@ -25,9 +25,9 @@ const ShippingCheckout = ({data,isAuthenticated,cartData}: {
        router.replace("/checkout/cart")
        return
     }
-    const totalQty = cartItems?.reduce((acc:any, item:any) => acc + item.quantity, 0);
+    const totalQty = cartItems?.reduce((acc:number, item:cartItemsProps) => acc + item.quantity, 0);
     const totalPrice = cartItems?.reduce(
-      (acc:any, item:any) => acc + item.quantity * item.price,
+      (acc:number, item:cartItemsProps) => acc + item.quantity * item.price,
       0
     );
   return (
@@ -46,14 +46,14 @@ const ShippingCheckout = ({data,isAuthenticated,cartData}: {
               </div>
                   <div className='flex items-center gap-2.5'>
                        <User className='text-light_blue' />
-                       <p className='font-medium text-black text-sm '>{shippingAddress?.name}</p>
+                       <p className='font-medium text-black text-sm '>{shippingAddress?.name || data[0]?.name}</p>
                        <span>|</span>
-                       <p className='font-medium text-black text-sm '>+212{shippingAddress?.phoneNumber}</p>
+                       <p className='font-medium text-black text-sm '>+212{shippingAddress?.phoneNumber || data[0]?.phoneNumber}</p>
                   </div>
                   <div className="flex items-center justify-between">
                   <div className='flex items-center gap-2.5'>
                        <LocateIcon className='text-light_blue' />
-                        <p className='font-medium text-black text-sm '> {shippingAddress?.city}, {shippingAddress?.address}, {shippingAddress?.country}, {shippingAddress?.postalCode}</p>
+                        <p className='font-medium text-black text-sm '> {shippingAddress?.city || data[0]?.city}, {shippingAddress?.address || data[0]?.address}, {shippingAddress?.country || data[0]?.country}, {shippingAddress?.postalCode || data[0]?.postalCode}</p>
                   </div>
                   <div className='lg:flex hidden'>
                     <EditShippingBtn data={data} />

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { ProfileItems as Items } from "@/constants";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -7,22 +7,39 @@ import Link from "next/link";
 import { useAppDispatch } from "@/hooks/user-redux";
 import { clearCart } from "@/lib/store/cartSlice";
 import { LogOut } from "lucide-react";
+import LoadingAppState from "../Loaders/LoadingAppState";
 
 const ProfileItems = () => {
   const pathname = usePathname();
+  const [loading,setLoading] = useState(false)
   const session = useSession();
   const dispatch = useAppDispatch()
-  const handleLogOut = async() => {
+   const handleLogOut = async () => {
+     setLoading(true);
      try {
-        await signOut()
-        dispatch(clearCart())
-        localStorage.removeItem('guest_cart');
+       // Call server API to update user lastSeen
+       if (session.status === "authenticated") {
+         await fetch("/api/logout", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ userId: session.data.user.id }),
+         });
+       }
+ 
+       dispatch(clearCart());
+       localStorage.removeItem("guest_cart");
+       await signOut({ callbackUrl: "/" });
      } catch (error) {
-        console.log(error)
+       console.error(error);
+     } finally {
+       setLoading(false);
      }
-  }
+   };
   return (
     <div className="mt-5 lg:hidden mx-4 overflow-x-auto flex items-center sm:gap-14 gap-4 no-scrollbar">
+       {loading && (
+         <LoadingAppState />
+       )}
       {Items.map((item, index) => {
         const isActive = pathname === item.pathname; // Ensure dynamic matching
         

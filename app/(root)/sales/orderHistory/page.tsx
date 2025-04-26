@@ -5,22 +5,25 @@ import CancelOrderBtn from '@/components/btns/CancelOrderBtn';
 import OpenOrderDetailsBtn from '@/components/btns/OpenOrderDetailsBtn';
 import ProfileItems from '@/components/navbar/ProfileItems';
 import RightSidebar from '@/components/navbar/RightSidebar';
+import Pagination from '@/components/pagination/Pagination';
 import Alert from '@/components/shared/Alert';
 import { Button } from '@/components/ui/button';
 
 import { ROUTES } from '@/constants/routes';
 import { formatDate, formatPrice } from '@/lib/utils';
+import { searchParamsProps } from '@/types/action';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-const page = async () => {
+const page = async ({searchParams}:searchParamsProps) => {
+  const { page, pageSize } = await searchParams
   const session = await auth();
   if (!session) redirect(ROUTES.signup);
 
-  const  {data} = await getMyOrders({userId: session.user.id})
-  console.log(data, "orders data")
+  const  {data} = await getMyOrders({userId: session.user.id, page: Number(page) || 1, pageSize: Number(pageSize) || 5})
+  console.log(page, "page")
  
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 lg:py-8 gap-5'>
@@ -30,7 +33,7 @@ const page = async () => {
       {/* box info */}
       {data ? (
         <div className="w-full px-2 flex-1">
-          <h2 className="h2-bold w-full lg:text-left text-center mb-5">{data?.orders.length as number} {data?.orders.length as number > 1 ? 'Commandes': 'Commande'}</h2>
+          <h2 className="h2-bold w-full lg:text-left text-center mb-5">vos Commandes</h2>
           <div className='flex flex-col space-y-3 w-full'>
             {data?.orders.map((item) => (
               <div className='rounded-lg border border-light_gray' key={item._id}>
@@ -65,7 +68,7 @@ const page = async () => {
       </div>
       <div className="flex flex-col gap-[2px] " >
         <div className=' flex items-center max-sm:justify-between'>
-        <div className='bg-green-500 w-fit flex items-center justify-center rounded-md text-white px-2  '>
+        <div className={`${item.orderStatus === "canceled" ? "bg-red-500 " : "bg-green-500"} w-fit flex items-center justify-center rounded-md text-white px-2`}>
             <span className="text-xs font-semibold">
                {item.orderStatus}
             </span>
@@ -87,28 +90,50 @@ const page = async () => {
           <h4 className='font-bold text-black max-sm:hidden text-sm m-0'>
              {formatPrice(x.price)}
           </h4>
-          <div className="flex items-center w-full sm:hidden gap-2">
+          {/* <div className="flex items-center w-full sm:hidden gap-2">
+   <Button className="h-fit py-1.5 flex-1 border border-light_blue bg-transparent
+    hover:bg-transparent text-light_blue rounded-full text-xs font-bold " >
+     suivi colis
+   </Button>
+    <CancelOrderBtn orderId={item._id} />
+ </div> */}
+      </div>
+ </div>
+ {/* <div className="flex flex-col max-sm:hidden gap-2 max-sm:gap-1">
+   <Button className="h-fit py-1.5 border border-light_blue bg-transparent
+    hover:bg-transparent max-sm:w-fit text-light_blue rounded-full text-xs font-bold " >
+     suivi colis
+   </Button>
+    <CancelOrderBtn orderId={item._id}  />
+ </div> */}
+</div>
+                ))}
+                 <div  className="flex px-3 pb-3 max-sm:hidden gap-3 max-sm:gap-1">
+                 
+                 
+                 <Button asChild className="h-fit py-1.5 border border-light_blue bg-transparent
+    hover:bg-light_blue hover:text-white flex-1 text-light_blue rounded-full text-xs font-bold " >
+      <Link href={ROUTES.orderDetails(item._id)}>suivi colis</Link>
+   
+   </Button>
+               
+   
+    <CancelOrderBtn orderId={item._id}  />
+ </div>
+               <div className="flex items-center w-full sm:hidden gap-2">
    <Button className="h-fit py-1.5 flex-1 border border-light_blue bg-transparent
     hover:bg-transparent text-light_blue rounded-full text-xs font-bold " >
      suivi colis
    </Button>
     <CancelOrderBtn orderId={item._id} />
  </div>
-      </div>
- </div>
- <div className="flex flex-col max-sm:hidden gap-2 max-sm:gap-1">
-   <Button className="h-fit py-1.5 border border-light_blue bg-transparent
-    hover:bg-transparent max-sm:w-fit text-light_blue rounded-full text-xs font-bold " >
-     suivi colis
-   </Button>
-    <CancelOrderBtn orderId={item._id}  />
- </div>
-</div>
-                ))}
-              
               </div>
             ))}
           </div>
+          <div className="my-5">
+            <Pagination page={Number(page) || 1} isNext={data.isNext} />
+          </div>
+         
         </div>
       ): (
         <div className='w-full h-fit flex-1 my-3 '>
