@@ -6,9 +6,12 @@ import { getSavedProducts } from '@/actions/collection.actions';
 import ProductCard from '@/components/cards/ProductCard';
 import { Button } from '@/components/ui/button';
 import Alert from '@/components/shared/Alert';
+import { searchParamsProps } from '@/types/action';
+import Pagination from '@/components/pagination/Pagination';
 
-const Page = async () => {
-  const result = await getSavedProducts({});
+const Page = async ({searchParams}:searchParamsProps) => {
+  const {page, pageSize} = await searchParams
+  const result = await getSavedProducts({page: Number(page) || 1, pageSize: Number(pageSize) || 2});
   console.log(result, "result")
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 max-sm:pb-5 lg:py-8 gap-5'>
@@ -47,6 +50,7 @@ const Page = async () => {
           ) : (
             <Alert message="Il n’y a aucun article dans votre liste d’envies." />
           )}
+           <Pagination page={Number(page) || 1} isNext={result.data?.isNext as boolean} />
         </div>
       </div>
     </div>

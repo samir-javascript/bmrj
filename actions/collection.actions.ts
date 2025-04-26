@@ -1,15 +1,16 @@
 "use server"
 // todo for authentication use the same method you signed up with;
-import { auth } from "@/auth";
+
 import connectToDb from "@/database/connect";
 import Collection, { ICollection } from "@/database/models/collection";
-import Product from "@/database/models/product.model";
+import Product, { IProduct } from "@/database/models/product.model";
 
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error"
 import { CollectionSchema, PaginatedSchemaValidation } from "@/lib/zod";
 import { CollectionParams, PaginatedSchemaParams } from "@/types/action";
 import { CollectionElement } from "@/types/Elements";
+
 import { revalidatePath } from "next/cache";
 
 export async function toggleSaveCollection(params:CollectionParams): Promise<ActionResponse<{saved:boolean}>> {
@@ -53,17 +54,15 @@ export async function toggleSaveCollection(params:CollectionParams): Promise<Act
     }
 }
 export async function getSavedProducts(params:PaginatedSchemaParams):Promise<ActionResponse<{collection:CollectionElement[],isNext:boolean}>> {
-    const validatedResult = await action({params,schema:PaginatedSchemaValidation})
+    const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
-    const { page = 1, pageSize = 10 } = validatedResult.params!
+    const { page = 1, pageSize = 2 } = params
     const skip = pageSize * (page - 1)
-    const session = await auth()
-    if(!session) return {
-        success: false
-    }
-    const userId = session.user.id;
+   
+   
+    const userId = validatedResult.session?.user.id;
     try {
         const collection = await Collection.find({userId})
         //   .populate({path: "userId", model: User})
@@ -110,3 +109,4 @@ export async function hasSavedProduct(params:CollectionParams):Promise<ActionRes
      return handleError(error) as ErrorResponse
   }
 }
+
