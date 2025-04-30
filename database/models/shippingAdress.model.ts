@@ -4,6 +4,7 @@ export interface IShipping {
     city:string;
     postalCode:string;
     phoneNumber:string;
+    isActive: boolean;
     country: string;
     address:string;
     name:string;
@@ -13,6 +14,10 @@ const ShippingSchema = new mongoose.Schema<IShipping>({
    city: {
      type:String,
      required:true
+   },
+   isActive: {
+      type: Boolean,
+      default: false
    },
    postalCode: {
     type:String,

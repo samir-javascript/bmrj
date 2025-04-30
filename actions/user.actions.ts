@@ -3,17 +3,22 @@
 import { auth } from "@/auth";
 import connectToDb from "@/database/connect";
 import Account, { IAccount } from "@/database/models/account.model";
+import { Cart } from "@/database/models/cart.model";
+import Collection from "@/database/models/collection";
+import Order from "@/database/models/order.model";
 import SetPasswordToken, { ISetPasswordToken } from "@/database/models/setPasswordToken.model";
 import User, { IUser } from "@/database/models/user.model";
+import { cache } from "@/lib/cache";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
-import { editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema } from "@/lib/zod";
-import { EditProfileParams, GetUserInfoParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
+import { DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
 import mongoose from "mongoose";
+
 
 
 
@@ -114,7 +119,7 @@ export async function getUserInfo(params:GetUserInfoParams):Promise<ActionRespon
    if(validatedResult instanceof Error) {
       return handleError(validatedResult) as ErrorResponse;
    }
-    const { userId } = validatedResult.params!;
+
     const session = validatedResult.session?.user.id!
 
    try {
@@ -228,3 +233,81 @@ export async function VerifyCodeAndSetPassword(params:VerifyCodeAndSetPasswordPa
      return handleError(error) as ErrorResponse
   }
 }
+
+
+// TODO: finish this ;
+// export async function editUserProfileByAdmin(params:EditUserProfileByAdmin): Promise<ActionResponse>{
+//   const validatedResult = await action({params,schema:EditUserProfileByAdminSchema,authorize:true})
+//   if(validatedResult instanceof Error) {
+//      return handleError(validatedResult) as ErrorResponse
+//   }
+//   const {} = params;
+//   try {
+//     await connectToDb()
+//   } catch (error) {
+//      return handleError(error) as ErrorResponse
+//   }
+// }
+
+// TODO: delete user by admin
+
+export async function deleteUser(params:DeleteUserParams): Promise<ActionResponse> {
+  const validatedResult = await action({params,schema:DeleteUserValidationSchema,authorize:true})
+  if(validatedResult instanceof Error) {
+     return handleError(validatedResult) as ErrorResponse
+  }
+  const session = validatedResult.session;
+  const { userId } = params
+   try {
+      await connectToDb()
+      // find admin user;
+      const adminUser = await User.findById(session?.user.id) as IUser;
+      if(!adminUser.isAdmin) throw new Error('only admin users can perform this action')
+      const user = await User.findById(userId) as IUser
+    if(!user) throw new Error('User not found')
+      await User.findByIdAndDelete(user._id)
+    
+      // delete all his orders
+      await Order.deleteMany({user: user._id})
+      // delete all his comments
+
+      // delete his wishlist items
+      await Collection.deleteMany({userId: user._id})
+      // Delete user cart
+      await Cart.deleteMany({userId:user._id})
+      return {
+         success: true
+      }
+   } catch (error) {
+      return handleError(error) as ErrorResponse
+   }
+}
+
+// TODO: Get all users for admin
+export const  getAllUsers = cache( async(params:PaginatedSchemaParams):Promise<ActionResponse<{users: IUser[], isNext:boolean}>> => {
+   const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
+   if(validatedResult instanceof Error) {
+      return handleError(validatedResult) as ErrorResponse
+   }
+   const session = validatedResult.session
+   if(!session) throw new Error('missing user admin session')
+    const { page = 1, pageSize = 10} = params;
+  const skip = pageSize * (page - 1)
+    try {
+      await connectToDb()
+      const userAdmin = await User.findById(session.user.id) as IUser
+      if(!userAdmin.isAdmin) throw new Error('Cannot procced! this action is only allowed by admin users')
+        const usersCount = await User.countDocuments()
+      const users = await User.find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort({createdAt: -1})
+      const isNext:boolean = usersCount > skip + users.length;
+      return  {
+         success: true,
+         data: {users: JSON.parse(JSON.stringify(users)), isNext: isNext}
+      }
+    } catch (error) {
+       return handleError(error) as ErrorResponse
+    }
+}, ["getAllUsers", "/admin/usersManagement/users"], {revalidate: 60 * 24 * 24})

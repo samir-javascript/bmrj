@@ -152,12 +152,18 @@ export const EditProductSchema = ProductSchemaValidation.extend({
 export const DeleteProductValidationSchema = z.object({
   productId: z.string().min(1, {message: "Product ID is required"})
 })
+export const DeleteUserValidationSchema = z.object({
+   userId: z.string().min(1, {message: "User id is required"})
+})
 export const PaginatedSchemaValidation = z.object({
   page: z.number().int().default(1),
   pageSize: z.number().int().default(10),
   filter: z.string().optional(),
   query: z.string().optional(),
   sort: z.string().optional(),
+})
+export const GetAllOrdersSchemaValidation = PaginatedSchemaValidation.extend({
+  orderStatus: z.enum(['canceled', 'in preparation', 'confirmed', 'delivered', ""]).optional(),
 })
 export const HeroValidationSchema = z.object({
    isActive: z.boolean().default(false),

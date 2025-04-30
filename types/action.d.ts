@@ -151,7 +151,9 @@ export interface PaginatedSchemaParams {
   query?: string;
   sort?: string;
 }
-
+export interface GetAllOrdersParams extends PaginatedSchemaParams {
+  orderStatus?: 'canceled'| 'in preparation'| 'confirmed'| 'delivered'| "",
+}
 export interface CancelOrderParams {
   orderId:string;
 }
@@ -214,4 +216,23 @@ export interface ClearUserCartParams {
 }
 export interface GetMyOrdersParams extends PaginatedSchemaParams {
   userId:string;
+}
+
+export interface EditUserProfileByAdmin {
+   userId: string;
+   gender: "male" | "female";
+   firstName:string;
+   lastName:string;
+   email:string;
+   phoneNumber:string;
+   hasNewsletter:boolean;
+   currentPassword:string;
+   newPassword:string;
+   address:string;
+   city:string;
+   postalCode:string;
+   country:string;
+}
+export interface DeleteUserParams {
+   userId:string;
 }

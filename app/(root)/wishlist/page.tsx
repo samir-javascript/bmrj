@@ -33,10 +33,13 @@ const Page = async ({searchParams}:searchParamsProps) => {
            
         </div>
        
-
-        <div className='flex justify-end w-full mb-4'>
+        {result.data?.collection.length! > 0 &&
+        ( <div className='flex justify-end w-full mb-4'>
           <SelectItems />
         </div>
+        )
+        }
+      
 
         <div>
           {result.data?.collection.length! > 0 ? (
@@ -50,7 +53,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
           ) : (
             <Alert message="Il n’y a aucun article dans votre liste d’envies." />
           )}
-           <Pagination page={Number(page) || 1} isNext={result.data?.isNext as boolean} />
+          {result.data?.collection.length! > 0 && <Pagination page={Number(page) || 1} isNext={result.data?.isNext as boolean} />}
         </div>
       </div>
     </div>

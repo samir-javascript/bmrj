@@ -8,6 +8,7 @@ import { clearCart } from "@/lib/store/cartSlice";
 import { useAppDispatch } from "@/hooks/user-redux";
 import LoadingAppState from "../Loaders/LoadingAppState";
 import { signOut } from "next-auth/react";
+import { LogOut } from "lucide-react";
 
 const RightSidebar = () => {
   const pathname = usePathname();
@@ -62,12 +63,14 @@ const RightSidebar = () => {
           );
         })}
 
-        <button
+        <div
           onClick={handleLogOut}
-          className="p-4 border-t border-gray-200 transition-all duration-300 text-[#333] cursor-pointer"
+          className="p-4 border-t flex items-center gap-2 border-gray-200 transition-all duration-300 text-[#333] cursor-pointer"
         >
+         
           <p className="text-[18px] font-semibold">LogOut</p>
-        </button>
+          <LogOut className="text-light_blue" />
+        </div>
       </div>
     </div>
   );

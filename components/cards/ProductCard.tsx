@@ -26,7 +26,8 @@ const ProductCard = async({product}: {
     <div className="w-[180px] max-sm:w-[165px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
        <div  className='w-full relative bg-gray-100 rounded-tr-lg rounded-tl-lg' >
          <Link href={`/products/${product._id}`}>
-            <Image src={product.images[0].url} className='object-contain' alt='product_image' width={170} height={170} />
+            <Image src={product.images[0].url}
+             className='object-contain' alt='product_image' width={170} height={170}  />
          </Link>
        <HeartCart hasSaved={hasSaved.data?.saved || false} productId={product._id} />
 

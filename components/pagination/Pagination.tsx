@@ -7,9 +7,10 @@ import { Button } from "../ui/button";
 interface Props {
   page: number | undefined | string;
   isNext: boolean;
+  isAdmin?:boolean
 }
 
-const Pagination = ({ page = 1, isNext }: Props) => {
+const Pagination = ({ page = 1, isNext, isAdmin }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,7 +28,7 @@ const Pagination = ({ page = 1, isNext }: Props) => {
   };
 
   return (
-    <div className={cn("flex w-full items-center justify-center gap-2 mt-5")}>
+    <div className={`flex items-center justify-center gap-2  ${!isAdmin && "w-full mt-5"}`}>
       <Button
         onClick={() => handleNavigation("prev")}
         disabled={Number(page) <= 1}
@@ -37,7 +38,7 @@ const Pagination = ({ page = 1, isNext }: Props) => {
       </Button>
 
       <div className="flex items-center justify-center rounded-md bg-primary-500 px-3.5 py-2">
-        <p className="body-semibold text-light-900">{page}</p>
+        <p className={`body-semibold ${isAdmin ? "text-white" : "text-black"}`}>{page}</p>
       </div>
 
       <Button

@@ -11,6 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/user-redux";
 import { useCartItems } from "@/hooks/useCartItems";
 import LoadingAppState from "../Loaders/LoadingAppState";
+import Image from "next/image";
 
 interface Props {
   data?: UserCartElement;
@@ -114,11 +115,13 @@ const CartSidebar = ({ data, isAuthenticated }: Props) => {
      {cartItems?.map((item: cartItemsProps, index:number) => (
        <div className="border-b border-gray-300 py-3" key={index}>
          <div className="flex items-start gap-2">
-           <div className="rounded-lg bg-gray-100 w-[350px]">
+           <div className="rounded-lg bg-gray-100 h-[120px]  w-[300px]">
              <img
-               className="w-full rounded-lg h-full object-cover"
+               className="w-full h-full rounded-lg  object-contain"
                src={item.image}
                alt={item.title}
+              
+               loading="lazy"
              />
            </div>
            <div className="flex flex-col gap-3">

@@ -3,14 +3,16 @@
 import Order, { IOrder } from "@/database/models/order.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
-import { CancelOrderSchemaValidation, CreateOrderValidationSchema, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { CancelOrderParams, CreateOrderParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
+import { CancelOrderSchemaValidation, CreateOrderValidationSchema, GetAllOrdersSchemaValidation, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { CancelOrderParams, CreateOrderParams, GetAllOrdersParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
 import connectToDb from "@/database/connect"
 import { auth } from "@/auth";
 import Product from "@/database/models/product.model";
 import { UnAuthorizedError } from "@/lib/http-errors";
 import { revalidatePath } from "next/cache";
 import { cache } from "@/lib/cache";
+import User from "@/database/models/user.model";
+import { Order as OrderType } from "@/types/Elements";
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
     // if(validatedResult instanceof Error) {
@@ -78,27 +80,35 @@ export const getMyOrders = cache(async(params:GetMyOrdersParams): Promise<Action
     }
 }, ['/sales/orderHistory', "getMyOrders"], {revalidate: 60 * 60 * 24})
 
-export const getAllOrders = cache(async(params:PaginatedSchemaParams):Promise<ActionResponse<{orders:IOrder[], isNext: boolean}>> =>{
-    const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
+export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionResponse<{orders:OrderType[], isNext: boolean}>> =>{
+    const validatedResult = await action({params,schema:GetAllOrdersSchemaValidation,authorize:true})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
-    const { page = 1, pageSize = 10, filter, sort, query} = validatedResult.params!
+    const { page = 1, pageSize = 5, orderStatus} = validatedResult.params!
     const skip = pageSize * (page - 1)
    try {
       await connectToDb()
-      const orders = await Order.find()
+      const query: Record<string, any> = {};
+      if (orderStatus) {
+        query.orderStatus = orderStatus;
+      }
+      const ordersCount = await Order.countDocuments(query)
+      const orders = await Order.find(query)
+      .populate({path: "user", model: User, select: "image name lastName"})
+      .populate({path: "orderItems.product",model: Product})
       .limit(pageSize)
       .skip(skip)
-      
+      .sort({createdAt: -1})
+      const isNext:boolean = ordersCount > skip + orders.length;
       return {
         success: true,
-        data: {orders: JSON.parse(JSON.stringify(orders)), isNext: false}
+        data: {orders: JSON.parse(JSON.stringify(orders)), isNext}
       }
    } catch (error) {
       return handleError(error) as ErrorResponse;
    }
-}, ["getAllOrders", "/admin/ordersManagement/orders"], {revalidate: 60 * 60 * 24})
+}
 
 export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResponse> => {
     const validatedResult = await action({
