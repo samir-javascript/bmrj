@@ -85,7 +85,7 @@ export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionRespo
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
-    const { page = 1, pageSize = 5, orderStatus} = validatedResult.params!
+    const { page = 1, pageSize = 5, orderStatus = ""} = params;
     const skip = pageSize * (page - 1)
    try {
       await connectToDb()

@@ -163,7 +163,10 @@ export const PaginatedSchemaValidation = z.object({
   sort: z.string().optional(),
 })
 export const GetAllOrdersSchemaValidation = PaginatedSchemaValidation.extend({
-  orderStatus: z.enum(['canceled', 'in preparation', 'confirmed', 'delivered', ""]).optional(),
+  orderStatus: z
+  .enum(['', 'canceled', 'in preparation', 'confirmed', 'delivered'])
+  .optional()
+  .default(''),
 })
 export const HeroValidationSchema = z.object({
    isActive: z.boolean().default(false),

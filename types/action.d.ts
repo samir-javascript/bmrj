@@ -152,7 +152,7 @@ export interface PaginatedSchemaParams {
   sort?: string;
 }
 export interface GetAllOrdersParams extends PaginatedSchemaParams {
-  orderStatus?: 'canceled'| 'in preparation'| 'confirmed'| 'delivered'| "",
+  orderStatus?: "" | 'canceled'| 'in preparation'| 'confirmed'| 'delivered'
 }
 export interface CancelOrderParams {
   orderId:string;
