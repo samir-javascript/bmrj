@@ -1,14 +1,20 @@
-import { formatPrice } from '@/lib/utils'
-import { ArrowDown, ChevronLeft, ChevronRight, Edit, Pencil, Search, Trash, X } from 'lucide-react'
+import { formatFullDateTime, formatPrice } from '@/lib/utils'
+import { ArrowDown, Check, ChevronLeft, ChevronRight, Edit, Pencil, Search, Trash, X } from 'lucide-react'
 import { Checkbox } from "@/components/ui/checkbox"
 import React from 'react'
 import OrderSearchInput from '@/components/search/OrderSearchInput'
 import { Button } from '@/components/ui/button'
 import Tabs from '@/components/btns/Tabs'
+import { searchParamsProps } from '@/types/action'
+import { getAllUsers } from '@/actions/user.actions'
+import Select from '../../ordersManagement/_components/Select'
+import Pagination from '@/components/pagination/Pagination'
 
 
 
-const page = () => {
+const page = async({searchParams}:searchParamsProps) => {
+   const { page, pageSize,query} = await searchParams
+   const { data } = await getAllUsers({page: Number(page) || 1, query: query as string || "" , pageSize: Number(pageSize) || 5})
   return (
     <div className=' h-full w-full py-7 flex flex-col'>
        <OrderSearchInput />
@@ -92,20 +98,20 @@ const page = () => {
   </thead>
   <tbody style={{background: "rgb(30,30,30)"}} className="divide-y   divide-gray-600">
     {/* Example row — map through your data here */}
-    {[0,1,2,3,5,6].map((_,index)=> (
+    {data?.users.map((user,index)=> (
         <tr className='hover:bg-gray-900 cursor-pointer' key={index}>
         <td className="px-4 py-3 text-white">
            <Checkbox />
         </td>
         <td className="px-4  py-3 flex items-center gap-2">
-           <img className='rounded-full w-[30px] h-[30px] object-contain' src="https://marmelab.com/posters/avatar-175.jpeg?size=25x25" alt="profile picture" />
+           <img className='rounded-full w-[30px] h-[30px] object-contain' src={user.image || "https://marmelab.com/posters/avatar-175.jpeg?size=25x25"} alt={user.name} />
            <span className='text-light_blue underline font-medium text-normal'>
-               Soufiane Omgil
+               {user.name} {" "} {user.lastName}
            </span>
         </td>
         <td className="px-4 py-3">
           <span className='text-white font-medium text-normal '>
-           09/25/2025
+           {formatFullDateTime(new Date(user.lastSeen))}
           </span>
           </td>
         <td className="px-4 py-3 flex mx-auto items-center h-full text-center  font-medium">
@@ -128,7 +134,7 @@ const page = () => {
         </td>
         
         <td className="px-4 py-3">
-           <X  className='text-gray-200' />
+           {user.hasNewsLetter ?  <Check  className='text-gray-200' /> : <X  className='text-gray-200' />} 
         </td>
         <td className="px-4 py-3">
           <div className='rounded-full flex items-center py-[3px] px-[6px] justify-center w-fit bg-[#333]  '>
@@ -146,28 +152,13 @@ const page = () => {
   </tbody>
          </table>
        <div className='mt-3 w-full items-center gap-5 px-3 flex justify-end'>
-           <div className='max-sm:hidden'>
-               <p><span  className="text-white font-medium text-sm">Rows per page</span>: <select className="bg-gray-500
-                text-white rounded-lg outline-none no-focus w-[40px] " name="" id="">
-                     <option value="">5</option>
-                     <option value="">10</option>
-                     <option value="">25</option>
-                     <option value="">50</option>
-                  </select></p>
+           {/* <div className='max-sm:hidden'>
+               <article><span  className="text-white font-medium text-sm">Rows per page</span>: <Select /></article>
                 
-           </div>
-           <div className='max-sm:hidden'>
-              <p className="text-white font-medium text-sm">26-29 of 29</p>
-           </div>
-           <div className='flex text-white items-center gap-2'>
-              <ChevronLeft />
-              <p>1</p>
-              <div className='w-[30px] h-[30px] rounded-full
-               bg-[#555] flex items-center justify-center '>
-                 <p>2</p>
-              </div>
-              <ChevronRight />
-           </div>
+           </div> */}
+           <Select />
+         
+         <Pagination isAdmin page={Number(page) || 1} isNext={data?.isNext as boolean} />
        </div>
          </div>
     </div>

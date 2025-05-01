@@ -85,16 +85,25 @@ export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionRespo
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
-    const { page = 1, pageSize = 5, orderStatus = ""} = params;
+    const { page = 1, pageSize = 5, orderStatus = "", query} = params;
     const skip = pageSize * (page - 1)
    try {
       await connectToDb()
-      const query: Record<string, any> = {};
-      if (orderStatus) {
-        query.orderStatus = orderStatus;
+      const queryOrder: Record<string, any> = {};
+      if (query && query.trim() !== '') {
+        const users = await User.find({
+          $or: [
+            { name: { $regex: query, $options: 'i' } },
+            { lastName: { $regex: query, $options: 'i' } }
+          ]
+        }).select('_id');
+        queryOrder.user = { $in: users.map((u) => u._id) };
       }
-      const ordersCount = await Order.countDocuments(query)
-      const orders = await Order.find(query)
+      if (orderStatus) {
+        queryOrder.orderStatus = orderStatus;
+      }
+      const ordersCount = await Order.countDocuments(queryOrder)
+      const orders = await Order.find(queryOrder)
       .populate({path: "user", model: User, select: "image name lastName"})
       .populate({path: "orderItems.product",model: Product})
       .limit(pageSize)

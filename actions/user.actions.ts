@@ -18,6 +18,7 @@ import { DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInf
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
 import mongoose from "mongoose";
+import { FilterQuery } from "mongoose";
 
 
 
@@ -284,21 +285,29 @@ export async function deleteUser(params:DeleteUserParams): Promise<ActionRespons
 }
 
 // TODO: Get all users for admin
-export const  getAllUsers = cache( async(params:PaginatedSchemaParams):Promise<ActionResponse<{users: IUser[], isNext:boolean}>> => {
+export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionResponse<{users: IUser[], isNext:boolean}>> => {
    const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
    if(validatedResult instanceof Error) {
       return handleError(validatedResult) as ErrorResponse
    }
    const session = validatedResult.session
    if(!session) throw new Error('missing user admin session')
-    const { page = 1, pageSize = 10} = params;
+    const { page = 1, pageSize = 10, query } = params;
+     const filterQuery: FilterQuery<typeof User> = {}
   const skip = pageSize * (page - 1)
     try {
       await connectToDb()
+      if(query && query.trim() !== "") {
+          filterQuery.$or =  [
+            {name: {$regex: new RegExp(query, "i")}},
+            {lastName: {$regex: new RegExp(query, "i")}},
+            {email: {$regex: new RegExp(query, "i")}},
+          ]
+      }
       const userAdmin = await User.findById(session.user.id) as IUser
       if(!userAdmin.isAdmin) throw new Error('Cannot procced! this action is only allowed by admin users')
-        const usersCount = await User.countDocuments()
-      const users = await User.find()
+        const usersCount = await User.countDocuments(filterQuery)
+      const users = await User.find(filterQuery)
       .skip(skip)
       .limit(pageSize)
       .sort({createdAt: -1})
@@ -310,4 +319,4 @@ export const  getAllUsers = cache( async(params:PaginatedSchemaParams):Promise<A
     } catch (error) {
        return handleError(error) as ErrorResponse
     }
-}, ["getAllUsers", "/admin/usersManagement/users"], {revalidate: 60 * 24 * 24})
+}

@@ -13,9 +13,9 @@ import Select from '../_components/Select'
 
 
 const page = async({searchParams}: searchParamsProps) => {
-   const {page,pageSize,orderStatus} = await searchParams
+   const {page,pageSize,orderStatus,query} = await searchParams
    // @ts-ignore
-   const { data } = await getAllOrders({page: Number(page) || 1, pageSize: Number(pageSize) || 5,orderStatus: orderStatus})
+   const { data } = await getAllOrders({page: Number(page) || 1, query: query || "" , pageSize: Number(pageSize) || 5,orderStatus: orderStatus})
   
   return (
     <div className=' h-full w-full py-7 flex flex-col'>
