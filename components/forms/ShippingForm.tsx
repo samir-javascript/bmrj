@@ -46,7 +46,7 @@ const ShippingForm =  <T extends FieldValues> ({schema,defaultValues,onSubmit,ty
     resolver: zodResolver (schema),
     defaultValues: defaultValues as DefaultValues<T>
   });
-
+  const isSubmitting = form.formState.isSubmitting === true
   const handleSubmit: SubmitHandler<T> = async (data) => {
       try {
          if(type === "CREATE") {
@@ -90,7 +90,7 @@ const ShippingForm =  <T extends FieldValues> ({schema,defaultValues,onSubmit,ty
                    {field.name}
                 </FormLabel>
                 <FormControl>
-                  <Input className="input-css" placeholder={`Enter ${field.name}`} {...field} />
+                  <Input disabled={isSubmitting} className="input-css" placeholder={`Enter ${field.name}`} {...field} />
                 </FormControl>
                 <FormMessage  />
               </FormItem>
@@ -102,6 +102,7 @@ const ShippingForm =  <T extends FieldValues> ({schema,defaultValues,onSubmit,ty
         <div className="flex items-center space-x-2">
         <Checkbox
   checked={checked}
+  disabled={isSubmitting}
   onCheckedChange={(value) => setChecked(value === true)}
   className="text-white"
   id="save_shipping"
@@ -118,7 +119,7 @@ const ShippingForm =  <T extends FieldValues> ({schema,defaultValues,onSubmit,ty
        
 
         <Button
-         disabled={form.formState.isSubmitting}
+         disabled={isSubmitting}
           type="submit"
           className="min-w-fit sm:w-[150px] font-semibold my-4 hover:shadow-md hover:bg-light_blue bg-black text-white rounded-lg"
         >

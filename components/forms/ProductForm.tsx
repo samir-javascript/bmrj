@@ -96,7 +96,7 @@ const ProductForm = () => {
     }
   };
    
- 
+ const isSubmitting = form.formState.isSubmitting === true;
   return (
     <Form {...form}>
       <form
@@ -112,7 +112,7 @@ const ProductForm = () => {
             <FormItem>
               <FormLabel className="text-white">Product Name</FormLabel>
               <FormControl>
-                <Input  className="admin-input" placeholder="Enter Product Name" {...field} />
+                <Input disabled={isSubmitting}  className="admin-input" placeholder="Enter Product Name" {...field} />
               </FormControl>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -129,6 +129,7 @@ const ProductForm = () => {
               <FormControl>
               <Editor
                   value={field.value}
+                  disabled={isSubmitting}
                   editorRef={editorRef}
                   fieldChange={field.onChange}
                 />
@@ -148,6 +149,7 @@ const ProductForm = () => {
                 <FormLabel className="text-white">Product Price</FormLabel>
                 <FormControl>
                   <Input
+                  disabled={isSubmitting}
                     type="number"
                     className="admin-input"
                     placeholder="Enter Product Price"
@@ -168,6 +170,7 @@ const ProductForm = () => {
                 <FormControl>
                   <Input
                     type="number"
+                    disabled={isSubmitting}
                     className="admin-input"
                     placeholder="Enter Previous Price"
                     {...field}
@@ -187,7 +190,11 @@ const ProductForm = () => {
             <FormItem>
               <FormLabel className="text-white">Product Category</FormLabel>
               <FormControl>
-                <Input className="admin-input" placeholder="Enter Product Category" {...field} />
+                <Input 
+                className="admin-input"
+                disabled={isSubmitting}
+                 placeholder="Enter Product Category"
+                  {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -202,7 +209,11 @@ const ProductForm = () => {
             <FormItem>
               <FormLabel className="text-white">Product Brand</FormLabel>
               <FormControl>
-                <Input className="admin-input" placeholder="Enter Product Brand" {...field} />
+                <Input
+                 className="admin-input"
+                 disabled={isSubmitting}
+                 placeholder="Enter Product Brand"
+                  {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -217,7 +228,11 @@ const ProductForm = () => {
             <FormItem>
               <FormLabel className="text-white">Product UI Position</FormLabel>
               <FormControl>
-                <Input className="admin-input" placeholder="Enter Product Position" {...field} />
+                <Input 
+                className="admin-input" 
+                placeholder="Enter Product Position"
+                disabled={isSubmitting}
+                 {...field} />
               </FormControl>
                <FormMessage className="text-red-500" />
             </FormItem>
@@ -234,6 +249,7 @@ const ProductForm = () => {
               <FormControl>
                 <Input
                   type="number"
+                  disabled={isSubmitting}
                   className="admin-input"
                   placeholder="Enter Product Quantity"
                   {...field}
@@ -253,45 +269,15 @@ const ProductForm = () => {
       <FormLabel className="text-white">Product Images</FormLabel>
       <FormControl>
        
-          {/* <CldUploadWidget
-  uploadPreset="marjana_e-commerce"
-  options={{multiple: true }}
-  onUpload={(result, { event }) => {
-   
-    if (typeof result.info === "object" && "secure_url" in result.info && "public_id" in result.info) {
-      const uploadedImage = {
-        url: result.info.secure_url,
-        public_id: result.info.public_id,
-      };
-    
-      const updatedImages = [...(field.value || []), uploadedImage];
-    
-      form.setValue("productImages", updatedImages, { shouldValidate: true });
-      form.trigger("productImages");
-    
-    }
-    
-  }}
->
-  {({ open }) => {
-    return (
-      <Button
-        onClick={() => open()}
-        className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
-        type="button"
-      >
-        Upload images <Upload />
-      </Button>
-    );
-  }}
-</CldUploadWidget> */}
+        
 <CldUploadWidget
   uploadPreset="marjana_e-commerce"
   options={{ multiple: true }}
   onUpload={handleUpload}
 >
   {({ open }) => (
-    <Button
+    <Button 
+    disabled={isSubmitting}
       onClick={() => open()}
       className="w-full bg-[rgb(49,49,49)] shadow-lg text-white
         rounded-lg min-h-[45px] "
@@ -313,6 +299,7 @@ const ProductForm = () => {
 
         <Button
           type="submit"
+          disabled={isSubmitting}
           className="min-w-fit sm:w-[150px] font-semibold hover:shadow-md hover:bg-light_blue bg-black text-white rounded-lg"
         >
           {form.formState.isSubmitting ? "Loading..." : "Submit"}
@@ -321,7 +308,8 @@ const ProductForm = () => {
         {form.watch("productImages").map((img, index) => (
   <div key={index} className="flex relative items-center gap-2 ">
     <img src={img.url} alt={`Uploaded ${index + 1}`} className=" w-32 relative h-32 object-contain rounded-lg border" />
-    <button
+    <button 
+     disabled={isSubmitting}
       type="button"
       onClick={() => removeImage(img.url)}
       className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded"

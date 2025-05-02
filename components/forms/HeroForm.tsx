@@ -35,7 +35,7 @@ const HeroForm = () => {
       },
     },
   })
-  const router = useRouter()
+  const isSubmitting = form.formState.isSubmitting === true
   const { toast } = useToast()
   const [error,setError] = useState<string | undefined>(undefined)
    console.log(form.watch(), "values")
@@ -85,7 +85,7 @@ const HeroForm = () => {
               <FormLabel>Activate Hero Banner?</FormLabel>
               <FormControl>
                 <Switch
-                 //className={field.value ? "text-light_blue" : "text-black"}
+                  disabled={isSubmitting}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -104,6 +104,7 @@ const HeroForm = () => {
               <FormControl>
                 <Input
                   className="input_styles no-focus"
+                  disabled={isSubmitting}
                   placeholder="Enter a strong title please"
                   {...field}
                 />
@@ -135,6 +136,7 @@ const HeroForm = () => {
           {({ open }) => (
             <Button
               onClick={() => open()}
+              disabled={isSubmitting}
               className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
               type="button"
             >
@@ -184,6 +186,7 @@ const HeroForm = () => {
           {({ open }) => (
             <Button
               onClick={() => open()}
+              disabled={isSubmitting}
               className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
               type="button"
             >
@@ -211,8 +214,8 @@ const HeroForm = () => {
 />
 
     
-        <Button className="bg-light_blue lg:w-[150px] text-white" type="submit">
-          {form.formState.isSubmitting ? "Loading..." : "Valider"}
+        <Button   disabled={isSubmitting} className="bg-light_blue lg:w-[150px] text-white" type="submit">
+          {isSubmitting ? "Loading..." : "Valider"}
         </Button>
       </form>
     </Form>

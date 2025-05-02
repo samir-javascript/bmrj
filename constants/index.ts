@@ -100,42 +100,42 @@ export const categories = [
     }
 ]
 export const ProfileItems = [
-     {
-        name: "mon compte",
-        icon: UserRound,
-        pathname: ROUTES.userProfile
-     },
-     {
-        name: "mes commandes",
-        icon: ShoppingCart,
-        pathname: ROUTES.orders
-     },   {
-        name: "ma list d'envie",
-        icon: Heart,
-        pathname: ROUTES.wishlist
-     },  {
-        name: "Carnet d'addresses",
-        icon: MapPin,
-        pathname: ROUTES.shipping
-     }, 
-      {
-        name: "Information du compte",
-        icon: BadgeInfo,
-        pathname: ROUTES.editProfile("kjkffd")
-     }, 
-     {
-        name: "mes Coupons",
-        icon: BadgeDollarSign,
-        pathname:  ROUTES.coupons  
-    },
-    
-    //  {
-    //     name: "LogOut",
-    //     icon: LogOut,
-    //     pathname: ""
-    //  },
-     
-     
+  {
+     name: "mon compte",
+     icon: UserRound,
+     pathname: ROUTES.userProfile
+  },
+  {
+     name: "mes commandes",
+     icon: ShoppingCart,
+     pathname: ROUTES.orders
+  },   {
+     name: "ma list d'envie",
+     icon: Heart,
+     pathname: ROUTES.wishlist
+  },  {
+     name: "Carnet d'addresses",
+     icon: MapPin,
+     pathname: ROUTES.shipping
+  }, 
+   {
+     name: "Information du compte",
+     icon: BadgeInfo,
+     pathname: "/customer/account/edit"
+  }, 
+  {
+     name: "mes Coupons",
+     icon: BadgeDollarSign,
+     pathname:  ROUTES.coupons  
+ },
+ 
+ //  {
+ //     name: "LogOut",
+ //     icon: LogOut,
+ //     pathname: ""
+ //  },
+  
+  
 ]
 export const features = [
     {

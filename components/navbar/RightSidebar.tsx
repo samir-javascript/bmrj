@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { ProfileItems as Items } from "@/constants";
+import {ROUTES} from "@/constants/routes"
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -46,7 +47,9 @@ const RightSidebar = () => {
           const isActive = item.pathname === pathname;
           const isFirst = index === 0;
           const isLast = index === Items.length - 1;
-
+           if(item.pathname.includes("edit") || item.pathname === "/customer/account/edit") {
+              item.pathname = ROUTES.editProfile(session?.data?.user?.id as string)
+           }
           return (
             <Link key={index} href={item.pathname} className="block">
               <div

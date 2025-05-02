@@ -17,11 +17,18 @@ import Alert from '@/components/shared/Alert'
 const page = async({searchParams}:searchParamsProps) => {
    const { page, pageSize,query} = await searchParams
    const { data, error } = await getAllUsers({page: Number(page) || 1, query: query as string || "" , pageSize: Number(pageSize) || 5})
+   if(error)  {
+      return (
+         <div className="my-5">
+             <Alert  message={error.message} />
+          </div>
+      )
+   }
   return (
     <div className=' h-full w-full py-7 flex flex-col'>
-       {error ? (
+       {!data || data.users.length === 0 ? (
           <div className="my-5">
-             <Alert  message={error.message} />
+             <Alert  message={"There are no users at the moment."} />
           </div>
        ): (
           <>

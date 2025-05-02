@@ -56,11 +56,7 @@ export default function EditProductForm({productId, product}: {productId:string,
     },
   })
  
-  // 2. Define a submit handler.
-  // const handleChange = (images:string[])=> {
-  //     setImages(images)
-  //     form.setValue('productImages',images)
-  // }
+const isSubmitting = form.formState.isSubmitting
  const handleSubmit = async(values: z.infer<typeof EditProductSchema>)=> {
       try {
          const { success } = await editProduct({
@@ -91,7 +87,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product Name
             </FormLabel>
             <FormControl>
-              <Input className="no-focus" placeholder="Enter Product Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -109,6 +105,7 @@ export default function EditProductForm({productId, product}: {productId:string,
             <FormControl>
             <Editor
                   value={field.value}
+                  disabled={isSubmitting}
                   editorRef={editorRef}
                   fieldChange={field.onChange}
                 />
@@ -129,7 +126,7 @@ export default function EditProductForm({productId, product}: {productId:string,
             </FormLabel>
             <FormControl>
               <Input  
-             
+             disabled={isSubmitting}
              type="number"
                className="no-focus" placeholder="Enter Product Price" {...field} />
             </FormControl>
@@ -147,7 +144,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product PrevPrice
             </FormLabel>
             <FormControl>
-              <Input type="number" className="no-focus" placeholder="Enter Product discounted price" {...field} />
+              <Input disabled={isSubmitting} type="number" className="no-focus" placeholder="Enter Product discounted price" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -165,7 +162,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product Category
             </FormLabel>
             <FormControl>
-              <Input className="no-focus" placeholder="Enter Product Category Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Category Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -181,7 +178,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product Brand
             </FormLabel>
             <FormControl>
-              <Input className="no-focus" placeholder="Enter Product Brand Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Brand Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -197,7 +194,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product UI Podition
             </FormLabel>
             <FormControl>
-              <Input className="no-focus" placeholder="Enter Product Position" {...field} />
+              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Position" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -213,7 +210,7 @@ export default function EditProductForm({productId, product}: {productId:string,
                 Product QTY
             </FormLabel>
             <FormControl>
-              <Input type="number" className="no-focus" placeholder="Enter Product Quantity" {...field} />
+              <Input disabled={isSubmitting} type="number" className="no-focus" placeholder="Enter Product Quantity" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -250,6 +247,7 @@ export default function EditProductForm({productId, product}: {productId:string,
     return (
       <Button
         onClick={() => open()}
+        disabled={isSubmitting}
         className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
         type="button"
       >
@@ -266,9 +264,9 @@ export default function EditProductForm({productId, product}: {productId:string,
 />
     
      
-      <Button className="min-w-fit sm:w-[150px] font-semibold
+      <Button disabled={isSubmitting} className="min-w-fit sm:w-[150px] font-semibold
        hover:shadow-md hover:bg-light_blue bg-black text-white rounded-lg" type="submit">
-         {form.formState.isSubmitting ? "Loading..." : "Valider"} 
+         {isSubmitting ? "Loading..." : "Valider"} 
       </Button>
     </form>
 

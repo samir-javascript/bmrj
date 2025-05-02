@@ -56,14 +56,7 @@ const AuthForm = () => {
  
   const session = useSession()
   const dispatch = useAppDispatch()
-    // 2. Define a submit handler.
-  //   useEffect(() => {
-  //     if (session?.data?.user) { // Check if session exists
-  //         dispatch(syncWithUser());
-         
-  //     }
-  // }, [session, syncWithUser]); 
-  // 2. Define a submit handler.
+  const isSubmitting = form.formState.isSubmitting === true
   async function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
      try {
         const { success , data, error } = await signUpWithCredentials({
@@ -111,7 +104,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>User Name</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your name" {...field} />
+                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your name" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -125,7 +118,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your lastName" {...field} />
+                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your lastName" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -139,7 +132,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input type="email" className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input disabled={isSubmitting} type="email" className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -153,7 +146,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" className="input_styles no-focus" placeholder="Enter a strong password please" {...field} />
+                <Input disabled={isSubmitting} type="password" className="input_styles no-focus" placeholder="Enter a strong password please" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -167,7 +160,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your valid phone number" {...field} />
+                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your valid phone number" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -181,14 +174,14 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>User Gender</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="what is your gender..." {...field} />
+                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="what is your gender..." {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
-        <Button className="bg-light_blue text-white" type="submit">
+        <Button disabled={isSubmitting} className="bg-light_blue text-white" type="submit">
            {form.formState.isSubmitting ? "Loading" : "Sign up"} 
         </Button>
       </form>

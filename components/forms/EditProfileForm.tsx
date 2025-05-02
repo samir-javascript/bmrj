@@ -54,6 +54,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
   })
  
   // 2. Define a submit handler.
+  const isSubmitting = form.formState.isSubmitting === true
    async function onSubmit(values: z.infer<typeof editProfileSchema>) {
    
      
@@ -92,6 +93,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
       <FormLabel>Gender</FormLabel>
       <FormControl>
         <RadioGroup
+        disabled={isSubmitting}
           onValueChange={field.onChange}
           defaultValue={field.value}
           className="flex flex-row gap-4"
@@ -124,7 +126,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input  disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -138,7 +140,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input  disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -152,7 +154,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input  disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -166,7 +168,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input type="number" className="input_styles no-focus" placeholder="Enter Your Phone Number" {...field} />
+                <Input  disabled={isSubmitting} type="number" className="input_styles no-focus" placeholder="Enter Your Phone Number" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -182,7 +184,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Current Password</FormLabel>
               <FormControl>
-                <Input type="password" className="input_styles no-focus"  {...field} />
+                <Input  disabled={isSubmitting} type="password" className="input_styles no-focus"  {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -196,7 +198,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>New Password</FormLabel>
               <FormControl>
-                <Input type="password" className="input_styles no-focus"  {...field} />
+                <Input  disabled={isSubmitting} type="password" className="input_styles no-focus"  {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -210,7 +212,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
             <FormItem>
               <FormLabel>Confirm new password</FormLabel>
               <FormControl>
-                <Input type="password" className="input_styles no-focus"  {...field} />
+                <Input  disabled={isSubmitting} type="password" className="input_styles no-focus"  {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -221,7 +223,7 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
         ): (
        
         <div className="flex flex-col mt-4 space-y-3">
-            <Button onClick={() => setOpen(true)} className="bg-gray-200 hover:bg-gray-300 lg:w-[200px] w-fit rounded-lg text-black  " type="button">
+            <Button  disabled={isSubmitting} onClick={() => setOpen(true)} className="bg-gray-200 hover:bg-gray-300 lg:w-[200px] w-fit rounded-lg text-black  " type="button">
                 Set Password
             </Button>
         </div>
@@ -229,8 +231,8 @@ const EditProfileForm = ({user, canChangePasswordPromise}: {
          
          <SetPasswordModal open={open} setOpen={setOpen} email={user.email} />
          
-        <Button disabled={open} className="bg-light_blue text-white" type="submit">
-            {form.formState.isSubmitting ? "Loading..." : "Valider"} 
+        <Button  disabled={open || isSubmitting} className="bg-light_blue text-white" type="submit">
+            {isSubmitting ? "Loading..." : "Valider"} 
         </Button>
       </form>
     

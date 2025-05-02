@@ -51,7 +51,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
         id: id,
     }
   });
-
+  const isSubmitting = form.formState.isSubmitting === true
   const handleSubmit = async (values:z.infer<typeof editShippingSchema>) => {
       try {
          const { success, data, error } =  await editShippingAddress(values)
@@ -104,7 +104,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                    Name
                 </FormLabel>
                 <FormControl>
-                  <Input className="input-css" {...field} />
+                  <Input disabled={isSubmitting} className="input-css" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +120,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                   Phone Number
                </FormLabel>
                <FormControl>
-                 <Input className="input-css"  {...field} />
+                 <Input disabled={isSubmitting} className="input-css"  {...field} />
                </FormControl>
                <FormMessage />
              </FormItem>
@@ -136,7 +136,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                   Address
                </FormLabel>
                <FormControl>
-                 <Input className="input-css"  {...field} />
+                 <Input disabled={isSubmitting} className="input-css"  {...field} />
                </FormControl>
                <FormMessage />
              </FormItem>
@@ -152,7 +152,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                   City
                </FormLabel>
                <FormControl>
-                 <Input className="input-css" {...field} />
+                 <Input disabled={isSubmitting} className="input-css" {...field} />
                </FormControl>
                <FormMessage />
              </FormItem>
@@ -169,7 +169,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                   Country
                </FormLabel>
                <FormControl>
-                 <Input className="input-css" {...field} />
+                 <Input disabled={isSubmitting} className="input-css" {...field} />
                </FormControl>
                <FormMessage />
              </FormItem>
@@ -186,7 +186,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
                  Postal Code
                </FormLabel>
                <FormControl>
-                 <Input className="input-css" {...field} />
+                 <Input disabled={isSubmitting} className="input-css" {...field} />
                </FormControl>
                <FormMessage />
              </FormItem>
@@ -199,12 +199,12 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
        
 
         <Button
-          disabled={form.formState.isSubmitting}
+          disabled={isSubmitting}
           type="submit"
           className="min-w-fit sm:w-[150px] font-semibold hover:shadow-md
            hover:bg-light_blue bg-black text-white rounded-lg mb-5"
         >
-          {form.formState.isSubmitting ? "Loading..." : "Valider"}
+          {isSubmitting ? "Loading..." : "Valider"}
         </Button>
       </form>
     </Form>

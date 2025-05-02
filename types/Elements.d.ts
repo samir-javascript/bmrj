@@ -75,11 +75,5 @@ export interface UserCartElement {
       ],
      }
     
-    // userCart: {
-        
-    //     items: [{
-    //          productId: IProduct;
-    //               quantity: number;
-    //     }]
-    // }
+   
 }

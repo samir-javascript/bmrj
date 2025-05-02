@@ -1,19 +1,46 @@
 "use client"
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, {useState} from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button'
 import { Bell, LogOut, Menu, MenuIcon } from 'lucide-react'
 import MobileSidebar from './MobileSidebar'
+import { clearCart } from "@/lib/store/cartSlice";
+import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch } from '@/hooks/user-redux'
 import { toggleAdminSidebar } from '@/lib/store/cartSlice'
-
+import LoadingAppState from "@/components/Loaders/LoadingAppState"
 const Navbar = () => {
   const dispatch = useAppDispatch()
-
+  const [loading,setLoading]= useState(false)
+  const session = useSession()
+ const handleLogOut = async () => {
+     setLoading(true);
+     try {
+       // Call server API to update user lastSeen
+       if (session.status === "authenticated") {
+         await fetch("/api/logout", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ userId: session.data.user.id }),
+         });
+       }
+ 
+       dispatch(clearCart());
+       localStorage.removeItem("guest_cart");
+       await signOut({ callbackUrl: "/" });
+     } catch (error) {
+       console.error(error);
+     } finally {
+       setLoading(false);
+     }
+   };
   return (
     <div className='w-full'>
+       {loading && (
+         <LoadingAppState />
+       )}
     <header style={{background: "rgb(18, 18, 18)", boxShadow:"0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)"}}
      className='gap-4 flex text-white flex-col px-4 py-3 max-lg:border-b border-gray-100'>
     <nav className='items-center gap-4  flex justify-between'>
@@ -58,7 +85,7 @@ const Navbar = () => {
                       </span>
                  </div>
              </div>
-             <Button className='bg-secondary sm:flex hidden hover:bg-light_blue text-white' type="button">
+             <Button onClick={()=> handleLogOut()} className='bg-secondary sm:flex hidden hover:bg-light_blue text-white' type="button">
                  LogOut <LogOut />
              </Button>
              <LogOut className='sm:hidden block ml-3 text-white' />

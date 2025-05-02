@@ -49,6 +49,7 @@ const LoginForm = () => {
   }) 
   
   const session = useSession()
+  const isSubmitting = form.formState.isSubmitting === true
   // 2. Define a submit handler.
   useEffect(() => {
     if (session?.data?.user) { // Check if session exists
@@ -95,7 +96,11 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input
+                 className="input_styles no-focus"
+                 disabled={isSubmitting}
+                  placeholder="Enter your valid email address"
+                   {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -109,7 +114,10 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" className="input_styles no-focus" placeholder="Enter a strong password please" {...field} />
+                <Input type="password"
+                 className="input_styles no-focus"
+                 disabled={isSubmitting}
+                  placeholder="Enter a strong password please" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -118,8 +126,8 @@ const LoginForm = () => {
         />
         
          
-        <Button className="bg-light_blue text-white" type="submit">
-            {form.formState.isSubmitting ? "Loading..." : "Sign in"} 
+        <Button disabled={isSubmitting} className="bg-light_blue text-white" type="submit">
+            {isSubmitting ? "Loading..." : "Sign in"} 
         </Button>
       </form>
       <div className="mt-3">

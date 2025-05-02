@@ -17,19 +17,25 @@ const page = async({searchParams}: searchParamsProps) => {
    const {page,pageSize,orderStatus,query} = await searchParams
    // @ts-ignore
    const { data,error} = await getAllOrders({page: Number(page) || 1, query: query || "" , pageSize: Number(pageSize) || 5,orderStatus: orderStatus})
-  
+    if(error) {
+       return (
+         <div className='my-5'>
+         <Alert message={error.message} />
+      </div>
+       )
+    }
   return (
     <div className=' h-full w-full py-7 flex flex-col'>
-      {error ? (
+      {!data ||data?.orders?.length === 0  ? (
           <div className='my-5'>
-             <Alert message={error.message} />
+             <Alert message={"There are no orders at the moment."} />
           </div>
       ): (
          <>
           <OrderSearchInput />
         {/** display orders for mobile */}
         <div className='hidden flex-col mt-3 w-[96%] max-sm:flex  mx-auto space-y-0.5'>
-            {data && data.orders.length > 0 ? data?.orders?.map((order,index) => (
+            {data && data.orders.length > 0 && data?.orders?.map((order,index) => (
                <div style={{background:"rgb(22,22,22)"}} className='shadow-md flex flex-col px-5 py-3 rounded-lg' key={index}>
                      <div className='flex items-center justify-between'>
                            <p className='text-white font-medium text-sm '>order #{order._id} </p>
@@ -50,11 +56,7 @@ const page = async({searchParams}: searchParamsProps) => {
                      </div>
 
                </div>
-            )): (
-               <div>
-                   no orders 
-               </div>
-            )}
+            ))}
         </div>
          {/** display orders for desktop and ...  */}
          <div className='mt-4'>

@@ -1,36 +1,26 @@
+import mongoose, { Schema } from "mongoose";
+
 // =======================
 // AUTH INTERFACES
 // =======================
-import mongoose from "mongoose";
-export interface GetUserInfoParams {
-  userId:string;
-}
-export interface SignUpParams {
-  name: string;
-  lastName: string;
+
+export interface AuthCredentials {
   email: string;
-  phoneNumber: string;
   gender: "male" | "female";
+  lastName: string;
+  name: string;
   password: string;
+  phoneNumber: string;
 }
-export interface CreateCategoryParams {
-  name:string;
-  image: {
-    public_id:string;
-    imageUrl:string;
-  }
+
+export interface EmailVerificationParams {
+  token: string;
 }
-export interface DeleteHeroBannerParams {
-  id:string;
+
+export interface GetUserInfoParams {
+  userId: string;
 }
-export interface AddHeroImageParams {
-  title:string;
-  imgUrl: {
-    mobile:string;
-    desktop:string;
-  }
-  isActive: boolean;
-}
+
 export interface SignInWithOAuthParams {
   provider: "google" | "github";
   providerAccountId: string;
@@ -42,52 +32,38 @@ export interface SignInWithOAuthParams {
   };
 }
 
-export interface EmailVerificationParams {
-  token: string;
-}
-
-export interface AuthCredentials {
-  name: string;
-  lastName: string;
+export interface SignUpParams {
   email: string;
+  gender: "male" | "female";
+  lastName: string;
+  name: string;
   password: string;
   phoneNumber: string;
-  gender: "male" | "female";
 }
 
 // =======================
-// PRODUCT INTERFACES
+// CATEGORY & HERO BANNER INTERFACES
 // =======================
 
-export interface ProductParams {
-  productName: string;
-  productDescription: string;
-  productPrice: string;
-  productPrevPrice: string;
-  productCategory: string;
-  productBrand: string;
-  productPosition: string;
-  qty: string;
-  productImages: {
-    url:string;
-    public_id:string
-  }[];
-}
-export interface VerifyCodeAndSetPasswordParams {
-  password:string;
-  confirmPassword:string;
-  code:string;
-}
-export interface GetSingleProductParams {
-  productId: string;
+export interface AddHeroImageParams {
+  imgUrl: {
+    desktop: string;
+    mobile: string;
+  };
+  isActive: boolean;
+  title: string;
 }
 
-export interface EditProductParams extends ProductParams {
-  productId: string;
+export interface CreateCategoryParams {
+  name: string;
+  image: {
+    public_id: string;
+    imageUrl: string;
+  };
 }
 
-export interface DeleteProductParams {
-  productId: string;
+export interface DeleteHeroBannerParams {
+  id: string;
 }
 
 // =======================
@@ -99,103 +75,20 @@ export interface CollectionParams {
 }
 
 // =======================
-// PROFILE INTERFACES
+// ORDER INTERFACES
 // =======================
 
-export interface EditProfileParams {
-  name: string;
-  lastName: string;
-  phoneNumber: string;
-  gender: "male" | "female";
-  email: string;
-  currentPassword?:string;
-  password?: string;
-  confirmPassword?: string;
-}
-
-// =======================
-// SHIPPING INTERFACES
-// =======================
-
-export interface CreateShippingParams {
-  city: string;
-  postalCode: string;
-  address: string;
-  phoneNumber: string;
-  name: string;
-  country: string;
-}
-
-export interface GetSingleShippingParams {
-  id: string;
-}
-export interface searchParamsProps  {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-export interface EditShippingParams extends CreateShippingParams {
-  id: string;
-}
-
-export interface DeleteShippingParams {
-  id: string;
-}
-
-// =======================
-// PAGINATION INTERFACES
-// =======================
-
-export interface PaginatedSchemaParams {
-  page?: number;
-  pageSize?: number;
-  filter?: string;
-  query?: string;
-  sort?: string;
-}
-export interface GetAllOrdersParams extends PaginatedSchemaParams {
-  orderStatus?: "" | 'canceled'| 'in preparation'| 'confirmed'| 'delivered'
-}
 export interface CancelOrderParams {
-  orderId:string;
-}
-export interface GetUserCartParams  {
-  userId:string;
-}
-export interface DeleteSelectedOrdersParams {
-  ordersId: string[]
-}
-export interface DeleteSelectedUsersParams  {
-  usersId: string[]
-}
-export interface CouponParams  {
-   code:string;
-   userId:string
+  orderId: string;
 }
 
-// ORDERS PARAMS;
+export interface ClearUserCartParams {
+  userId: string;
+}
 
-export interface GetSearchInputResultsParams {
-  query:string
-}
-export interface ReviewParams  {
-   user:string | Schema.Types.ObjectId;
-  
-   title: string;
-   comment: string;
-   rating: string;
-   productId:string
-}
-export interface orderItemParams {
-  name: string;
-  price: number;
-  qty: number;
-  images: string[];
-  product: mongoose.Schema.Types.ObjectId | string;
-}
 export interface CreateOrderParams {
-  orderItems: orderItemParams[];
-  shippingPrice: number;
-  totalPrice: number;
   itemsPrice: number;
+  orderItems: orderItemParams[];
   paymentMethod: "stripe" | "COD";
   shippingAddress: {
     city: string;
@@ -204,6 +97,8 @@ export interface CreateOrderParams {
     address: string;
     phoneNumber: string;
   };
+  shippingPrice: number;
+  totalPrice: number;
   orderStatus?: "canceled" | "in preparation" | "confirmed" | "delivered";
   isPaid?: boolean;
   paidAt?: Date;
@@ -217,28 +112,168 @@ export interface CreateOrderParams {
   };
 }
 
-export interface ClearUserCartParams {
-  userId:string;
+export interface DeleteSelectedOrdersParams {
+  ordersId: string[];
 }
+
+export interface GetAllOrdersParams extends PaginatedSchemaParams {
+  orderStatus?: "" | "canceled" | "in preparation" | "confirmed" | "delivered";
+}
+
 export interface GetMyOrdersParams extends PaginatedSchemaParams {
-  userId:string;
+  userId: string;
+}
+
+export interface orderItemParams {
+  images: string[];
+  name: string;
+  price: number;
+  product: mongoose.Schema.Types.ObjectId | string;
+  qty: number;
+}
+
+// =======================
+// PAGINATION INTERFACES
+// =======================
+
+export interface PaginatedSchemaParams {
+  filter?: string;
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  sort?: string;
+}
+
+// =======================
+// PRODUCT INTERFACES
+// =======================
+
+export interface DeleteProductParams {
+  productId: string;
+}
+
+export interface EditProductParams extends ProductParams {
+  productId: string;
+}
+
+export interface GetSingleProductParams {
+  productId: string;
+}
+
+export interface ProductParams {
+  productName: string;
+  productDescription: string;
+  productPrice: string;
+  productPrevPrice: string;
+  productCategory: string;
+  productBrand: string;
+  productPosition: string;
+  qty: string;
+  productImages: {
+    url: string;
+    public_id: string;
+  }[];
+}
+
+// =======================
+// PROFILE INTERFACES
+// =======================
+
+export interface EditProfileParams {
+  confirmPassword?: string;
+  currentPassword?: string;
+  email: string;
+  gender: "male" | "female";
+  lastName: string;
+  name: string;
+  password?: string;
+  phoneNumber: string;
 }
 
 export interface EditUserProfileByAdmin {
-   userId: string;
-   gender: "male" | "female";
-   firstName:string;
-   lastName:string;
-   email:string;
-   phoneNumber:string;
-   hasNewsletter:boolean;
-   currentPassword:string;
-   newPassword:string;
-   address:string;
-   city:string;
-   postalCode:string;
-   country:string;
+  address: string;
+  city: string;
+  country: string;
+  currentPassword: string;
+  email: string;
+  firstName: string;
+  gender: "male" | "female";
+  hasNewsletter: boolean;
+  lastName: string;
+  newPassword: string;
+  phoneNumber: string;
+  postalCode: string;
+  userId: string;
 }
+
 export interface DeleteUserParams {
-   userId:string;
+  userId: string;
+}
+
+export interface DeleteSelectedUsersParams {
+  usersId: string[];
+}
+
+// =======================
+// REVIEW INTERFACES
+// =======================
+
+export interface ReviewParams {
+  comment: string;
+  productId: string;
+  rating: string;
+  title: string;
+  user: string | Schema.Types.ObjectId;
+}
+
+// =======================
+// SHIPPING INTERFACES
+// =======================
+
+export interface CreateShippingParams {
+  address: string;
+  city: string;
+  country: string;
+  name: string;
+  phoneNumber: string;
+  postalCode: string;
+}
+
+export interface DeleteShippingParams {
+  id: string;
+}
+
+export interface EditShippingParams extends CreateShippingParams {
+  id: string;
+}
+
+export interface GetSingleShippingParams {
+  id: string;
+}
+
+// =======================
+// UTILITY INTERFACES
+// =======================
+
+export interface CouponParams {
+  code: string;
+  userId: string;
+}
+
+export interface GetSearchInputResultsParams {
+  query: string;
+}
+
+export interface GetUserCartParams {
+  userId: string;
+}
+
+export interface searchParamsProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export interface VerifyCodeAndSetPasswordParams {
+  code: string;
+  confirmPassword: string;
+  password: string;
 }

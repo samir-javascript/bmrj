@@ -31,7 +31,7 @@ const page = async ({searchParams}:searchParamsProps) => {
       <RightSidebar />
       <div className='w-full lg:hidden h-[10px] bg-gray-100' />
       {/* box info */}
-      {data ? (
+      {data && data?.orders?.length > 0  ? (
         <div className="w-full px-2 flex-1">
           <h2 className="h2-bold w-full lg:text-left text-center mb-5">vos Commandes</h2>
           <div className='flex flex-col space-y-3 w-full'>

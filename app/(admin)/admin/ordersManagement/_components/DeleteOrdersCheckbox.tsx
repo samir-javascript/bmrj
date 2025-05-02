@@ -9,6 +9,7 @@ import { formatFullDateTime, formatPrice } from '@/lib/utils'
 import { Order } from '@/types/Elements'
 import { ArrowDown, Trash, X } from 'lucide-react'
 import React, {useState} from 'react'
+import Alert from '@/components/shared/Alert'
 
 const DeleteOrdersCheckbox = ({data}: {
     data: {
@@ -48,7 +49,7 @@ const DeleteOrdersCheckbox = ({data}: {
       {loading && (
          <LoadingAppState />
       )}
-         {selectedOrders.length > 0 && (
+         {selectedOrders.length > 0 && data.orders.length > 0  && (
   <div className="bg-light_blue py-3 px-4 rounded-tr-lg rounded-tl-lg flex items-center justify-between ">
   <div className='flex items-center gap-2.5'>
     <div
@@ -69,7 +70,8 @@ const DeleteOrdersCheckbox = ({data}: {
 </div>
          )}
          <Tabs />
-         <table className="min-w-full divide-y max-sm:hidden divide-gray-600 text-sm text-left">
+          {data.orders.length > 0 ? (
+  <table className="min-w-full divide-y max-sm:hidden divide-gray-600 text-sm text-left">
   <thead className=" text-white bg-black font-semibold">
     <tr>
       <th className="px-4 py-3">
@@ -113,7 +115,7 @@ const DeleteOrdersCheckbox = ({data}: {
   </thead>
   <tbody style={{background: "rgb(30,30,30)"}} className="divide-y  divide-gray-600">
     {/* Example row — map through your data here */}
-    {data && data.orders.length > 0 ? data?.orders?.map((order,index)=> (
+    {data && data.orders.length > 0 && data?.orders?.map((order,index)=> (
         <tr className='hover:bg-gray-900 cursor-pointer' key={index}>
         <td className="px-4 py-3 text-white">
         <Checkbox 
@@ -129,13 +131,7 @@ const DeleteOrdersCheckbox = ({data}: {
     setSelectAll(updated.length === data.orders.length)
   }}
   
-  // onCheckedChange={(checked) => {
-  //   if (checked) {
-  //     setSelectedOrders((prev) => [...prev, order._id])
-  //   } else {
-  //     setSelectedOrders((prev) => prev.filter(id => id !== order._id))
-  //   }
-  // }}
+  
 />
         </td>
         <td className="px-4  py-3">
@@ -176,15 +172,17 @@ const DeleteOrdersCheckbox = ({data}: {
           </p>
         </td>
       </tr>
-    ) ): (
-       <div>
-          no orders shiit
-       </div>
-    )}
+    ) )}
    
     {/* Repeat rows */}
   </tbody>
          </table>
+          ): (
+             <div>
+                <Alert message={"There are no orders at the moment."} />
+             </div>
+          )}
+       
      </div>
   )
 }

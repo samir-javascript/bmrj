@@ -53,7 +53,7 @@ const CategoryForm = () => {
       form.trigger("image");
     }
   };
-
+  const isSubmitting = form.formState.isSubmitting === true
   const handleSubmit = async (data: z.infer<typeof CategorySchemaValidation>) => {
      try {
         const { success, error } = await createCategory({
@@ -97,6 +97,7 @@ const CategoryForm = () => {
                   className="input_styles no-focus"
                   placeholder="Enter Category Name"
                   {...field}
+                  disabled={isSubmitting}
                 />
               </FormControl>
               <FormMessage className="text-red-500" />
@@ -118,6 +119,7 @@ const CategoryForm = () => {
                   {({ open }) => (
                     <Button
                       onClick={() => open()}
+                      disabled={isSubmitting}
                       className="w-full bg-white shadow-lg text-black border border-gray-200 rounded-lg min-h-[45px] hover:bg-white"
                       type="button"
                     >
