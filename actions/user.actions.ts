@@ -6,6 +6,7 @@ import Account, { IAccount } from "@/database/models/account.model";
 import { Cart } from "@/database/models/cart.model";
 import Collection from "@/database/models/collection";
 import Order from "@/database/models/order.model";
+import Product, { IReview } from "@/database/models/product.model";
 import SetPasswordToken, { ISetPasswordToken } from "@/database/models/setPasswordToken.model";
 import User, { IUser } from "@/database/models/user.model";
 import { cache } from "@/lib/cache";
@@ -13,12 +14,13 @@ import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
-import { DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
+import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
 import mongoose from "mongoose";
 import { FilterQuery } from "mongoose";
+import { revalidatePath } from "next/cache";
 
 
 
@@ -252,37 +254,62 @@ export async function VerifyCodeAndSetPassword(params:VerifyCodeAndSetPasswordPa
 
 // TODO: delete user by admin
 
-export async function deleteUser(params:DeleteUserParams): Promise<ActionResponse> {
-  const validatedResult = await action({params,schema:DeleteUserValidationSchema,authorize:true})
-  if(validatedResult instanceof Error) {
-     return handleError(validatedResult) as ErrorResponse
+export async function deleteUser(params: DeleteUserParams): Promise<ActionResponse> {
+  const validatedResult = await action({ params, schema: DeleteUserValidationSchema, authorize: true });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
   }
-  const session = validatedResult.session;
-  const { userId } = params
-   try {
-      await connectToDb()
-      // find admin user;
-      const adminUser = await User.findById(session?.user.id) as IUser;
-      if(!adminUser.isAdmin) throw new Error('only admin users can perform this action')
-      const user = await User.findById(userId) as IUser
-    if(!user) throw new Error('User not found')
-      await User.findByIdAndDelete(user._id)
-    
-      // delete all his orders
-      await Order.deleteMany({user: user._id})
-      // delete all his comments
 
-      // delete his wishlist items
-      await Collection.deleteMany({userId: user._id})
-      // Delete user cart
-      await Cart.deleteMany({userId:user._id})
-      return {
-         success: true
-      }
-   } catch (error) {
-      return handleError(error) as ErrorResponse
-   }
+  const session = validatedResult.session;
+  const { userId } = params;
+
+  try {
+    await connectToDb();
+
+    // find admin user
+    const adminUser = await User.findById(session?.user.id) as IUser;
+    if (!adminUser.isAdmin) throw new Error("only admin users can perform this action");
+
+    const user = await User.findById(userId) as IUser;
+    if (!user) throw new Error("User not found");
+
+    // delete user
+    await User.findByIdAndDelete(user._id);
+
+    // delete all orders
+    await Order.deleteMany({ user: user._id });
+
+    // delete wishlist items
+    await Collection.deleteMany({ userId: user._id });
+
+    // delete user cart
+    await Cart.deleteMany({ userId: user._id });
+
+    // delete user reviews/comments from all products
+    const productsWithUserReviews = await Product.find({ "reviews.user": user._id });
+
+    for (const product of productsWithUserReviews) {
+      // filter out the user's reviews
+      product.reviews = product.reviews.filter(
+        (review:IReview) => review.user.toString() !== user._id.toString()
+      );
+
+      // update numReviews and rating
+      product.numReviews = product.reviews.length;
+      const totalRating = product.reviews.reduce((sum:number, r:IReview) => sum + r.rating, 0);
+      product.rating = product.numReviews > 0 ? totalRating / product.numReviews : 0;
+
+      await product.save();
+    }
+
+    return {
+      success: true
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 }
+
 
 // TODO: Get all users for admin
 export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionResponse<{users: IUser[], isNext:boolean}>> => {
@@ -293,7 +320,8 @@ export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionR
    const session = validatedResult.session
    if(!session) throw new Error('missing user admin session')
     const { page = 1, pageSize = 10, query } = params;
-     const filterQuery: FilterQuery<typeof User> = {}
+   const filterQuery: FilterQuery<typeof User> = {}
+
   const skip = pageSize * (page - 1)
     try {
       await connectToDb()
@@ -305,7 +333,7 @@ export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionR
           ]
       }
       const userAdmin = await User.findById(session.user.id) as IUser
-      if(!userAdmin.isAdmin) throw new Error('Cannot procced! this action is only allowed by admin users')
+      if(!userAdmin?.isAdmin) throw new Error('Cannot procced! this action is only allowed by admin users')
         const usersCount = await User.countDocuments(filterQuery)
       const users = await User.find(filterQuery)
       .skip(skip)
@@ -320,3 +348,57 @@ export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionR
        return handleError(error) as ErrorResponse
     }
 }
+export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Promise<ActionResponse> => {
+  const validatedResult = await action({ params, schema: DeleteSelectedUsersSchema, authorize: true });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  const session = validatedResult.session;
+  if (!session) throw new UnAuthorizedError();
+
+  const { usersId } = params;
+
+  try {
+    await connectToDb();
+
+    const isAdminUser = await User.findById(session.user.id) as IUser;
+    if (!isAdminUser.isAdmin) throw new UnAuthorizedError("only admin users can perform this action");
+
+    for (const userId of usersId) {
+      const user = await User.findById(userId);
+      if (!user) continue;
+
+      // Delete related data
+      await Order.deleteMany({ user: user._id });
+      await Collection.deleteMany({ userId: user._id });
+      await Cart.deleteMany({ userId: user._id });
+
+      // Remove user reviews from all products
+      const products = await Product.find({ "reviews.user": user._id });
+
+      for (const product of products) {
+        product.reviews = product.reviews.filter(
+          (review:IReview) => review.user.toString() !== user._id.toString()
+        );
+
+        product.numReviews = product.reviews.length;
+        const totalRating = product.reviews.reduce((sum:number, r:IReview) => sum + r.rating, 0);
+        product.rating = product.numReviews > 0 ? totalRating / product.numReviews : 0;
+
+        await product.save();
+      }
+
+      await User.findByIdAndDelete(user._id);
+    }
+
+    revalidatePath("/admin/usersManagement/users");
+
+    return {
+      success: true,
+      message: `${usersId.length} user(s) and related data successfully deleted.`,
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};

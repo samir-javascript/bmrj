@@ -37,23 +37,38 @@ useEffect(() => {
       document.body.style.overflow = ""; // Cleanup on unmount
     };
   }, [isOrderDetailsOpened]);
- useEffect(() => {
-    const fetchOrder = async()=> {
-        const response = await fetch(`/api/order/${orderId}`)
-        // if(!response.ok) {
-        //     setError("Error fetching order details")
-        //     return
-        // }
-        const {data} = await response.json()
+//  useEffect(() => {
+//     const fetchOrder = async()=> {
+//         const response = await fetch(`/api/order/${orderId}`)
+       
+//         const {data} = await response.json()
 
-     setOrder(data)
+//      setOrder(data)
      
-     dispatch(endLoadingOrderDetails())
-    }
-   if(orderId) fetchOrder()
+//      dispatch(endLoadingOrderDetails())
+//     }
+//    if(orderId) fetchOrder()
    
- },
-[orderId])
+//  },
+// [orderId])
+useEffect(() => {
+  const fetchOrder = async () => {
+    try {
+      const response = await fetch(`/api/order/${orderId}`);
+      const { data } = await response.json();
+      setOrder(data);
+    } catch (error) {
+      setError("Une erreur s'est produite lors du chargement de la commande.");
+    } finally {
+      dispatch(endLoadingOrderDetails());
+    }
+  };
+
+  if (isOrderDetailsOpened && orderId) {
+    fetchOrder();
+  }
+}, [orderId, isOrderDetailsOpened]);
+
   return (
     <React.Fragment>
       {isOrderDetailsOpened && (

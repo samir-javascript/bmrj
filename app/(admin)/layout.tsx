@@ -7,7 +7,8 @@ import { redirect } from 'next/navigation'
 
 const AdminLayout = async({children}: {children: React.ReactNode}) => {
   const session = await auth()
-  if(session?.user.isAdmin === false) redirect("/")
+   if(!session) redirect("/")
+  if(session?.user?.isAdmin === false) redirect("/")
   return (
     <main className=''>
         <Navbar />

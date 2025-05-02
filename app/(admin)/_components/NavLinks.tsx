@@ -73,7 +73,7 @@ const NavLinks = () => {
                 }`}
                 href={child.route!}
               >
-                <item.imgURL className="text-white" size={20} />
+                <child.imgIcon className="text-white" size={20} />
                {!isAdminSidebarOpen  &&  <p className="max-lg:hidden text-sm font-medium text-gray-300">
                   {child.label}
                 </p>}

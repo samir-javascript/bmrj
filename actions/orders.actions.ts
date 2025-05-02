@@ -3,16 +3,18 @@
 import Order, { IOrder } from "@/database/models/order.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
-import { CancelOrderSchemaValidation, CreateOrderValidationSchema, GetAllOrdersSchemaValidation, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { CancelOrderParams, CreateOrderParams, GetAllOrdersParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
+import { CancelOrderSchemaValidation, CreateOrderValidationSchema, DeleteSelectedOrdersValidationSchema, GetAllOrdersSchemaValidation, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { CancelOrderParams, CreateOrderParams, DeleteSelectedOrdersParams, GetAllOrdersParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
 import connectToDb from "@/database/connect"
 import { auth } from "@/auth";
 import Product from "@/database/models/product.model";
 import { UnAuthorizedError } from "@/lib/http-errors";
 import { revalidatePath } from "next/cache";
 import { cache } from "@/lib/cache";
-import User from "@/database/models/user.model";
+import User, { IUser } from "@/database/models/user.model";
 import { Order as OrderType } from "@/types/Elements";
+import { redirect } from "next/navigation";
+
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
     // if(validatedResult instanceof Error) {
@@ -85,10 +87,14 @@ export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionRespo
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
     }
+    const session = validatedResult.session
+    if(!session) throw new UnAuthorizedError()
     const { page = 1, pageSize = 5, orderStatus = "", query} = params;
     const skip = pageSize * (page - 1)
    try {
       await connectToDb()
+      const isAdminUser = await User.findById(session.user.id) as IUser
+      if(!isAdminUser?.isAdmin) throw new UnAuthorizedError('UnAuthorized Error: Only admin users can have access to this area!')
       const queryOrder: Record<string, any> = {};
       if (query && query.trim() !== '') {
         const users = await User.find({
@@ -157,6 +163,45 @@ export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResp
       return {
         success: true,
         message: 'Order has been canceled',
+      }
+    } catch (error) {
+      return handleError(error) as ErrorResponse
+    }
+  }
+
+  export const deleteSelectedOrders = async (
+    params: DeleteSelectedOrdersParams
+  ): Promise<ActionResponse> => {
+    const validatedResult = await action({
+      params,
+      schema: DeleteSelectedOrdersValidationSchema,
+      authorize: true,
+    })
+  
+    if (validatedResult instanceof Error) {
+      return handleError(validatedResult) as ErrorResponse
+    }
+  
+    const session = validatedResult.session
+    if (!session) throw new UnAuthorizedError()
+  
+    const { ordersId } = params
+  
+    try {
+      await connectToDb()
+  
+      const isAdminUser = await User.findById(session.user.id) as IUser
+      if (!isAdminUser?.isAdmin) {
+        throw new UnAuthorizedError("Only admin users can perform this action")
+      }
+  
+      await Order.deleteMany({
+        _id: { $in: ordersId }
+      })
+     revalidatePath("/admin/ordersManagement/orders")
+      return {
+        success: true,
+        message: `${ordersId.length} order(s) successfully deleted.`,
       }
     } catch (error) {
       return handleError(error) as ErrorResponse

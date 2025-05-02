@@ -168,6 +168,12 @@ export const GetAllOrdersSchemaValidation = PaginatedSchemaValidation.extend({
   .optional()
   .default(''),
 })
+export const DeleteSelectedOrdersValidationSchema  = z.object({
+   ordersId: z.array(z.string().min(1, { message: "Order ID is required" }))
+})
+export const DeleteSelectedUsersSchema  = z.object({
+  usersId: z.array(z.string().min(1, { message: "User ID is required" }))
+})
 export const HeroValidationSchema = z.object({
    isActive: z.boolean().default(false),
    title: z.string().min(1, {message: "title is required"}),

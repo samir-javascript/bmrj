@@ -160,6 +160,12 @@ export interface CancelOrderParams {
 export interface GetUserCartParams  {
   userId:string;
 }
+export interface DeleteSelectedOrdersParams {
+  ordersId: string[]
+}
+export interface DeleteSelectedUsersParams  {
+  usersId: string[]
+}
 export interface CouponParams  {
    code:string;
    userId:string

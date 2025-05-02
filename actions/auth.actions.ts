@@ -14,6 +14,8 @@ import { EmailVerificationValidationSchema, LoginValidationSchema, SignUpValidat
 import Token, { IToken } from "@/database/models/token.model";
 import { sendVerificationEmail } from "@/lib/nodemailer";
 import connectToDb from "@/database/connect";
+import { revalidatePath } from "next/cache";
+import { ROUTES } from "@/constants/routes";
 
 
 
@@ -64,6 +66,7 @@ export async function signUpWithCredentials(
      await sendVerificationEmail(newUser.email,token)
 
     await signIn("credentials", { email, password, redirect: false });
+    revalidatePath(ROUTES.adminUsersList)
     
     return { success: true };
   } catch (error) {

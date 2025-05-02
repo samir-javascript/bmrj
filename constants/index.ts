@@ -4,6 +4,9 @@ import { Tv, ShoppingCart,ThumbsUp , UserRound, ChartNoAxesCombined,
      LogOut, Book, UserRoundSearch, CircleDollarSign, Settings, BadgeDollarSign, 
      Computer, ImagePlay, Grid2x2, BadgeInfo, BookUser, MapPin, DollarSign,
       GalleryThumbnails, GalleryHorizontalIcon, Users, MessageSquare } from "lucide-react"
+      import { FaFileInvoiceDollar } from "react-icons/fa";
+      import { TbCategoryFilled } from "react-icons/tb";
+      import { PiLineSegmentsFill } from "react-icons/pi";
 import { ROUTES } from "./routes"
 
 export const categories = [
@@ -207,12 +210,12 @@ export const sidebarLinks = [
         {
           label: "Orders",
           route: "/admin/ordersManagement/orders",
-          imgURL: DollarSign,
+          imgIcon: DollarSign,
         },
         {
           label: "Invoices",
           route: "/admin/sales/invoices",
-          imgURL:  DollarSign,
+          imgIcon:  FaFileInvoiceDollar,
         },
       ],
     },
@@ -224,12 +227,12 @@ export const sidebarLinks = [
         {
           label: "Posters",
           route: "/admin/sales/orders",
-          imgURL: DollarSign,
+          imgIcon: ImagePlay,
         },
         {
           label: "Categories",
           route: "/admin/sales/invoices",
-          imgURL:  DollarSign,
+          imgIcon: TbCategoryFilled,
         },
       ],
     },
@@ -241,12 +244,12 @@ export const sidebarLinks = [
         {
           label: "Customers",
           route: "/admin/sales/orders",
-          imgURL: DollarSign,
+          imgIcon: Users,
         },
         {
           label: "Segments",
           route: "/admin/sales/invoices",
-          imgURL:  DollarSign,
+          imgIcon: PiLineSegmentsFill,
         },
       ],
     },
