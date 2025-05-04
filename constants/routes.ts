@@ -17,5 +17,6 @@ export const ROUTES = {
     orderDetails: (id:string) => `/sales/order/view/order_id/${id}`,
     wishlist: "/wishlist",
     adminOrdersList: '/admin/ordersManagement/orders',
+    adminOrderDetails: (id:string)=> `/admin/ordersManagement/orders/${id}`,
     adminUsersList: '/admin/usersManagement/users'
 }

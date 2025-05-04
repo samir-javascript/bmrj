@@ -9,7 +9,6 @@ import Order from "@/database/models/order.model";
 import Product, { IReview } from "@/database/models/product.model";
 import SetPasswordToken, { ISetPasswordToken } from "@/database/models/setPasswordToken.model";
 import User, { IUser } from "@/database/models/user.model";
-import { cache } from "@/lib/cache";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
@@ -320,7 +319,7 @@ export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionR
    const session = validatedResult.session
    if(!session) throw new Error('missing user admin session')
     const { page = 1, pageSize = 10, query } = params;
-   const filterQuery: FilterQuery<typeof User> = {}
+   const filterQuery: FilterQuery<typeof User> = {isAdmin: false}
 
   const skip = pageSize * (page - 1)
     try {

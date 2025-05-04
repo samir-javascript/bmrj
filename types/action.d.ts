@@ -115,7 +115,9 @@ export interface CreateOrderParams {
 export interface DeleteSelectedOrdersParams {
   ordersId: string[];
 }
-
+export interface GetOrderDetailsParams {
+   orderId:string
+}
 export interface GetAllOrdersParams extends PaginatedSchemaParams {
   orderStatus?: "" | "canceled" | "in preparation" | "confirmed" | "delivered";
 }
@@ -242,7 +244,9 @@ export interface CreateShippingParams {
 export interface DeleteShippingParams {
   id: string;
 }
-
+export interface DeleteOrderByIdParams {
+  id:string
+}
 export interface EditShippingParams extends CreateShippingParams {
   id: string;
 }

@@ -3,8 +3,8 @@
 import Order, { IOrder } from "@/database/models/order.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
-import { CancelOrderSchemaValidation, CreateOrderValidationSchema, DeleteSelectedOrdersValidationSchema, GetAllOrdersSchemaValidation, GetMyOrdersValidationSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { CancelOrderParams, CreateOrderParams, DeleteSelectedOrdersParams, GetAllOrdersParams, GetMyOrdersParams, PaginatedSchemaParams } from "@/types/action";
+import { CancelOrderSchemaValidation, CreateOrderValidationSchema, DeleteOrderByIdSchema, DeleteSelectedOrdersValidationSchema, GetAllOrdersSchemaValidation, GetMyOrdersValidationSchema, GetOrderDetailsSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { CancelOrderParams, CreateOrderParams, DeleteOrderByIdParams, DeleteSelectedOrdersParams, GetAllOrdersParams, GetMyOrdersParams, GetOrderDetailsParams, PaginatedSchemaParams } from "@/types/action";
 import connectToDb from "@/database/connect"
 import { auth } from "@/auth";
 import Product from "@/database/models/product.model";
@@ -14,6 +14,7 @@ import { cache } from "@/lib/cache";
 import User, { IUser } from "@/database/models/user.model";
 import { Order as OrderType } from "@/types/Elements";
 import { redirect } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
 
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {
     // const validatedResult = await action({params,schema:CreateOrderValidationSchema,authorize:true})
@@ -208,3 +209,50 @@ export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResp
     }
   }
   
+  export const getOrderDetails = async(params:GetOrderDetailsParams):Promise<ActionResponse<{order: OrderType}>> => {
+    const validatedResult = await action({params,schema:GetOrderDetailsSchema,authorize:true})
+    if(validatedResult instanceof Error) {
+       return handleError(validatedResult) as ErrorResponse
+    }
+    const session = validatedResult.session 
+    if(!session) throw new UnAuthorizedError()
+      const { orderId } = params;
+    try {
+        await connectToDb()
+        const isAdminUser = await User.findById(session.user.id) as IUser
+        if(!isAdminUser.isAdmin) throw new UnAuthorizedError('Only admin users can have access to this operation')
+        const order = await Order.findById(orderId)
+      .populate({path: "user", model: User, select: "name lastName"})
+        .populate({path: "orderItems.product", model: Product})
+        if(!order) throw new Error('Order not found')
+        return {
+          success: true,
+          data: {order: JSON.parse(JSON.stringify(order))}
+        }
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+  }
+
+  export const deleteOrderById = async(params:DeleteOrderByIdParams):Promise<ActionResponse> =>{
+    const validatedResult = await action({params,schema:DeleteOrderByIdSchema,authorize:true})
+     if(validatedResult instanceof Error) {
+        return handleError(validatedResult) as ErrorResponse
+     }
+      const session = validatedResult.session
+      if(!session) throw new UnAuthorizedError("")
+        const {id} = params;
+        try {
+          await connectToDb()
+          const isAdminUser = await User.findById(session.user.id) as IUser
+          if(!isAdminUser.isAdmin) throw new Error('Only admin users can perform this action')
+          await Order.findByIdAndDelete(id)
+        revalidatePath(ROUTES.adminOrdersList)
+        return {
+           success:true,
+           message: "Order has been deleted successfuly"
+        }
+        } catch (error) {
+            return handleError(error) as ErrorResponse
+        }
+  }

@@ -1,37 +1,52 @@
+import { getOrderDetails } from '@/actions/orders.actions';
+import DeleteOrderBtn from '@/components/btns/DeleteOrderBtn';
 import SelectOrderStatus from '@/components/btns/SelectOrderStatus';
+import Alert from '@/components/shared/Alert';
 import { Button } from '@/components/ui/button';
+import Order from '@/database/models/order.model';
+import { formatDate, formatPrice } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Save, TrashIcon } from 'lucide-react';
+import { notFound, redirect } from 'next/navigation';
 import React from 'react'
 
 const page = async({params}: {params: Promise<{id:string}>}) => {
     const { id } = await params;
-    const items = [
-       {
-        ref: "yassine anouar",
-        unitPrice: "27,93 $US",
-        qty: 4,
-        total: "111,72 $US"
-       },
-       {
-        ref: "mouad hmamou",
-        unitPrice: "33,93 $US",
-        qty: 2,
-        total: "67,72 $US"
-       },
-       {
-        ref: "karim amlah",
-        unitPrice: "27,93 $US",
-        qty: 4,
-        total: "111,72 $US"
-       },
-       {
-        ref: "walid kbiri",
-        unitPrice: "30.50 $US",
-        qty: 3,
-        total: "95,72 $US"
-       }
+    const { data , error } = await getOrderDetails({orderId:id})
+    if(!data) return notFound()
+    // const items = [
+    //    {
+    //     ref: "yassine anouar",
+    //     unitPrice: "27,93 $US",
+    //     qty: 4,
+    //     total: "111,72 $US"
+    //    },
+    //    {
+    //     ref: "mouad hmamou",
+    //     unitPrice: "33,93 $US",
+    //     qty: 2,
+    //     total: "67,72 $US"
+    //    },
+    //    {
+    //     ref: "karim amlah",
+    //     unitPrice: "27,93 $US",
+    //     qty: 4,
+    //     total: "111,72 $US"
+    //    },
+    //    {
+    //     ref: "walid kbiri",
+    //     unitPrice: "30.50 $US",
+    //     qty: 3,
+    //     total: "95,72 $US"
+    //    }
 
-    ]
+    // ]
+    if(error) {
+       return (
+         <div className='my-5'>
+            <Alert message={error.message} />
+         </div>
+       )
+    }
   return (
     <div className='py-7 w-full'>
          <div className='flex items-center gap-3 text-white'>
@@ -49,11 +64,13 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
                       <h3 className='text-white font-medium text-[17px] '>Order</h3>
                       <div>
                           <p className='text-gray-400 text-sm '>Date</p>
-                          <span className='text-gray-100 text-sm'>07/03/2022</span>
+                          <span className='text-gray-100 text-sm'>
+                             {formatDate(data?.order?.createdAt as Date)}
+                          </span>
                       </div>
                       <div>
                         <p className='text-light_blue text-sm mb-1 font-medium'>Status:</p>
-                         <SelectOrderStatus />
+                         <SelectOrderStatus status={data.order.orderStatus} />
                       </div>
                      
                 </div>
@@ -61,24 +78,32 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
                      <h3 className="opacity-0">some placeholder</h3>
                       <div>
                           <p className='text-gray-400 text-sm '>Reference</p>
-                          <span className='text-gray-100 text-sm'>HD3KPU</span>
+                          <span className='text-gray-100 text-sm'>
+                             {data?.order._id}
+                          </span>
                       </div>
                 </div>
                 
                 <div className="flex flex-col space-y-3">
-                    <div className='flex flex-col space-y-3'>
+                    <div className='flex flex-col space-y-1'>
                     <h3 className='text-white font-medium text-[17px] '>Customer</h3>
                       <div>
-                          <p className='text-[16px] text-light_blue underline font-medium '>Yassine anouar</p>
-                          <span className='text-[17px] text-light_blue underline font-medium '>Yassinezmagri@gmail.com</span>
+                          <p className='text-[16px] text-light_blue underline font-medium '>
+                             {data?.order.user.name} {" "} {data?.order.user.lastName}
+                          </p>
+                          <span className='text-[17px] text-light_blue underline font-medium '>
+                             {data?.order.user.email}
+                          </span>
                       </div>
                     </div>
                     <div className='flex flex-col space-y-3'>
                     <h3 className='text-white font-medium text-[17px] '>Shipping Address</h3>
                       <div>
-                          <p className='text-[16px] text-white font-medium '>Yassine anouar</p>
-                          <p className='text-[16px] text-white font-medium '>82534 Aniyah Canyon</p>
-                          <p className='text-[16px] text-white font-medium '>Adaberg, AK 18348-2375</p>
+                          <p className='text-[16px] text-white font-medium '>
+                             {data?.order.user.name} {" "} {data?.order.user.lastName}
+                          </p>
+                          <p className='text-[16px] text-white font-medium '>{data?.order.shippingAddress.postalCode} {data?.order.shippingAddress.address} </p>
+                          <p className='text-[16px] text-white font-medium '>{data?.order.shippingAddress.city}, +212{data?.order.shippingAddress.phoneNumber}</p>
                       </div>
                     </div>
                 </div>
@@ -95,16 +120,16 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
                         </tr>
                      </thead>
                      <tbody className="divide-y  divide-gray-600">
-                        {items.map((x,index) => (
+                        {data?.order.orderItems.map((x,index) => (
                             <tr key={index}>
                                   <td className="px-4  py-3">
            <span className='text-white font-medium text-normal '>
-             {x.ref}
+             {x._id}
            </span>
         </td>
         <td className="px-4  py-3">
            <span className='text-white  whitespace-nowrap font-medium text-normal '>
-             {x.unitPrice}
+             {formatPrice(x.price)}
            </span>
         </td>
         <td className="px-4  py-3">
@@ -114,50 +139,54 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
         </td>
         <td className="px-4  py-3">
            <span className='text-white whitespace-nowrap font-medium text-normal '>
-             {x.total}
+             {formatPrice(x.price * x.qty)}
            </span>
         </td>
                             </tr>
                         ))}
                      </tbody>
                  </table>
-                 <div className="flex flex-col space-y-3">
+                 {/* <div className="flex flex-col space-y-3">
                     
                      {items.map((x,index) => (
                         <p key={index}></p>
                      ))}
                     
                     
-                 </div>
+                 </div> */}
                 
             </div>
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 mt-5'>
                  <h3 className='text-gray-200 text-[18px] font-medium  '>Total</h3>
                  <div className="flex flex-col space-y-3">
                      <div className='flex border-b pb-3 border-gray-500 items-center justify-between'>
                          <p className='text-white font-normal text-[15px] '>Sum</p>
-                         <p className='text-white font-medium text-[16px] '>459,73 $US</p>
+                         <p className='text-white font-medium text-[16px] '>
+                           {formatPrice(data?.order?.totalPrice as number)}
+                         </p>
                      </div>
                      <div className='flex border-b pb-3 border-gray-500 items-center justify-between'>
                          <p className='text-white font-normal text-[15px] '>Delivery</p>
-                         <p className='text-white font-medium text-[16px] '>3,81 $US</p>
+                         <p className='text-white font-medium text-[16px] '>
+                           {formatPrice(15)}
+                         </p>
                      </div>
                      <div className='flex border-b pb-3 border-gray-500 items-center justify-between'>
-                         <p className='text-white font-normal text-[15px] '>Tax (12 %)</p>
-                         <p className='text-white font-medium text-[16px] '>55,62 $US</p>
+                         <p className='text-white font-normal text-[15px] '>Tax (0 %)</p>
+                         <p className='text-white font-medium text-[16px] '>Tax free</p>
                      </div>
                      <div className='flex border-b pb-3 border-gray-500 items-center justify-between'>
                          <p className='text-white font-normal text-[15px] '>Total</p>
-                         <p className='text-white font-medium text-[16px] '>519,16 $US</p>
+                         <p className='text-white font-medium text-[16px] '>
+                           {formatPrice(data?.order?.totalPrice as number + 15)}
+                         </p>
                      </div>
                  </div>
                  <div className='flex items-center justify-between'>
                      <Button disabled className="disabled:bg-[#333]">
                        <Save /> Save
                      </Button>
-                     <Button className="bg-transparent text-red-500 hover:bg-red-200 rounded-xl w-fit h-fit ">
-                       <TrashIcon /> Delete
-                     </Button>
+                  <DeleteOrderBtn id={id} />
                  </div>
             </div>
          </div>

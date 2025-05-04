@@ -10,6 +10,9 @@ import { Order } from '@/types/Elements'
 import { ArrowDown, Trash, X } from 'lucide-react'
 import React, {useState} from 'react'
 import Alert from '@/components/shared/Alert'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
+import { useRouter } from 'next/navigation'
 
 const DeleteOrdersCheckbox = ({data}: {
     data: {
@@ -19,6 +22,7 @@ const DeleteOrdersCheckbox = ({data}: {
 }) => {
   const {toast} = useToast()
     const [selectedOrders, setSelectedOrders] = useState<string[]>([])
+    const router = useRouter()
     const [selectAll, setSelectAll] = useState(false)
     const [loading,setLoading] = useState<boolean>(false)
      const handleDeleteOrder = async()=> {
@@ -116,7 +120,9 @@ const DeleteOrdersCheckbox = ({data}: {
   <tbody style={{background: "rgb(30,30,30)"}} className="divide-y  divide-gray-600">
     {/* Example row — map through your data here */}
     {data && data.orders.length > 0 && data?.orders?.map((order,index)=> (
-        <tr className='hover:bg-gray-900 cursor-pointer' key={index}>
+     
+         <tr onClick={()=> router.push(ROUTES.adminOrderDetails(order._id))} key={index} className='hover:bg-gray-900 cursor-pointer' >
+          
         <td className="px-4 py-3 text-white">
         <Checkbox 
   checked={selectedOrders.includes(order._id)}
@@ -171,7 +177,10 @@ const DeleteOrdersCheckbox = ({data}: {
              {formatPrice(order.totalPrice)}
           </p>
         </td>
+      
       </tr>
+     
+     
     ) )}
    
     {/* Repeat rows */}

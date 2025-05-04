@@ -74,7 +74,7 @@ export const getHeroImages = cache(async(): Promise<ActionResponse<{items: IHero
    } catch (error) {
        return handleError(error) as ErrorResponse
    }
-},["getHoroImages", "/admin/productsManagement/add_hero"], {revalidate: 60 * 60 * 24})
+},["getHoroImages", "/admin/productsManagement/add_hero"], {revalidate: 1060 * 60 * 24})
 
 export const deleteHeroBanner = async(params:DeleteHeroBannerParams): Promise<ActionResponse>=> {
    const validatedResult = await action({params,schema:DeleteHeroBannerSchema,authorize: true})

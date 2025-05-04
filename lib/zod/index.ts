@@ -161,7 +161,12 @@ export const SignleProductSchema = z.object({
 export const CancelOrderSchemaValidation = z.object({
   orderId: z.string().min(1, { message: "order ID is required" }),
 });
-
+export const DeleteOrderByIdSchema = z.object({
+   id: z.string().min(1,  {message: "order id is required"})
+})
+export const GetOrderDetailsSchema = z.object({
+  orderId: z.string().min(1, { message: "order ID is required" }),
+})
 export const CreateOrderValidationSchema = z.object({
   orderItems: z.array(z.object({
     name: z.string().min(1, "Item name is required"),
