@@ -50,19 +50,19 @@ const UserDetailsForm = ({
   const form = useForm<z.infer<typeof editProfileSchema>>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      gender: userWithShipping.gender || "male",
-      email: userWithShipping.email || "",
-      phoneNumber: userWithShipping.phoneNumber || "",
-      hasNews: userWithShipping.hasNewsLetter,
+      gender: userWithShipping?.gender || "male",
+      email: userWithShipping?.email || "",
+      phoneNumber: userWithShipping?.phoneNumber || "",
+      hasNews: userWithShipping?.hasNewsLetter,
       password: "",
       currentPassword: "",
       confirmPassword: "",
-      name: userWithShipping.name || "",
-      lastName: userWithShipping.lastName || "",
-      address: userWithShipping.shippingAddresses[0].address || "",
-      postalCode: userWithShipping.shippingAddresses[0].postalCode || "",
-      city: userWithShipping.shippingAddresses[0].city ||  "",
-      country: userWithShipping.shippingAddresses[0].country || ""
+      name: userWithShipping?.name || "",
+      lastName: userWithShipping?.lastName || "",
+      address: userWithShipping?.shippingAddresses[0]?.address || "",
+      postalCode: userWithShipping?.shippingAddresses[0]?.postalCode || "",
+      city: userWithShipping?.shippingAddresses[0]?.city ||  "",
+      country: userWithShipping?.shippingAddresses[0]?.country || ""
     },
   })
 
