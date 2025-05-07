@@ -48,17 +48,9 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
        )
     }
   return (
-    <div className='py-7 w-full'>
-         <div className='flex items-center gap-3 text-white'>
-             <div className='w-[30px] cursor-pointer h-[30px] rounded-full transition-all duration-200 hover:bg-[#777] flex items-center justify-center '>
-                <ChevronLeft />
-             </div>
-              <p>11 / 512</p>
-             <div className='w-[30px] cursor-pointer h-[30px] rounded-full hover:bg-[#777] transition-all duration-200 flex items-center justify-center '>
-                <ChevronRight />
-             </div>
-         </div> 
-         <div className="rounded-lg p-3 flex flex-col w-full lg:w-[70%] mt-3 " style={{background: "rgb(18,18,18)"}}>
+    <div className='py-7 '>
+         
+         <div className="rounded-lg p-3 flex flex-col min-w-full lg:w-[70%] mt-3 " style={{background: "rgb(18,18,18)"}}>
             <div className='flex flex-col lg:flex-row items-start justify-between'>
                 <div className="flex flex-col space-y-3">
                       <h3 className='text-white font-medium text-[17px] '>Order</h3>

@@ -3,21 +3,28 @@ import { deleteSelectedUsers } from '@/actions/user.actions'
 import LoadingAppState from '@/components/Loaders/LoadingAppState'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { ROUTES } from '@/constants/routes'
 import { IUser } from '@/database/models/user.model'
 import { useToast } from '@/hooks/use-toast'
 import { formatFullDateTime, formatPrice } from '@/lib/utils'
 import { ArrowDown, Check, Trash, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, {useState} from 'react'
 
 const SelectCheckboxUsers = ({data}: {
     data: {
-        users: IUser[];
+      users: (IUser & { 
+        orderCount: number; 
+        latestPurchase?: string; 
+        totalSpent: number 
+      })[], 
         isNext: boolean
     }
 }) => {
   const [selectedUsers,setSelectedUsers] = useState<string[]>([])
   const [selectAll,setSelectAll] = useState(false)
   const [loading,setLoading] = useState(false)
+  const router = useRouter()
   const {toast} = useToast()
   const handleDeleteUsers = async()=> {
      setLoading(true)
@@ -112,7 +119,7 @@ Segments
 <tbody style={{background: "rgb(30,30,30)"}} className="divide-y   divide-gray-600">
 {/* Example row — map through your data here */}
 {data?.users.map((user,index)=> (
-<tr className='hover:bg-gray-900 cursor-pointer' key={index}>
+<tr onClick={()=>  router.push(ROUTES.adminUserDetails(user._id))} className='hover:bg-gray-900 cursor-pointer' key={index}>
 <td className="px-4 py-3 text-white">
   <Checkbox
    checked={selectedUsers.includes(user._id)}
@@ -141,21 +148,19 @@ Segments
  </td>
 <td className="px-4 py-3 flex mx-auto items-center h-full text-center  font-medium">
 <span className='text-white font-medium text-normal '>
-  2
+  {user.orderCount}
  </span>
 </td>
 <td className="px-4 py-3 ">
 <p className='font-bold text-white text-[16px] '>
-    {formatPrice(50.04)}
+    {formatPrice(user.totalSpent)}
  </p>
 </td>
 <td className="px-4 py-3 flex flex-col">
  <span className="text-white font-medium text-normal">
-      09/25/2025
+      {user.latestPurchase ? formatFullDateTime(new Date(user.latestPurchase)) : 'N/A'}
  </span>
- <span className="text-white font-medium text-normal">
-      17:08:33
- </span>
+
 </td>
 
 <td className="px-4 py-3">

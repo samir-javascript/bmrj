@@ -33,6 +33,11 @@ export const editProfileSchema = z.object({
   currentPassword: z.string().optional(),
   password: z.string().optional(),
   confirmPassword: z.string().optional(),
+  hasNews: z.boolean().default(false),
+  address: z.string().min(1, {message: "address is required"}),
+  city: z.string().min(1, {message: "city is required"}),
+  country: z.string().min(1, {message:"country is required"}),
+  postalCode: z.string().min(1, {message: "postal Code is required"}),
   phoneNumber: z
     .string()
     .regex(/^[+\d]?(?:[\d-.\s()]*)$/, { message: "Invalid phone number format" }),
@@ -163,6 +168,9 @@ export const CancelOrderSchemaValidation = z.object({
 });
 export const DeleteOrderByIdSchema = z.object({
    id: z.string().min(1,  {message: "order id is required"})
+})
+export const GetUserWithShippingSchema = z.object({
+  userId: z.string().min(1, { message: "user ID is required" }),
 })
 export const GetOrderDetailsSchema = z.object({
   orderId: z.string().min(1, { message: "order ID is required" }),

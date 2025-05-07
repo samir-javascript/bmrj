@@ -26,7 +26,7 @@ import { editProfileSchema } from "@/lib/zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { editProfile } from "@/actions/user.actions"
+import { editProfile, IUserWithShipping } from "@/actions/user.actions"
 import { ROUTES } from "@/constants/routes"
 import { IUser } from "@/database/models/user.model"
 
@@ -36,10 +36,10 @@ import AlertMessage from "@/components/shared/AlertMessage"
 import { Save, TrashIcon } from "lucide-react"
 
 const UserDetailsForm = ({
-  user,
+  userWithShipping,
   canChangePasswordPromise,
 }: {
-  user: IUser
+  userWithShipping: IUserWithShipping
   canChangePasswordPromise: boolean
 }) => {
   const router = useRouter()
@@ -50,14 +50,19 @@ const UserDetailsForm = ({
   const form = useForm<z.infer<typeof editProfileSchema>>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      gender: user.gender || "male",
-      email: user.email || "",
-      phoneNumber: user.phoneNumber || "",
+      gender: userWithShipping.gender || "male",
+      email: userWithShipping.email || "",
+      phoneNumber: userWithShipping.phoneNumber || "",
+      hasNews: userWithShipping.hasNewsLetter,
       password: "",
       currentPassword: "",
       confirmPassword: "",
-      name: user.name || "",
-      lastName: user.lastName || "",
+      name: userWithShipping.name || "",
+      lastName: userWithShipping.lastName || "",
+      address: userWithShipping.shippingAddresses[0].address || "",
+      postalCode: userWithShipping.shippingAddresses[0].postalCode || "",
+      city: userWithShipping.shippingAddresses[0].city ||  "",
+      country: userWithShipping.shippingAddresses[0].country || ""
     },
   })
 
@@ -87,7 +92,7 @@ const UserDetailsForm = ({
                     >Gender</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={String(field.value)}
                     >
                       <FormControl>
                         <SelectTrigger className="no-focus bg-[rgb(46,46,46)] w-full rounded-lg font-medium text-white">
@@ -189,16 +194,17 @@ const UserDetailsForm = ({
             <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
               <FormField
                 control={form.control}
-                name="gender" // Consider renaming this if it's not meant to be gender
+                name="hasNews" // Consider renaming this if it's not meant to be gender
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-200">Has Newsletter</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={String(field.value)}
                     >
                       <FormControl>
-                        <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)] rounded-lg font-medium text-white">
+                        <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)]
+                         rounded-lg font-medium text-white">
                           <SelectValue placeholder="Has newsletter" />
                         </SelectTrigger>
                       </FormControl>
@@ -228,7 +234,7 @@ const UserDetailsForm = ({
         <h3 className="text-white font-medium text-[18px] tracking-wide ">Address</h3>
         <FormField
                 control={form.control}
-                name="currentPassword"
+                name="address"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm">Address</FormLabel>
@@ -247,7 +253,7 @@ const UserDetailsForm = ({
                  <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
                  <FormField
                 control={form.control}
-                name="currentPassword"
+                name="city"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm">City</FormLabel>
@@ -266,7 +272,7 @@ const UserDetailsForm = ({
                  <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
                  <FormField
                 control={form.control}
-                name="currentPassword"
+                name="postalCode"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm">Postal Code</FormLabel>
@@ -285,7 +291,7 @@ const UserDetailsForm = ({
                  <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
                  <FormField
                 control={form.control}
-                name="currentPassword"
+                name="country"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm">Country</FormLabel>
@@ -385,7 +391,7 @@ const UserDetailsForm = ({
             </div>
           )}
 
-          <SetPasswordModal open={open} setOpen={setOpen} email={user.email} />
+          <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.email} />
     <div className="w-full p-4 bg-[#333] flex  rounded-lg items-center justify-between ">
          <Button disabled={open} className="bg-light_blue text-white" type="submit">
             {form.formState.isSubmitting ? "Loading..." : <><Save /> Save</>}

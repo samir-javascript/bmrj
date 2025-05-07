@@ -10,9 +10,9 @@ const AdminLayout = async({children}: {children: React.ReactNode}) => {
    if(!session) redirect("/")
   if(session?.user?.isAdmin === false) redirect("/")
   return (
-    <main className=''>
+    <main>
         <Navbar />
-        <div style={{background: "rgb(49, 49, 49)"}} className='flex lg:gap-5 min-h-[100vh] w-full'>
+        <div style={{background: "rgb(49, 49, 49)"}} className='flex lg:gap-5 min-h-[100vh]'>
           <Sidebar />
            {children}
         </div>

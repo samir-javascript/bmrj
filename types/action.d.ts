@@ -244,6 +244,9 @@ export interface CreateShippingParams {
 export interface DeleteShippingParams {
   id: string;
 }
+export interface GetUserWithShippingParams  {
+  userId: string;
+}
 export interface DeleteOrderByIdParams {
   id:string
 }

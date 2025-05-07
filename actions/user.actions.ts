@@ -8,18 +8,20 @@ import Collection from "@/database/models/collection";
 import Order from "@/database/models/order.model";
 import Product, { IReview } from "@/database/models/product.model";
 import SetPasswordToken, { ISetPasswordToken } from "@/database/models/setPasswordToken.model";
+import Shipping, { IShipping } from "@/database/models/shippingAdress.model";
 import User, { IUser } from "@/database/models/user.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
-import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
+import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
-import mongoose from "mongoose";
-import { FilterQuery } from "mongoose";
+import mongoose, {FilterQuery,isValidObjectId} from "mongoose";
+
 import { revalidatePath } from "next/cache";
+
 
 
 
@@ -311,42 +313,103 @@ export async function deleteUser(params: DeleteUserParams): Promise<ActionRespon
 
 
 // TODO: Get all users for admin
-export const  getAllUsers =  async(params:PaginatedSchemaParams):Promise<ActionResponse<{users: IUser[], isNext:boolean}>> => {
-   const validatedResult = await action({params,schema:PaginatedSchemaValidation,authorize:true})
-   if(validatedResult instanceof Error) {
-      return handleError(validatedResult) as ErrorResponse
-   }
-   const session = validatedResult.session
-   if(!session) throw new Error('missing user admin session')
-    const { page = 1, pageSize = 10, query } = params;
-   const filterQuery: FilterQuery<typeof User> = {isAdmin: false}
 
-  const skip = pageSize * (page - 1)
-    try {
-      await connectToDb()
-      if(query && query.trim() !== "") {
-          filterQuery.$or =  [
-            {name: {$regex: new RegExp(query, "i")}},
-            {lastName: {$regex: new RegExp(query, "i")}},
-            {email: {$regex: new RegExp(query, "i")}},
-          ]
-      }
-      const userAdmin = await User.findById(session.user.id) as IUser
-      if(!userAdmin?.isAdmin) throw new Error('Cannot procced! this action is only allowed by admin users')
-        const usersCount = await User.countDocuments(filterQuery)
-      const users = await User.find(filterQuery)
+
+
+
+
+export const getAllUsers = async (
+  params: PaginatedSchemaParams
+): Promise<ActionResponse<{
+  users: (IUser & { 
+    orderCount: number; 
+    latestPurchase?: string; 
+    totalSpent: number 
+  })[], 
+  isNext: boolean 
+}>> => {
+  const validatedResult = await action({ params, schema: PaginatedSchemaValidation, authorize: true });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  const session = validatedResult.session;
+  if (!session) throw new Error("missing user admin session");
+
+  const { page = 1, pageSize = 10, query } = params;
+  const filterQuery: FilterQuery<typeof User> = { isAdmin: false };
+  const skip = pageSize * (page - 1);
+
+  try {
+    await connectToDb();
+
+    if (query && query.trim() !== "") {
+      filterQuery.$or = [
+        { name: { $regex: new RegExp(query, "i") } },
+        { lastName: { $regex: new RegExp(query, "i") } },
+        { email: { $regex: new RegExp(query, "i") } },
+      ];
+    }
+
+    const userAdmin = await User.findById(session.user.id) as IUser;
+    if (!userAdmin?.isAdmin) throw new Error("Cannot proceed! This action is only allowed by admin users");
+
+    const usersCount = await User.countDocuments(filterQuery);
+
+    const users = await User.find(filterQuery)
       .skip(skip)
       .limit(pageSize)
-      .sort({createdAt: -1})
-      const isNext:boolean = usersCount > skip + users.length;
-      return  {
-         success: true,
-         data: {users: JSON.parse(JSON.stringify(users)), isNext: isNext}
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const userIds = users.map(u => u._id);
+
+    // Aggregate: get orderCount, totalSpent, latestPurchase per user
+    const ordersSummary = await Order.aggregate([
+      { $match: { user: { $in: userIds } } },
+      {
+        $group: {
+          _id: "$user",
+          count: { $sum: 1 },
+          latestPurchase: { $max: "$createdAt" },
+          totalSpent: { $sum: "$totalPrice" }
+        }
       }
-    } catch (error) {
-       return handleError(error) as ErrorResponse
-    }
-}
+    ]);
+
+    const summaryMap = new Map(
+      ordersSummary.map(o => [o._id.toString(), {
+        count: o.count,
+        latestPurchase: o.latestPurchase,
+        totalSpent: o.totalSpent
+      }])
+    );
+
+    const usersWithStats = users.map(user => {
+      // @ts-ignore
+      const summary = summaryMap.get((user as IUser)._id.toString());
+      return {
+        ...user,
+        orderCount: summary?.count || 0,
+        latestPurchase: summary?.latestPurchase?.toISOString(),
+        totalSpent: summary?.totalSpent || 0
+      };
+    });
+
+    const isNext = usersCount > skip + users.length;
+
+    return {
+      success: true,
+      data: {
+        users: JSON.parse(JSON.stringify(usersWithStats)),
+        isNext
+      }
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
+
 export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Promise<ActionResponse> => {
   const validatedResult = await action({ params, schema: DeleteSelectedUsersSchema, authorize: true });
   if (validatedResult instanceof Error) {
@@ -399,5 +462,42 @@ export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Pr
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+};
+
+
+export interface IUserWithShipping extends IUser {
+  shippingAddresses: IShipping[];
+}
+
+export const getUserWithShipping = async (params:GetUserWithShippingParams): Promise<ActionResponse<IUserWithShipping>> => {
+  const validatedResult = await action({params,schema:GetUserWithShippingSchema,authorize:true})
+  if(validatedResult instanceof Error) {
+     return handleError(validatedResult) as ErrorResponse
+  }
+  const session = validatedResult.session;
+  if(!session) throw new UnAuthorizedError('')
+    const {userId} = params;
+    
+  try {
+
+    await connectToDb();
+    if(!isValidObjectId(userId)) throw new Error("User Id is not valid")
+    const isAdminUser = await User.findById(session.user.id) as IUser
+    if(!isAdminUser.isAdmin) throw new Error('Only admin users can have access to this area!')
+    const user = await User.findById(userId) as IUser
+    if (!user) throw new Error("User not found");
+
+    const shippingAddresses = await Shipping.find({ userId }).sort({ createdAt: -1 })
+    const parsedUser  = JSON.parse(JSON.stringify(user))
+    return {
+      success: true,
+      data: {
+        ...parsedUser,
+        shippingAddresses: JSON.parse(JSON.stringify(shippingAddresses))
+      }
+    };
+  } catch (error) {
+     return handleError(error) as ErrorResponse;
   }
 };
