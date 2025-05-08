@@ -26,14 +26,14 @@ import { editProfileSchema } from "@/lib/zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { editProfile, IUserWithShipping } from "@/actions/user.actions"
+import { deleteUser, editProfile, IUserWithShipping } from "@/actions/user.actions"
 import { ROUTES } from "@/constants/routes"
 import { IUser } from "@/database/models/user.model"
 
 import { useToast } from "@/hooks/use-toast"
 import SetPasswordModal from "@/components/modals/SetPasswordModal"
 import AlertMessage from "@/components/shared/AlertMessage"
-import { Save, TrashIcon } from "lucide-react"
+import { Loader, Save, TrashIcon } from "lucide-react"
 
 const UserDetailsForm = ({
   userWithShipping,
@@ -45,20 +45,21 @@ const UserDetailsForm = ({
   const router = useRouter()
   const { toast } = useToast()
   const [open, setOpen] = useState<boolean>(false)
+  const [pending,setPending] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
 
   const form = useForm<z.infer<typeof editProfileSchema>>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      gender: userWithShipping?.gender || "male",
-      email: userWithShipping?.email || "",
-      phoneNumber: userWithShipping?.phoneNumber || "",
-      hasNews: userWithShipping?.hasNewsLetter,
+      gender: userWithShipping?.user.gender || "male",
+      email: userWithShipping?.user.email || "",
+      phoneNumber: userWithShipping?.user.phoneNumber || "",
+      hasNews: userWithShipping?.user.hasNewsLetter,
       password: "",
       currentPassword: "",
       confirmPassword: "",
-      name: userWithShipping?.name || "",
-      lastName: userWithShipping?.lastName || "",
+      name: userWithShipping?.user.name || "",
+      lastName: userWithShipping?.user.lastName || "",
       address: userWithShipping?.shippingAddresses[0]?.address || "",
       postalCode: userWithShipping?.shippingAddresses[0]?.postalCode || "",
       city: userWithShipping?.shippingAddresses[0]?.city ||  "",
@@ -69,7 +70,30 @@ const UserDetailsForm = ({
   const onSubmit = async (values: z.infer<typeof editProfileSchema>) => {
     // handle submit logic here
   }
-
+  const handleDeleteUser = async()=> {
+    setPending(true)
+     try {
+        const { error, success, message} = await deleteUser({userId: userWithShipping.user._id})
+        if(error) {
+           return toast({
+             title: "Error occured",
+             description: error.message,
+             variant: "destructive"
+           })
+        }else if(success) {
+          toast({
+            title: "Success",
+            description: message,
+          })
+          router.push(ROUTES.adminUsersList)
+          return
+        }
+     } catch (error) {
+        console.log(error)
+     }finally {
+        setPending(false)
+     }
+  }
   return (
     <div className="w-full">
       <Form {...form}>
@@ -391,13 +415,24 @@ const UserDetailsForm = ({
             </div>
           )}
 
-          <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.email} />
+          <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.user.email} />
     <div className="w-full p-4 bg-[#333] flex  rounded-lg items-center justify-between ">
          <Button disabled={open} className="bg-light_blue text-white" type="submit">
             {form.formState.isSubmitting ? "Loading..." : <><Save /> Save</>}
           </Button>
-          <Button disabled={open} className="bg-red-500 max-sm:bg-transparent max-sm:w-fit max-sm:hover:bg-transparent hover:bg-red-600 text-white" type="submit">
-             <TrashIcon className="max-sm:text-red-500 cursor-pointer max-sm:text-[25px] " /> <span className="max-sm:hidden">DELETE</span>
+          <Button onClick={() =>handleDeleteUser()} disabled={open || pending} className="bg-red-500 max-sm:bg-transparent
+           max-sm:w-fit max-sm:hover:bg-transparent hover:bg-red-600 text-white" type="submit">
+            {pending ? (
+              <>
+                  <Loader className="animate-spin  " />
+                  <span>Deleting...</span>
+              </>
+               
+            ): (
+               <>
+                  <TrashIcon className="max-sm:text-red-500 cursor-pointer max-sm:text-[25px] " /> <span className="max-sm:hidden">DELETE</span>
+               </>
+            )} 
           </Button>
     </div>
          

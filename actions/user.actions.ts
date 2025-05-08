@@ -16,6 +16,7 @@ import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
 import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation } from "@/lib/zod";
 import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
+import { Order as OrderType } from "@/types/Elements";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
 import mongoose, {FilterQuery,isValidObjectId} from "mongoose";
@@ -304,7 +305,8 @@ export async function deleteUser(params: DeleteUserParams): Promise<ActionRespon
     }
 
     return {
-      success: true
+      success: true,
+      message: "user has been deleted successfully"
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
@@ -466,8 +468,15 @@ export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Pr
 };
 
 
-export interface IUserWithShipping extends IUser {
+export interface IUserWithShipping  {
+  user: IUser,
   shippingAddresses: IShipping[];
+  orders: OrderType[];
+  reviews: {
+     productId: string,
+     productName:string;
+     reviews: IReview
+  }[]
 }
 
 export const getUserWithShipping = async (params:GetUserWithShippingParams): Promise<ActionResponse<IUserWithShipping>> => {
@@ -488,13 +497,32 @@ export const getUserWithShipping = async (params:GetUserWithShippingParams): Pro
     const user = await User.findById(userId) as IUser
     if (!user) throw new Error("User not found");
 
-    const shippingAddresses = await Shipping.find({ userId }).sort({ createdAt: -1 })
+    // const shippingAddresses = await Shipping.find({ userId }).sort({ createdAt: -1 })
+    const [shippingAddresses, orders, products] = await Promise.all([
+      Shipping.find({ userId }).sort({ createdAt: -1 }),
+      Order.find({ user: userId }).sort({ createdAt: -1 }),
+      Product.find({ "reviews.user": userId })
+    ]);
+
+    // Extract user's reviews from products
+    const reviews = products.flatMap(product =>
+      product.reviews
+        .filter((review: any) => String(review.user) === String(userId))
+        .map((review: IReview) => ({
+          productId: String(product._id),
+          productName: product.name,
+          reviews: review
+        }))
+    );
+    
     const parsedUser  = JSON.parse(JSON.stringify(user))
     return {
       success: true,
       data: {
-        ...parsedUser,
-        shippingAddresses: JSON.parse(JSON.stringify(shippingAddresses))
+        user: JSON.parse(JSON.stringify(user)),
+        shippingAddresses: JSON.parse(JSON.stringify(shippingAddresses)),
+        orders: JSON.parse(JSON.stringify(orders)),
+        reviews: JSON.parse(JSON.stringify(reviews)),
       }
     };
   } catch (error) {
