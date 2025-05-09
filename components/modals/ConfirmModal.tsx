@@ -26,9 +26,7 @@ const ConfirmModal = ({open,setOpen,message,handleClick,loading,error}: {
     error?: string;
     loading:boolean
 }) => {
-//   const [error,setError] = useState<null | string>()
-//   const {toast} = useToast()
-//   const [loading,setLoading] = useState(false)
+
 
   return (
     <Dialog open={open} defaultOpen={false}  onOpenChange={()=> setOpen(false)}>
@@ -39,7 +37,7 @@ const ConfirmModal = ({open,setOpen,message,handleClick,loading,error}: {
           {error && (
              <Alert message={error} />
           )}
-          <DialogDescription className="font-bold text-[#222] text-[18px] text-center ">
+          <DialogDescription className="font-bold mt-3 text-[#222] text-[18px] text-center ">
                {message}
           </DialogDescription>
       </DialogHeader>

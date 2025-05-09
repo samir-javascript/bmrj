@@ -438,7 +438,7 @@ const UserDetailsForm = ({
         </form>
       </Form>
       <ConfirmModal message="Are you sure you want to delete this user ?" handleClick={handleDeleteUser} error={error} 
-        loading open={openConfirmModal} setOpen={setOpenConfirmModel} />
+        loading={pending} open={openConfirmModal} setOpen={setOpenConfirmModel} />
     </div>
   )
 }
