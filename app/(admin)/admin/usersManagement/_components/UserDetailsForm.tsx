@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { editProfileSchema } from "@/lib/zod"
+import { editProfileSchema, editProfileSchemaByAdmin } from "@/lib/zod"
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -54,8 +54,8 @@ const UserDetailsForm = ({
   const [error, setError] = useState<string | undefined>(undefined)
    const [err, setErr] = useState<string | undefined>(undefined)
    const {id} = useParams()
-  const form = useForm<z.infer<typeof editProfileSchema>>({
-    resolver: zodResolver(editProfileSchema),
+  const form = useForm<z.infer<typeof editProfileSchemaByAdmin>>({
+    resolver: zodResolver(editProfileSchemaByAdmin),
     defaultValues: {
       gender: userWithShipping?.user.gender || "male",
       email: userWithShipping?.user.email || "",
@@ -72,7 +72,7 @@ const UserDetailsForm = ({
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof editProfileSchema>) => {
+  const onSubmit = async (values: z.infer<typeof editProfileSchemaByAdmin>) => {
     setLoading(true)
      try {
         const { error, success , message} = await editUserProfileByAdmin({

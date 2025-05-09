@@ -56,7 +56,7 @@ export const DeleteSelectedUsersSchema = z.object({
   usersId: z.array(z.string().min(1, { message: "User ID is required" })),
 });
 
-export const editProfileSchema = z.object({
+export const editProfileSchemaByAdmin = z.object({
   gender: z.enum(["male", "female"], { message: "Invalid gender type" }),
   name: z.string().min(1, { message: "Name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
@@ -84,7 +84,31 @@ export const editProfileSchema = z.object({
 //     }
 //   }
 });
-
+export const editProfileSchema = z.object({
+  gender: z.enum(["male", "female"], { message: "Invalid gender type" }),
+  name: z.string().min(1, { message: "Name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  email: z.string().email({ message: "Please provide a valid email address" }),
+  currentPassword: z.string().optional(),
+  confirmPassword: z.string().optional(),
+  password: z.string().optional(),
+ 
+  phoneNumber: z
+    .string()
+    .regex(/^[+\d]?(?:[\d-.\s()]*)$/, { message: "Invalid phone number format" }),
+}).superRefine((data, ctx) => {
+  if (data.currentPassword) {
+    if (!data.password) {
+      ctx.addIssue({ code: "custom", message: "New password is required", path: ["password"] });
+    }
+    if (!data.confirmPassword) {
+      ctx.addIssue({ code: "custom", message: "Please confirm your new password", path: ["confirmPassword"] });
+    }
+    if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+      ctx.addIssue({ code: "custom", message: "Passwords don't match", path: ["confirmPassword"] });
+    }
+  }
+});
 export const EmailVerificationValidationSchema = z.object({
   token: z.string().min(1, { message: "token is required" }),
 });
