@@ -90,6 +90,7 @@ const UserDetailsForm = ({
             title: "Success",
             description: message,
           })
+          setOpenConfirmModel(false)
           router.push(ROUTES.adminUsersList)
           return
         }
