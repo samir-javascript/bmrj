@@ -16,6 +16,37 @@ export const AccountSchema = z.object({
   provider: z.string().min(1, { message: "provider name is required" }),
   providerAccountId: z.string().min(1, { message: "ProviderAccount ID is required" }),
 });
+export const UpdateUserDetailsSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  gender: z.enum(["male", "female"]),
+  phoneNumber: z.string().optional().or(z.literal("")),
+  isAdmin: z.boolean(),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  country: z.string().min(1, "Country is required"),
+  postalCode: z.string().min(1, "Postal code is required"),
+  currentPassword:  z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long." })
+    .max(100, { message: "Password cannot exceed 100 characters." })
+    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter." })
+    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter." })
+    .regex(/[0-9]/, { message: "Password must contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, { message: "Password must contain at least one special character." })
+    .optional(),
+  newPassword:  z
+    .string()
+    .min(6, { message: "new Password must be at least 6 characters long." })
+    .max(100, { message: "new Password cannot exceed 100 characters." })
+    .regex(/[A-Z]/, { message: "new Password must contain at least one uppercase letter." })
+    .regex(/[a-z]/, { message: "new Password must contain at least one lowercase letter." })
+    .regex(/[0-9]/, { message: "new Password must contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, { message: "new Password must contain at least one special character." })
+    .optional(),
+});
 
 export const DeleteUserValidationSchema = z.object({
   userId: z.string().min(1, { message: "User id is required" }),
@@ -32,8 +63,7 @@ export const editProfileSchema = z.object({
   email: z.string().email({ message: "Please provide a valid email address" }),
   currentPassword: z.string().optional(),
   password: z.string().optional(),
-  confirmPassword: z.string().optional(),
-  hasNews: z.boolean().default(false),
+  isAdmin: z.boolean().default(false),
   address: z.string().min(1, {message: "address is required"}),
   city: z.string().min(1, {message: "city is required"}),
   country: z.string().min(1, {message:"country is required"}),
@@ -41,18 +71,18 @@ export const editProfileSchema = z.object({
   phoneNumber: z
     .string()
     .regex(/^[+\d]?(?:[\d-.\s()]*)$/, { message: "Invalid phone number format" }),
-}).superRefine((data, ctx) => {
-  if (data.currentPassword) {
-    if (!data.password) {
-      ctx.addIssue({ code: "custom", message: "New password is required", path: ["password"] });
-    }
-    if (!data.confirmPassword) {
-      ctx.addIssue({ code: "custom", message: "Please confirm your new password", path: ["confirmPassword"] });
-    }
-    if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
-      ctx.addIssue({ code: "custom", message: "Passwords don't match", path: ["confirmPassword"] });
-    }
-  }
+// }).superRefine((data, ctx) => {
+//   if (data.currentPassword) {
+//     if (!data.password) {
+//       ctx.addIssue({ code: "custom", message: "New password is required", path: ["password"] });
+//     }
+//     if (!data.confirmPassword) {
+//       ctx.addIssue({ code: "custom", message: "Please confirm your new password", path: ["confirmPassword"] });
+//     }
+//     if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+//       ctx.addIssue({ code: "custom", message: "Passwords don't match", path: ["confirmPassword"] });
+//     }
+//   }
 });
 
 export const EmailVerificationValidationSchema = z.object({

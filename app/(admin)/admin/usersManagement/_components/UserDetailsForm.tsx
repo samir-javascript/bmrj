@@ -24,9 +24,9 @@ import { Input } from "@/components/ui/input"
 import { editProfileSchema } from "@/lib/zod"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
-import { deleteUser, editProfile } from "@/actions/user.actions"
+import { deleteUser, editProfile, editUserProfileByAdmin } from "@/actions/user.actions"
 import { ROUTES } from "@/constants/routes"
 import { IUser } from "@/database/models/user.model"
 
@@ -50,18 +50,19 @@ const UserDetailsForm = ({
   const [open, setOpen] = useState<boolean>(false)
   const [openConfirmModal,setOpenConfirmModel] = useState(false)
   const [pending,setPending] = useState<boolean>(false)
+  const [loading,setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
-
+   const [err, setErr] = useState<string | undefined>(undefined)
+   const {id} = useParams()
   const form = useForm<z.infer<typeof editProfileSchema>>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
       gender: userWithShipping?.user.gender || "male",
       email: userWithShipping?.user.email || "",
       phoneNumber: userWithShipping?.user.phoneNumber || "",
-      hasNews: userWithShipping?.user.hasNewsLetter,
+      isAdmin: userWithShipping?.user.isAdmin,
       password: "",
       currentPassword: "",
-      confirmPassword: "",
       name: userWithShipping?.user.name || "",
       lastName: userWithShipping?.user.lastName || "",
       address: userWithShipping?.shippingAddresses[0]?.address || "",
@@ -72,7 +73,28 @@ const UserDetailsForm = ({
   })
 
   const onSubmit = async (values: z.infer<typeof editProfileSchema>) => {
-    // handle submit logic here
+    setLoading(true)
+     try {
+        const { error, success , message} = await editUserProfileByAdmin({
+           userId: id as string,
+           firstName: values.name,
+           lastName: values.lastName,
+           isAdmin: values.isAdmin,
+           email: values.email,
+           phoneNumber: values.phoneNumber,
+           gender: values.gender,
+           address: values.address,
+           city: values.city,
+           country: values.country,
+           postalCode: values.postalCode,
+           currentPassword: values.currentPassword,
+           newPassword: values.password,  
+        })
+     } catch (error) {
+       console.log(error)
+     }finally {
+       setLoading(false)
+     }
   }
   const handleDeleteUser = async()=> {
     setPending(true)
@@ -224,10 +246,10 @@ const UserDetailsForm = ({
             <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
               <FormField
                 control={form.control}
-                name="hasNews" // Consider renaming this if it's not meant to be gender
+                name="isAdmin" // Consider renaming this if it's not meant to be gender
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-200">Has Newsletter</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-200">isAdmin</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={String(field.value)}
@@ -235,18 +257,18 @@ const UserDetailsForm = ({
                       <FormControl>
                         <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)]
                          rounded-lg font-medium text-white">
-                          <SelectValue placeholder="Has newsletter" />
+                          <SelectValue placeholder="is Admin" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-white">
                         <SelectItem
-                          value="male"
+                          value="Yes"
                           className="hover:bg-blue-800 hover:text-white text-sm"
                         >
                           Yes
                         </SelectItem>
                         <SelectItem
-                          value="female"
+                          value="No"
                           className="hover:bg-blue-800 hover:text-white text-sm"
                         >
                           No
@@ -347,7 +369,7 @@ const UserDetailsForm = ({
                  
            
       <div className="flex items-center !w-full gap-2 max-lg:flex-wrap">
-      <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
+      <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
             <FormField
                 control={form.control}
                 name="currentPassword"
@@ -366,7 +388,7 @@ const UserDetailsForm = ({
                 )}
               />
             </div>
-            <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
+            <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
             <FormField
                 control={form.control}
                 name="password"
@@ -385,25 +407,7 @@ const UserDetailsForm = ({
                 )}
               />
                           </div>
-            <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
-            <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-200 font-medium text-sm">Confirm new password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="admin-input no-focus"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
+          
       </div>
           
          

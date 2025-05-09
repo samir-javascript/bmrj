@@ -205,13 +205,13 @@ export interface EditUserProfileByAdmin {
   address: string;
   city: string;
   country: string;
-  currentPassword: string;
+  currentPassword?: string;
   email: string;
   firstName: string;
   gender: "male" | "female";
-  hasNewsletter: boolean;
+  isAdmin: boolean;
   lastName: string;
-  newPassword: string;
+  newPassword?: string;
   phoneNumber: string;
   postalCode: string;
   userId: string;

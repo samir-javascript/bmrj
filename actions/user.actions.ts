@@ -14,7 +14,7 @@ import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
-import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation } from "@/lib/zod";
+import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation, UpdateUserDetailsSchema } from "@/lib/zod";
 import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, IUserWithShipping, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import { Order as OrderType } from "@/types/Elements";
 import bcrypt from "bcryptjs";
@@ -242,18 +242,60 @@ export async function VerifyCodeAndSetPassword(params:VerifyCodeAndSetPasswordPa
 // a bag to fix [shipping address inheritance after logout]
 
 // TODO: finish this ;
-// export async function editUserProfileByAdmin(params:EditUserProfileByAdmin): Promise<ActionResponse>{
-//   const validatedResult = await action({params,schema:EditUserProfileByAdminSchema,authorize:true})
-//   if(validatedResult instanceof Error) {
-//      return handleError(validatedResult) as ErrorResponse
-//   }
-//   const {} = params;
-//   try {
-//     await connectToDb()
-//   } catch (error) {
-//      return handleError(error) as ErrorResponse
-//   }
-// }
+export async function editUserProfileByAdmin(params:EditUserProfileByAdmin): Promise<ActionResponse>{
+  const validatedResult = await action({params,schema:UpdateUserDetailsSchema,authorize:true})
+  if(validatedResult instanceof Error) {
+     return handleError(validatedResult) as ErrorResponse
+  }
+  const session = validatedResult.session;
+  if(!session) throw new Error("User Session is missing")
+  const {  lastName, firstName,isAdmin, email, gender, phoneNumber,
+     address, city, country, postalCode, currentPassword, newPassword, userId } = params;
+  try {
+    await connectToDb()
+    const isAdminUser = await User.findById(session.user.id) as IUser;
+    if(!isAdminUser.isAdmin) throw new Error("Only admin users can perform this action")
+      const userToUpdate = await User.findById(userId) 
+    if(!userToUpdate) throw new Error("User not found")
+     if(userToUpdate.name !== firstName)  userToUpdate.name = firstName;
+    if(userToUpdate.lastName !== lastName)  userToUpdate.lastName = lastName;
+    if(userToUpdate.email !== email)  userToUpdate.email = email;
+    if(userToUpdate.gender !== gender)  userToUpdate.gender = gender;
+    if(userToUpdate.phoneNumber !== phoneNumber)  userToUpdate.phoneNumber = phoneNumber;
+    if(userToUpdate.isAdmin !== isAdmin)  userToUpdate.isAdmin = isAdmin;
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, userToUpdate.password);
+      if (!isMatch) throw new Error("Wrong user password");
+      userToUpdate.password = await bcrypt.hash(newPassword, 10);
+    }
+    await userToUpdate.save()
+    const activeUserShippingAddress = await Shipping.findOne({userId,isActive: true}) 
+     if(activeUserShippingAddress) {
+         activeUserShippingAddress.address = address;
+         activeUserShippingAddress.postalCode = postalCode;
+         activeUserShippingAddress.country = country;
+         activeUserShippingAddress.city = city;
+         await activeUserShippingAddress.save() 
+     }else {
+      await Shipping.create({
+        userId,
+        name: `${firstName} ${lastName}`,
+        address,
+        city,
+        country,
+        postalCode,
+        phoneNumber: phoneNumber || "",
+        isActive: true,
+      });
+     }
+     return {
+       success: true
+     }
+
+  } catch (error) {
+     return handleError(error) as ErrorResponse
+  }
+}
 
 // TODO: delete user by admin
 
