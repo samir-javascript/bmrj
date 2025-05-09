@@ -161,7 +161,16 @@ export interface EditProductParams extends ProductParams {
 export interface GetSingleProductParams {
   productId: string;
 }
-
+export interface IUserWithShipping  {
+  user: IUser,
+  shippingAddresses: IShipping[];
+  orders: OrderType[];
+  reviews: {
+     productId: string,
+     productName:string;
+     reviews: IReview
+  }[]
+}
 export interface ProductParams {
   productName: string;
   productDescription: string;

@@ -26,7 +26,7 @@ import { editProfileSchema } from "@/lib/zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { deleteUser, editProfile, IUserWithShipping } from "@/actions/user.actions"
+import { deleteUser, editProfile } from "@/actions/user.actions"
 import { ROUTES } from "@/constants/routes"
 import { IUser } from "@/database/models/user.model"
 
@@ -34,6 +34,9 @@ import { useToast } from "@/hooks/use-toast"
 import SetPasswordModal from "@/components/modals/SetPasswordModal"
 import AlertMessage from "@/components/shared/AlertMessage"
 import { Loader, Save, TrashIcon } from "lucide-react"
+import ConfirmModal from "@/components/modals/ConfirmModal"
+import { useCellValues } from "@mdxeditor/editor"
+import { IUserWithShipping } from "@/types/action"
 
 const UserDetailsForm = ({
   userWithShipping,
@@ -45,6 +48,7 @@ const UserDetailsForm = ({
   const router = useRouter()
   const { toast } = useToast()
   const [open, setOpen] = useState<boolean>(false)
+  const [openConfirmModal,setOpenConfirmModel] = useState(false)
   const [pending,setPending] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
 
@@ -75,6 +79,7 @@ const UserDetailsForm = ({
      try {
         const { error, success, message} = await deleteUser({userId: userWithShipping.user._id})
         if(error) {
+          setError(error.message)
            return toast({
              title: "Error occured",
              description: error.message,
@@ -420,24 +425,20 @@ const UserDetailsForm = ({
          <Button disabled={open} className="bg-light_blue text-white" type="submit">
             {form.formState.isSubmitting ? "Loading..." : <><Save /> Save</>}
           </Button>
-          <Button onClick={() =>handleDeleteUser()} disabled={open || pending} className="bg-red-500 max-sm:bg-transparent
-           max-sm:w-fit max-sm:hover:bg-transparent hover:bg-red-600 text-white" type="submit">
-            {pending ? (
-              <>
-                  <Loader className="animate-spin  " />
-                  <span>Deleting...</span>
-              </>
-               
-            ): (
+          <Button onClick={() => setOpenConfirmModel(true)} disabled={open || pending} className="bg-red-500 max-sm:bg-transparent
+           max-sm:w-fit max-sm:hover:bg-transparent hover:bg-red-600 text-white" type="button">
+            
                <>
                   <TrashIcon className="max-sm:text-red-500 cursor-pointer max-sm:text-[25px] " /> <span className="max-sm:hidden">DELETE</span>
                </>
-            )} 
+            
           </Button>
     </div>
          
         </form>
       </Form>
+      <ConfirmModal message="Are you sure you want to delete this user ?" handleClick={handleDeleteUser} error={error} 
+        loading open={openConfirmModal} setOpen={setOpenConfirmModel} />
     </div>
   )
 }

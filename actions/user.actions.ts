@@ -15,7 +15,7 @@ import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
 import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
 import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
+import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, IUserWithShipping, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import { Order as OrderType } from "@/types/Elements";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"
@@ -239,6 +239,7 @@ export async function VerifyCodeAndSetPassword(params:VerifyCodeAndSetPasswordPa
   }
 }
 
+// a bag to fix [shipping address inheritance after logout]
 
 // TODO: finish this ;
 // export async function editUserProfileByAdmin(params:EditUserProfileByAdmin): Promise<ActionResponse>{
@@ -468,16 +469,7 @@ export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Pr
 };
 
 
-export interface IUserWithShipping  {
-  user: IUser,
-  shippingAddresses: IShipping[];
-  orders: OrderType[];
-  reviews: {
-     productId: string,
-     productName:string;
-     reviews: IReview
-  }[]
-}
+
 
 export const getUserWithShipping = async (params:GetUserWithShippingParams): Promise<ActionResponse<IUserWithShipping>> => {
   const validatedResult = await action({params,schema:GetUserWithShippingSchema,authorize:true})
