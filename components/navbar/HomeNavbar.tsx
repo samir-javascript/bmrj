@@ -37,9 +37,9 @@ const HomeNavbar = ({qty}: {
         <MenuIcon className='lg:hidden block text-white' size={28} />
         <Link href="/">
         <Image alt="marjanemall logo"
-          width={220}
+          width={180}
           className='object-contain w-auto h-auto max-md:w-[170px]   lg:mr-7'
-          height={220}
+          height={180}
           loading="eager"
           priority
           src="/logoo.svg" />

@@ -263,11 +263,22 @@ export async function editUserProfileByAdmin(params:EditUserProfileByAdmin): Pro
     if(userToUpdate.gender !== gender)  userToUpdate.gender = gender;
     if(userToUpdate.phoneNumber !== phoneNumber)  userToUpdate.phoneNumber = phoneNumber;
     if(userToUpdate.isAdmin !== isAdmin)  userToUpdate.isAdmin = isAdmin;
-    if (currentPassword && newPassword) {
+    // if (currentPassword && newPassword) {
+    //   const isMatch = await bcrypt.compare(currentPassword, userToUpdate.password);
+    //   if (!isMatch) throw new Error("Wrong user password");
+    //   userToUpdate.password = await bcrypt.hash(newPassword, 10);
+    // }
+    if (newPassword) {
+      if (!currentPassword) {
+        throw new Error("Current password is required to set a new password");
+      }
+    
       const isMatch = await bcrypt.compare(currentPassword, userToUpdate.password);
       if (!isMatch) throw new Error("Wrong user password");
+    
       userToUpdate.password = await bcrypt.hash(newPassword, 10);
     }
+    
     await userToUpdate.save()
     const activeUserShippingAddress = await Shipping.findOne({userId,isActive: true}) 
      if(activeUserShippingAddress) {

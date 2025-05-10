@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { editProfileSchema, editProfileSchemaByAdmin } from "@/lib/zod"
+import { editProfileSchema, UpdateUserDetailsSchema } from "@/lib/zod"
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -55,16 +55,15 @@ const UserDetailsForm = ({
   const [error, setError] = useState<string | undefined>(undefined)
    const [err, setErr] = useState<string | undefined>(undefined)
    const {id} = useParams()
-  const form = useForm<z.infer<typeof editProfileSchemaByAdmin>>({
-    resolver: zodResolver(editProfileSchemaByAdmin),
+  const form = useForm<z.infer<typeof UpdateUserDetailsSchema>>({
+    resolver: zodResolver(UpdateUserDetailsSchema),
     defaultValues: {
       gender: userWithShipping?.user.gender || "male",
       email: userWithShipping?.user.email || "",
       phoneNumber: userWithShipping?.user.phoneNumber || "",
       isAdmin: userWithShipping?.user.isAdmin,
-      password: "",
       currentPassword: "",
-      name: userWithShipping?.user.name || "",
+      firstName: userWithShipping?.user.name || "",
       lastName: userWithShipping?.user.lastName || "",
       address: userWithShipping?.shippingAddresses[0]?.address || "",
       postalCode: userWithShipping?.shippingAddresses[0]?.postalCode || "",
@@ -73,23 +72,23 @@ const UserDetailsForm = ({
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof editProfileSchemaByAdmin>) => {
+  const onSubmit = async (values: z.infer<typeof UpdateUserDetailsSchema>) => {
     setLoading(true)
      try {
         const { error, success , message} = await editUserProfileByAdmin({
            userId: id as string,
-           firstName: values.name,
+           firstName: values.firstName,
            lastName: values.lastName,
            isAdmin: values.isAdmin,
            email: values.email,
-           phoneNumber: values.phoneNumber,
+           phoneNumber: values.phoneNumber as string,
            gender: values.gender,
            address: values.address,
            city: values.city,
            country: values.country,
            postalCode: values.postalCode,
            currentPassword: values.currentPassword,
-           newPassword: values.password,  
+           newPassword: values.newPassword,  
         })
         if(error) {
            setErr(error.message)
@@ -180,7 +179,7 @@ const UserDetailsForm = ({
             <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm ">First Name</FormLabel>
@@ -400,7 +399,7 @@ const UserDetailsForm = ({
             <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
             <FormField
                 control={form.control}
-                name="password"
+                name="newPassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-200 font-medium text-sm">New Password</FormLabel>
