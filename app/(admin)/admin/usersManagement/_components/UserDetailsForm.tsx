@@ -37,6 +37,7 @@ import { Loader, Save, TrashIcon } from "lucide-react"
 import ConfirmModal from "@/components/modals/ConfirmModal"
 import { useCellValues } from "@mdxeditor/editor"
 import { IUserWithShipping } from "@/types/action"
+import Alert from "@/components/shared/Alert"
 
 const UserDetailsForm = ({
   userWithShipping,
@@ -90,6 +91,15 @@ const UserDetailsForm = ({
            currentPassword: values.currentPassword,
            newPassword: values.password,  
         })
+        if(error) {
+           setErr(error.message)
+           return
+        }else if(success) {
+           return toast({
+             title: "Success",
+             description: "profile has been updated"
+           })
+        }
      } catch (error) {
        console.log(error)
      }finally {
@@ -124,6 +134,11 @@ const UserDetailsForm = ({
   }
   return (
     <div className="w-full">
+       {err && (
+         <div className="my-5">
+            <Alert message={err} />
+         </div>
+       )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
