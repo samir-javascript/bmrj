@@ -244,41 +244,35 @@ const UserDetailsForm = ({
           />
        </div>
             <div className="flex-1 min-w-full lg:min-w-[calc(33.33%-0.5rem)]">
-              <FormField
-                control={form.control}
-                name="isAdmin" // Consider renaming this if it's not meant to be gender
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-200">isAdmin</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={String(field.value)}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)]
-                         rounded-lg font-medium text-white">
-                          <SelectValue placeholder="is Admin" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-white">
-                        <SelectItem
-                          value="Yes"
-                          className="hover:bg-blue-800 hover:text-white text-sm"
-                        >
-                          Yes
-                        </SelectItem>
-                        <SelectItem
-                          value="No"
-                          className="hover:bg-blue-800 hover:text-white text-sm"
-                        >
-                          No
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+  control={form.control}
+  name="isAdmin"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel className="text-sm font-medium text-gray-200">isAdmin</FormLabel>
+      <Select
+        onValueChange={(value) => field.onChange(value === "true")}
+        defaultValue={String(field.value)}
+      >
+        <FormControl>
+          <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)] rounded-lg font-medium text-white">
+            <SelectValue placeholder="is Admin" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent className="bg-white">
+          <SelectItem value="true" className="hover:bg-blue-800 hover:text-white text-sm">
+            Yes
+          </SelectItem>
+          <SelectItem value="false" className="hover:bg-blue-800 hover:text-white text-sm">
+            No
+          </SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage className="text-red-500" />
+    </FormItem>
+  )}
+/>
+
             </div>
           </div>
  
