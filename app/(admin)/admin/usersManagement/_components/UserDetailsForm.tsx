@@ -62,7 +62,7 @@ const UserDetailsForm = ({
       email: userWithShipping?.user.email || "",
       phoneNumber: userWithShipping?.user.phoneNumber || "",
       isAdmin: userWithShipping?.user.isAdmin,
-      currentPassword: "",
+     
       firstName: userWithShipping?.user.name || "",
       lastName: userWithShipping?.user.lastName || "",
       address: userWithShipping?.shippingAddresses[0]?.address || "",
@@ -87,8 +87,7 @@ const UserDetailsForm = ({
            city: values.city,
            country: values.country,
            postalCode: values.postalCode,
-           currentPassword: values.currentPassword || "",
-           newPassword: values.newPassword || "",  
+           
         })
         if(error) {
            setErr(error.message)
@@ -370,73 +369,9 @@ const UserDetailsForm = ({
 
               </div>
         </>
-          {canChangePasswordPromise ? (
-            <>
-            <h3 className="text-white font-medium text-[18px] tracking-normal ">Change Password</h3>
+        
 
-                 
-           
-      <div className="flex items-center !w-full gap-2 max-lg:flex-wrap">
-      <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
-            <FormField
-                control={form.control}
-                name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-200 text-sm font-medium ">Current Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="admin-input no-focus"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex-1 min-w-full lg:min-w-[calc(50%-0.5rem)]">
-            <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-200 font-medium text-sm">New Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                      
-                        className="admin-input  no-focus"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-                          </div>
-          
-      </div>
-          
-         
-             
-            </>
-          ) : (
-            <div className="flex flex-col mt-4 space-y-3">
-              <Button
-                onClick={() => setOpen(true)}
-                className="bg-gray-200 hover:bg-gray-300 lg:w-[200px] w-fit rounded-lg text-black"
-                type="button"
-              >
-                Set Password
-              </Button>
-            </div>
-          )}
-
-          <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.user.email} />
+          {/* <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.user.email} /> */}
     <div className="w-full p-4 bg-[#333] flex  rounded-lg items-center justify-between ">
          <Button disabled={open} className="bg-light_blue text-white" type="submit">
             {form.formState.isSubmitting ? "Loading..." : <><Save /> Save</>}
