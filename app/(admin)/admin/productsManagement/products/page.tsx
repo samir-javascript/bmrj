@@ -22,7 +22,7 @@ export default async function Page() {
     <div className="mt-10 px-4 w-full">
        
         <div className='flex flex-col-reverse mb-5 justify-between sm:items-center sm:flex-row items-start'>
-        <h2 className="text-2xl font-semibold ">Product List</h2>
+        <h2 className="text-2xl font-semibold !text-white ">Product List</h2>
            
             <div className='max-sm:w-full justify-end flex max-sm:mb-5 '>
             <Link href={ROUTES.createProduct}>
@@ -40,7 +40,7 @@ export default async function Page() {
           <Table className="rounded-xl border shadow-sm overflow-hidden">
        
        <TableHeader>
-         <TableRow className="bg-gray-100 hover:bg-gray-100">
+         <TableRow className="text-white bg-black font-semibold">
            <TableHead className="font-semibold text-gray-700">Name</TableHead>
            <TableHead className="font-semibold text-gray-700">Price</TableHead>
            <TableHead className="font-semibold text-gray-700">Category</TableHead>
@@ -60,13 +60,13 @@ export default async function Page() {
          {result.data?.products.map((item, index) => (
            <TableRow
              key={index}
-             className="hover:bg-gray-50 transition-colors duration-200"
+             className='hover:bg-gray-900 cursor-pointer'
            >
-             <TableCell className="font-medium   text-gray-800">{item.name}</TableCell>
-             <TableCell className="text-gray-600">${item.price}</TableCell>
-             <TableCell className="text-gray-600">{item.category}</TableCell>
-             <TableCell className="text-gray-600">{item.brand}</TableCell>
-             <TableCell className="text-gray-600">{item.countInStock}</TableCell>
+             <TableCell className="font-medium   text-white">{item.name}</TableCell>
+             <TableCell className="text-white">${item.price}</TableCell>
+             <TableCell className="text-white">{item.category}</TableCell>
+             <TableCell className="text-white">{item.brand}</TableCell>
+             <TableCell className="text-white">{item.countInStock}</TableCell>
              <TableCell className="flex justify-center items-center py-4">
                <img
                  className="w-[60px] h-[60px] object-cover rounded-md shadow-sm border"
@@ -74,13 +74,13 @@ export default async function Page() {
                  alt={item.name}
                />
              </TableCell>
-             <TableCell className="text-gray-600">
+             <TableCell className="text-white">
                <Link href={`/admin/productsManagement/edit/${item._id}`}>
                   <Edit color='green' />
                </Link>
               
               </TableCell>
-              <TableCell className="text-gray-600">
+              <TableCell className="text-white">
             <DeleteProductBtn productId={item._id} />
         </TableCell>
            </TableRow>

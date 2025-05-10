@@ -29,7 +29,7 @@ const Navbar = () => {
  
        dispatch(clearCart());
        localStorage.removeItem("guest_cart");
-       await signOut({ callbackUrl: "/" });
+       await signOut({ callbackUrl: process.env.NEXT_PUBLIC_API_ENDPOINT });
      } catch (error) {
        console.error(error);
      } finally {
