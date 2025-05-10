@@ -16,37 +16,84 @@ export const AccountSchema = z.object({
   provider: z.string().min(1, { message: "provider name is required" }),
   providerAccountId: z.string().min(1, { message: "ProviderAccount ID is required" }),
 });
-export const UpdateUserDetailsSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  gender: z.enum(["male", "female"]),
-  phoneNumber: z.string().optional().or(z.literal("")),
-  isAdmin: z.boolean(),
-  address: z.string().min(1, "Address is required"),
-  city: z.string().min(1, "City is required"),
-  country: z.string().min(1, "Country is required"),
-  postalCode: z.string().min(1, "Postal code is required"),
-  currentPassword:  z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long." })
-    .max(100, { message: "Password cannot exceed 100 characters." })
-    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter." })
-    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter." })
-    .regex(/[0-9]/, { message: "Password must contain at least one number." })
-    .regex(/[^a-zA-Z0-9]/, { message: "Password must contain at least one special character." })
-    .optional(),
-  newPassword:  z
-    .string()
-    .min(6, { message: "new Password must be at least 6 characters long." })
-    .max(100, { message: "new Password cannot exceed 100 characters." })
-    .regex(/[A-Z]/, { message: "new Password must contain at least one uppercase letter." })
-    .regex(/[a-z]/, { message: "new Password must contain at least one lowercase letter." })
-    .regex(/[0-9]/, { message: "new Password must contain at least one number." })
-    .regex(/[^a-zA-Z0-9]/, { message: "new Password must contain at least one special character." })
-    .optional(),
-});
+// export const UpdateUserDetailsSchema = z.object({
+//   userId: z.string().min(1, "User ID is required"),
+//   firstName: z.string().min(1, "First name is required"),
+//   lastName: z.string().min(1, "Last name is required"),
+//   email: z.string().email("Invalid email address"),
+//   gender: z.enum(["male", "female"]),
+//   phoneNumber: z.string().optional().or(z.literal("")),
+//   isAdmin: z.boolean(),
+//   address: z.string().min(1, "Address is required"),
+//   city: z.string().min(1, "City is required"),
+//   country: z.string().min(1, "Country is required"),
+//   postalCode: z.string().min(1, "Postal code is required"),
+//   currentPassword:  z
+//     .string()
+//     .min(6, { message: "Password must be at least 6 characters long." })
+//     .max(100, { message: "Password cannot exceed 100 characters." })
+//     .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter." })
+//     .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter." })
+//     .regex(/[0-9]/, { message: "Password must contain at least one number." })
+//     .regex(/[^a-zA-Z0-9]/, { message: "Password must contain at least one special character." })
+//     .optional(),
+//   newPassword:  z
+//     .string()
+//     .min(6, { message: "new Password must be at least 6 characters long." })
+//     .max(100, { message: "new Password cannot exceed 100 characters." })
+//     .regex(/[A-Z]/, { message: "new Password must contain at least one uppercase letter." })
+//     .regex(/[a-z]/, { message: "new Password must contain at least one lowercase letter." })
+//     .regex(/[0-9]/, { message: "new Password must contain at least one number." })
+//     .regex(/[^a-zA-Z0-9]/, { message: "new Password must contain at least one special character." })
+//     .optional(),
+// });
+
+export const UpdateUserDetailsSchema = z
+  .object({
+    userId: z.string().min(1, "User ID is required"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z.string().email("Invalid email address"),
+    gender: z.enum(["male", "female"]),
+    phoneNumber: z.string().optional().or(z.literal("")),
+    isAdmin: z.boolean(),
+    address: z.string().min(1, "Address is required"),
+    city: z.string().min(1, "City is required"),
+    country: z.string().min(1, "Country is required"),
+    postalCode: z.string().min(1, "Postal code is required"),
+    currentPassword: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long." })
+      .max(100, { message: "Password cannot exceed 100 characters." })
+      .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter." })
+      .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter." })
+      .regex(/[0-9]/, { message: "Password must contain at least one number." })
+      .regex(/[^a-zA-Z0-9]/, { message: "Password must contain at least one special character." })
+      .optional()
+      .or(z.literal("")),
+    newPassword: z
+      .string()
+      .min(6, { message: "New password must be at least 6 characters long." })
+      .max(100, { message: "New password cannot exceed 100 characters." })
+      .regex(/[A-Z]/, { message: "New password must contain at least one uppercase letter." })
+      .regex(/[a-z]/, { message: "New password must contain at least one lowercase letter." })
+      .regex(/[0-9]/, { message: "New password must contain at least one number." })
+      .regex(/[^a-zA-Z0-9]/, { message: "New password must contain at least one special character." })
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine(
+    (data) => {
+      const hasCurrent = !!data.currentPassword && data.currentPassword.trim() !== "";
+      const hasNew = !!data.newPassword && data.newPassword.trim() !== "";
+
+      return !hasNew || (hasNew && hasCurrent);
+    },
+    {
+      message: "Current password is required when setting a new password.",
+      path: ["currentPassword"],
+    }
+  );
 
 export const DeleteUserValidationSchema = z.object({
   userId: z.string().min(1, { message: "User id is required" }),
