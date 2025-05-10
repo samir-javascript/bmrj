@@ -87,8 +87,8 @@ const UserDetailsForm = ({
            city: values.city,
            country: values.country,
            postalCode: values.postalCode,
-           currentPassword: values.currentPassword,
-           newPassword: values.newPassword,  
+           currentPassword: values.currentPassword || "",
+           newPassword: values.newPassword || "",  
         })
         if(error) {
            setErr(error.message)
@@ -389,6 +389,7 @@ const UserDetailsForm = ({
                         type="password"
                         className="admin-input no-focus"
                         {...field}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
@@ -406,8 +407,10 @@ const UserDetailsForm = ({
                     <FormControl>
                       <Input
                         type="password"
+                      
                         className="admin-input  no-focus"
                         {...field}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
