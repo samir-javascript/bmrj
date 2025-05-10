@@ -12,8 +12,8 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
   return (
     <div className='h-full  w-full py-7 max-lg:px-5 '>
       <div className='border-b border-gray-200 pb-3 flex flex-col gap-2  '>
-          <h2 className="h2-bold">Edit Product</h2>
-          <p className='text-gray-500 font-medium text-[16px]  '>Manage your products settings and add new products , edit or delete.</p>
+          <h2 className="h2-bold !text-white">Edit Product</h2>
+          <p className='text-gray-100 font-medium text-[16px]  '>Manage your products settings and add new products , edit or delete.</p>
       </div>
         <EditProductForm productId={id} product={result?.data?.product!}  />
     </div>

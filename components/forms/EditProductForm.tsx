@@ -83,11 +83,12 @@ const isSubmitting = form.formState.isSubmitting
         name="productName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm text-white font-semibold leading-none
+             peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product Name
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus admin-input" placeholder="Enter Product Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -99,7 +100,7 @@ const isSubmitting = form.formState.isSubmitting
         name="productDescription"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm font-semibold  text-white leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product Description
             </FormLabel>
             <FormControl>
@@ -121,14 +122,14 @@ const isSubmitting = form.formState.isSubmitting
         name="productPrice"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm  text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product Price
             </FormLabel>
             <FormControl>
               <Input  
              disabled={isSubmitting}
              type="number"
-               className="no-focus" placeholder="Enter Product Price" {...field} />
+               className="no-focus admin-input" placeholder="Enter Product Price" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -140,11 +141,11 @@ const isSubmitting = form.formState.isSubmitting
         name="productPrevPrice"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm  text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product PrevPrice
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} type="number" className="no-focus" placeholder="Enter Product discounted price" {...field} />
+              <Input disabled={isSubmitting} type="number" className="no-focus admin-input" placeholder="Enter Product discounted price" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -158,11 +159,11 @@ const isSubmitting = form.formState.isSubmitting
         name="productCategory"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm  text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product Category
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Category Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus admin-input" placeholder="Enter Product Category Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -174,11 +175,11 @@ const isSubmitting = form.formState.isSubmitting
         name="productBrand"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm  text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product Brand
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Brand Name" {...field} />
+              <Input disabled={isSubmitting} className="no-focus admin-input" placeholder="Enter Product Brand Name" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -190,11 +191,11 @@ const isSubmitting = form.formState.isSubmitting
         name="productPosition"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm  text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product UI Podition
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} className="no-focus" placeholder="Enter Product Position" {...field} />
+              <Input disabled={isSubmitting} className="no-focus admin-input" placeholder="Enter Product Position" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
@@ -206,11 +207,11 @@ const isSubmitting = form.formState.isSubmitting
         name="qty"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <FormLabel className="text-sm   text-white font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Product QTY
             </FormLabel>
             <FormControl>
-              <Input disabled={isSubmitting} type="number" className="no-focus" placeholder="Enter Product Quantity" {...field} />
+              <Input disabled={isSubmitting} type="number" className="no-focus admin-input" placeholder="Enter Product Quantity" {...field} />
             </FormControl>
             
             <FormMessage className="text-red-500" />
