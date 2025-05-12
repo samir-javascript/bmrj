@@ -24,7 +24,8 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
   return (
     <div className='py-7 w-full'>
          
-         <div className="rounded-lg p-3 flex flex-col min-w-full lg:w-[85%] mt-3 " style={{background: "rgb(18,18,18)"}}>
+         <div className="rounded-lg p-3 flex flex-col min-w-full mr-5 lg:w-[85%] mt-3 "
+          style={{background: "rgb(18,18,18)"}}>
             <div className='flex flex-col lg:flex-row items-start justify-between'>
                 <div className="flex flex-col space-y-3">
                       <h3 className='text-white font-medium text-[17px] '>Order</h3>

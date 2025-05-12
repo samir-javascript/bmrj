@@ -10,6 +10,8 @@ import Pagination from '@/components/pagination/Pagination'
 import Select from '../_components/Select'
 import DeleteOrdersCheckbox from '../_components/DeleteOrdersCheckbox'
 import Alert from '@/components/shared/Alert'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 
 
@@ -39,7 +41,10 @@ const page = async({searchParams}: searchParamsProps) => {
                <div style={{background:"rgb(22,22,22)"}} className='shadow-md flex flex-col px-5 py-3 rounded-lg' key={index}>
                      <div className='flex items-center justify-between'>
                            <p className='text-white font-medium text-sm '>order #{order._id} </p>
-                           <Pencil size={22} className='text-light_blue' />
+                           <Link href={ROUTES.adminOrderDetails(order._id)}>
+                             <Pencil size={22} className='text-light_blue' />
+                           </Link>
+                          
                      </div>
                      <div className="mt-5">
                         <div className='flex items-center gap-1'>
