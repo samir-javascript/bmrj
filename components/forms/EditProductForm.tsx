@@ -77,7 +77,7 @@ const isSubmitting = form.formState.isSubmitting
  
   return (
     <Form  {...form}>
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col space-y-5 mt-7 lg:w-[60%] ">
+    <form onSubmit={form.handleSubmit(handleSubmit)}  style={{background: "rgb(18, 18, 18)"}} className="flex flex-col space-y-5 mt-7 lg:w-[60%] ">
       <FormField
         control={form.control}
         name="productName"
