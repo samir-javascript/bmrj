@@ -63,7 +63,7 @@ const UserDetailsForm = ({
       email: userWithShipping?.user.email || "",
       phoneNumber: userWithShipping?.user.phoneNumber || "",
       isAdmin: userWithShipping?.user.isAdmin,
-     
+      userId: id,
       firstName: userWithShipping?.user.name || "",
       lastName: userWithShipping?.user.lastName || "",
       address: userWithShipping?.shippingAddresses[0]?.address || "",
