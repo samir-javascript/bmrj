@@ -130,6 +130,8 @@ const UserDetailsForm = ({
         setPending(false)
      }
   }
+  console.log(form.formState.errors,  "errors")
+  console.log(form.watch(), "watch")
   return (
     <div className="w-full">
        {err && (

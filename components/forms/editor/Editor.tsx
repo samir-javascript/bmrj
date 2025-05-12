@@ -47,6 +47,7 @@ const Editor = ({ value, editorRef, disabled, fieldChange, ...props }: Props) =>
       markdown={value}
       ref={editorRef}
       className={editorClassName}
+    
       readOnly={disabled}
       onChange={fieldChange}
       plugins={[
