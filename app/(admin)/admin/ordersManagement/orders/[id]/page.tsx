@@ -13,33 +13,7 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
     const { id } = await params;
     const { data , error } = await getOrderDetails({orderId:id})
     if(!data) return notFound()
-    // const items = [
-    //    {
-    //     ref: "yassine anouar",
-    //     unitPrice: "27,93 $US",
-    //     qty: 4,
-    //     total: "111,72 $US"
-    //    },
-    //    {
-    //     ref: "mouad hmamou",
-    //     unitPrice: "33,93 $US",
-    //     qty: 2,
-    //     total: "67,72 $US"
-    //    },
-    //    {
-    //     ref: "karim amlah",
-    //     unitPrice: "27,93 $US",
-    //     qty: 4,
-    //     total: "111,72 $US"
-    //    },
-    //    {
-    //     ref: "walid kbiri",
-    //     unitPrice: "30.50 $US",
-    //     qty: 3,
-    //     total: "95,72 $US"
-    //    }
-
-    // ]
+ 
     if(error) {
        return (
          <div className='my-5'>
@@ -48,9 +22,9 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
        )
     }
   return (
-    <div className='py-7 '>
+    <div className='py-7 w-full'>
          
-         <div className="rounded-lg p-3 flex flex-col min-w-full lg:w-[70%] mt-3 " style={{background: "rgb(18,18,18)"}}>
+         <div className="rounded-lg p-3 flex flex-col min-w-full lg:w-[85%] mt-3 " style={{background: "rgb(18,18,18)"}}>
             <div className='flex flex-col lg:flex-row items-start justify-between'>
                 <div className="flex flex-col space-y-3">
                       <h3 className='text-white font-medium text-[17px] '>Order</h3>
