@@ -24,7 +24,7 @@ const page = async({params}: {params:Promise<{id:string}>}) => {
         <div className="flex w-full flex-row items-start gap-5">
              <div style={{background: "rgb(18,18,18)"}} className="rounded-lg w-full flex flex-col px-4 py-3 flex-1">
                  <h3 className='text-gray-100 font-medium text-[18px] tracking-wide '>Identity</h3>
-                 <UserDetailsForm  canChangePasswordPromise userWithShipping={data} />
+                 <UserDetailsForm  id={id} userWithShipping={data} />
              </div>
              <div className="lg:flex flex-col w-[320px] mr-2 space-y-3 hidden">
                   <div style={{background: "rgb(18,18,18)"}} className='rounded-lg flex flex-col py-3 px-2'>

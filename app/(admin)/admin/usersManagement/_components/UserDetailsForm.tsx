@@ -41,10 +41,11 @@ import Alert from "@/components/shared/Alert"
 
 const UserDetailsForm = ({
   userWithShipping,
-  canChangePasswordPromise,
+  id
 }: {
   userWithShipping: IUserWithShipping
-  canChangePasswordPromise: boolean
+  id:string
+ 
 }) => {
   const router = useRouter()
   const { toast } = useToast()
@@ -54,7 +55,7 @@ const UserDetailsForm = ({
   const [loading,setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
    const [err, setErr] = useState<string | undefined>(undefined)
-   const {id} = useParams()
+   
   const form = useForm<z.infer<typeof UpdateUserDetailsSchema>>({
     resolver: zodResolver(UpdateUserDetailsSchema),
     defaultValues: {
@@ -76,7 +77,7 @@ const UserDetailsForm = ({
     setLoading(true)
      try {
         const { error, success , message} = await editUserProfileByAdmin({
-           userId: id as string,
+           userId: id ,
            firstName: values.firstName,
            lastName: values.lastName,
            isAdmin: values.isAdmin,
