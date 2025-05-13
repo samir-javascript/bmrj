@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import SearchInput from '../search/SearchInput'
-import { Heart, MenuIcon, ShoppingBag, User } from 'lucide-react'
+import { Heart, MenuIcon, ShoppingBag, User, UserCheckIcon } from 'lucide-react'
 import TopBar from './TopBar'
 import Link from 'next/link'
 import { ROUTES } from '@/constants/routes'
@@ -83,6 +83,23 @@ const HomeNavbar = ({qty}: {
                  
                   <p className='font-medium lg:block hidden text-sm'>Mon compte</p>
                </Link>
+               {session.status === "authenticated" && session.data && session.data.user.isAdmin && (
+ <Link href={`${ROUTES.userProfile}`} className='flex flex-col cursor-pointer  hover:text-light_blue items-center gap-1'>
+  
+       
+                   <UserCheckIcon />
+                    
+
+                  
+               
+                 
+                  <p className='font-medium lg:block hidden text-sm'>Admin Panel</p>
+  
+                
+               </Link>
+               )}
+              
+               
                <div onClick={()=> dispatch(open())} className='flex flex-col cursor-pointer 
                  hover:text-light_blue items-center gap-1'>
                   <div className='relative'>

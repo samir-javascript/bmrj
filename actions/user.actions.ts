@@ -457,6 +457,63 @@ export const getAllUsers = async (
   }
 };
 
+
+export const getUsers = async (
+  params: {}
+): Promise<ActionResponse<{
+  users: (IUser & { totalSpent: number })[],
+}>> => {
+  const validatedResult = await action({ params, authorize: true });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  const session = validatedResult.session;
+  if (!session) throw new Error("missing user admin session");
+
+  try {
+    await connectToDb();
+
+    const userAdmin = await User.findById(session.user.id) as IUser;
+    if (!userAdmin?.isAdmin) throw new Error("Cannot proceed! This action is only allowed by admin users");
+
+    // Get all non-admin users
+    const users = await User.find({ isAdmin: false }).sort({ createdAt: -1 }).lean();
+
+    // Get total spent per user from the Orders
+    const spending = await Order.aggregate([
+      {
+        $match: {
+          user: { $in: users.map(user => user._id) }
+        }
+      },
+      {
+        $group: {
+          _id: "$user",
+          totalSpent: { $sum: "$totalPrice" }
+        }
+      }
+    ]);
+
+    // Map totalSpent back to users
+    const spendingMap = new Map(spending.map(item => [item._id.toString(), item.totalSpent]));
+
+    const usersWithSpending = users.map(user => ({
+      ...user,
+      totalSpent: spendingMap.get((user as unknown as IUser)._id.toString()) || 0
+    }));
+
+    return {
+      success: true,
+      data: {
+        users: JSON.parse(JSON.stringify(usersWithSpending)),
+      }
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
+
 export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Promise<ActionResponse> => {
   const validatedResult = await action({ params, schema: DeleteSelectedUsersSchema, authorize: true });
   if (validatedResult instanceof Error) {

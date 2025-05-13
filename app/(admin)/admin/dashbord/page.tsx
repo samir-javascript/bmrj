@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Chart } from '../../_components/Chart'
 import { formatPrice } from '@/lib/utils'
+import { getUsers } from '@/actions/user.actions'
 
 // Reusable Box component
 const StatBox = ({
@@ -48,7 +49,9 @@ const StatBox = ({
  
  
 
-const Page = () => {
+const Page = async() => {
+   const {data,error,success} = await getUsers({})
+   console.log(data, "get users data for dashboard")
   return (
     <div className="w-full px-3 py-8">
       {/* Welcome Section */}
