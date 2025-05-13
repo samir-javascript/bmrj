@@ -5,6 +5,7 @@ import React from 'react'
 import { Chart } from '../../_components/Chart'
 import { formatPrice } from '@/lib/utils'
 import { getUsers } from '@/actions/user.actions'
+import { ROUTES } from '@/constants/routes'
 
 // Reusable Box component
 const StatBox = ({
@@ -70,14 +71,19 @@ const Page = async() => {
             This is the admin of an imaginary poster shop. Feel free to explore and modify the data – it's local to your computer and will reset each time you reload.
           </p>
           <div className="mt-2 flex items-center gap-3">
-            <Button className="text-white bg-light_blue">
+            <Link href={ROUTES.createProduct}>
+             <Button className="text-white bg-light_blue">
               <Plus className="mr-1" />
               Add NEW Products
             </Button>
-            <Button className="bg-light_blue text-white">
+            </Link>
+            <Link href={ROUTES.adminUsersList}>
+             <Button className="bg-light_blue text-white">
               <User className="mr-1" />
               Check Users
             </Button>
+            </Link>
+           
           </div>
         </div>
 
@@ -149,20 +155,26 @@ const Page = async() => {
             </div>
           </div>
           <div className="lg:flex hidden flex-col w-full">
-          <StatBox label="New Customers" value="12 430 $US" icon={User} blobColor="rgb(100,181,200)" />
+          <StatBox label="New Customers" value={formatPrice(data?.totalSpent as number)} icon={User} blobColor="rgb(100,181,200)" />
             <div style={{
          boxShadow:
            '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
        }}
         className="border-t flex flex-col bg-[rgb(18,18,18)] ">
            
-               {[0,1,2,3,4,5,6,7].map((_,index)=> (
-                   <Link href="/" className='flex items-center lg:gap-3 gap-2 py-2  px-3 hover:bg-[rgb(30,30,30)]' key={index}>
+               {data && !error ? data?.users.map((user,index)=> (
+                   <Link href={ROUTES.adminUserDetails(user._id)} className='flex items-center lg:gap-3 gap-2 py-2  px-3 hover:bg-[rgb(30,30,30)]' key={index}>
                         <img className='w-[35px] h-[35px] rounded-full'
-                         src="https://marmelab.com/posters/avatar-98.jpeg?size=32x32" alt="" />
-                         <p className='text-white font-medium text-sm lg:text-[16px] '>soufiane Hamama</p>
+                         src={user.image || "https://marmelab.com/posters/avatar-98.jpeg?size=32x32"} alt={user.name} />
+                         <p className='text-white font-medium text-sm lg:text-[16px] '>
+                           {user.name} {" "} {user.lastName}
+                         </p>
                    </Link>
-               ))}
+               )): (
+                   <p className='text-red-500 font-semibold text-sm '>
+                      {error?.message}
+                   </p>
+               )}
             </div>
           </div>
         </div>

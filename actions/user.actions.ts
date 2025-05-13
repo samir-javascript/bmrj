@@ -461,7 +461,8 @@ export const getAllUsers = async (
 export const getUsers = async (
   params: {}
 ): Promise<ActionResponse<{
-  users: (IUser & { totalSpent: number })[],
+  users: IUser[],
+  totalSpent: number
 }>> => {
   const validatedResult = await action({ params, authorize: true });
   if (validatedResult instanceof Error) {
@@ -480,7 +481,7 @@ export const getUsers = async (
     // Get all non-admin users
     const users = await User.find({ isAdmin: false }).sort({ createdAt: -1 }).lean();
 
-    // Get total spent per user from the Orders
+    // Aggregate total spending per user
     const spending = await Order.aggregate([
       {
         $match: {
@@ -495,24 +496,29 @@ export const getUsers = async (
       }
     ]);
 
-    // Map totalSpent back to users
     const spendingMap = new Map(spending.map(item => [item._id.toString(), item.totalSpent]));
 
-    const usersWithSpending = users.map(user => ({
-      ...user,
-      totalSpent: spendingMap.get((user as unknown as IUser)._id.toString()) || 0
-    }));
+    // Calculate overall total spent
+    const totalSpent = spending.reduce((acc, curr) => acc + curr.totalSpent, 0);
+
+    // (Optional) You could still add per-user spending if needed
+    // const usersWithSpending = users.map(user => ({
+    //   ...user,
+    //   totalSpent: spendingMap.get(user._id.toString()) || 0
+    // }));
 
     return {
       success: true,
       data: {
-        users: JSON.parse(JSON.stringify(usersWithSpending)),
+        users: JSON.parse(JSON.stringify(users)), // original users list
+        totalSpent, // total money spent by all users
       }
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 };
+
 
 export const deleteSelectedUsers = async (params: DeleteSelectedUsersParams): Promise<ActionResponse> => {
   const validatedResult = await action({ params, schema: DeleteSelectedUsersSchema, authorize: true });
