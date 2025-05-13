@@ -3,21 +3,24 @@ import { DollarSign, Plus, User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Chart } from '../../_components/Chart'
-import { formatPrice } from '@/lib/utils'
+import { formatFullDateTime, formatPrice } from '@/lib/utils'
 import { getUsers } from '@/actions/user.actions'
 import { ROUTES } from '@/constants/routes'
+import { getOrders } from '@/actions/orders.actions'
 
 // Reusable Box component
 const StatBox = ({
    label,
    value,
    icon: Icon,
-   blobColor = 'rgb(206,147,216)',
+   blobColor
+  
  }: {
    label: string
-   value: string
+   value: number | string
    icon: React.ElementType
-   blobColor?: string
+   blobColor?:string
+  
  }) => {
    return (
      <div
@@ -52,7 +55,7 @@ const StatBox = ({
 
 const Page = async() => {
    const {data,error,success} = await getUsers({})
-   console.log(data, "get users data for dashboard")
+  const { data:dashboardOrders, error:dashboardOrdersError} = await getOrders({})
   return (
     <div className="w-full px-3 py-8">
       {/* Welcome Section */}
@@ -99,8 +102,8 @@ const Page = async() => {
         {/* Left Section */}
         <div className="flex-1 flex flex-col gap-3">
           <div className="flex flex-col lg:flex-row gap-3">
-          <StatBox label="Monthly Revenue" value="6 903 $US" icon={DollarSign} blobColor="rgb(206,147,216)" />
-<StatBox label="New Orders" value="1 245" icon={User} blobColor="rgb(255,138,101)" />
+          <StatBox label="Monthly Revenue" value={formatPrice(dashboardOrders?.monthlyRevenue as number)} icon={DollarSign} blobColor="rgb(206,147,216)" />
+<StatBox label="New Orders" value={dashboardOrders?.ordersCount as number} icon={User} blobColor="rgb(255,138,101)" />
 
           </div>
           <div style={{background: "rgb(18,18,18)"}} className="bg-[(rgb(18,18,18))] rounded-lg p-4 shadow mt-3">
@@ -114,19 +117,21 @@ const Page = async() => {
             <h4 className="text-lg font-semibold p-3 text-white mb-4">Pending Orders</h4>
             {/* Add order summary here */}
             <div className="flex flex-col space-y-3">
-                {[0,1,2,3,4,5,6,7].map((_,index) => (
+                {dashboardOrders?.orders.map((order,index) => (
                    <Link href="/" className='flex items-center px-2.5 py-1.5 hover:bg-gray-800 justify-between w-full' key={index}>
                         <div className='flex items-center lg:gap-3 gap-2'>
                            <img className='rounded-full w-[45px] h-[45px] object-contain '
-                            src="https://marmelab.com/posters/avatar-58.jpeg?size=32x32" alt="" />
+                            src={order.user.image || ""} alt={order.user.name} />
                             <div className='flex flex-col'>
-                                <p className='text-white font-medium text-sm '>21/04/2025, 00:49:10</p>
-                                <p className='text-gray-400 font-medium text-sm '>by yassine anouar, 3 items</p>
+                                <p className='text-white font-medium text-sm '>
+                                   {formatFullDateTime(new Date(order.createdAt))}
+                                </p>
+                                <p className='text-gray-400 font-medium text-sm '>by {order.user.name} {" "} {order.user.lastName}, {order.orderItems.length} items</p>
                             </div>
                         </div>
                         <div>
                            <p className='text-white font-semibold text-sm '>
-                             {formatPrice(298)}
+                             {formatPrice(order.totalPrice)}
                            </p>
                         </div>
                    </Link>

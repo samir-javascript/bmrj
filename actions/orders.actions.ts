@@ -83,7 +83,8 @@ export const getMyOrders = cache(async(params:GetMyOrdersParams): Promise<Action
     }
 }, ['/sales/orderHistory', "getMyOrders"], {revalidate: 60 * 60 * 24})
 
-export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionResponse<{orders:OrderType[], isNext: boolean}>> =>{
+export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionResponse<{orders:OrderType[],
+   isNext: boolean}>> =>{
     const validatedResult = await action({params,schema:GetAllOrdersSchemaValidation,authorize:true})
     if(validatedResult instanceof Error) {
         return handleError(validatedResult) as ErrorResponse
@@ -125,6 +126,68 @@ export const getAllOrders = async(params:GetAllOrdersParams):Promise<ActionRespo
       return handleError(error) as ErrorResponse;
    }
 }
+export const getOrders = async (
+  params: {}
+): Promise<ActionResponse<{
+  orders: OrderType[],
+  monthlyRevenue: number;
+  ordersCount: number;
+}>> => {
+  const validatedResult = await action({ params, authorize: true });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  const session = validatedResult.session;
+  if (!session) throw new UnAuthorizedError();
+
+  try {
+    await connectToDb();
+
+    const isAdminUser = await User.findById(session.user.id) as IUser;
+    if (!isAdminUser?.isAdmin) {
+      throw new UnAuthorizedError('UnAuthorized Error: Only admin users can have access to this area!');
+    }
+
+    // Get all orders
+    const orders = await Order.find()
+      .populate({ path: "user", model: User, select: "image name lastName" })
+      .populate({ path: "orderItems.product", model: Product })
+      .sort({ createdAt: -1 });
+
+    // Get monthly revenue (last 30 days)
+    const now = new Date();
+    const lastMonth = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+
+    const monthlyStats = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastMonth }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$totalPrice" }
+        }
+      }
+    ]);
+
+    const monthlyRevenue = monthlyStats[0]?.total || 0;
+    const ordersCount = orders.length;
+
+    return {
+      success: true,
+      data: {
+        orders: JSON.parse(JSON.stringify(orders)),
+        monthlyRevenue,
+        ordersCount
+      }
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
 
 export const cancelOrder = async (params: CancelOrderParams): Promise<ActionResponse> => {
     const validatedResult = await action({
