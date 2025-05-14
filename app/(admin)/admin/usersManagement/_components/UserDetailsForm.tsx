@@ -52,7 +52,7 @@ const UserDetailsForm = ({
   const [open, setOpen] = useState<boolean>(false)
   const [openConfirmModal,setOpenConfirmModel] = useState(false)
   const [pending,setPending] = useState<boolean>(false)
-  const [loading,setLoading] = useState<boolean>(false)
+ 
   const [error, setError] = useState<string | undefined>(undefined)
    const [err, setErr] = useState<string | undefined>(undefined)
    
@@ -72,9 +72,9 @@ const UserDetailsForm = ({
       country: userWithShipping?.shippingAddresses[0]?.country || ""
     },
   })
-
+ const formLoading = form.formState.isSubmitting === true
   const onSubmit = async (values: z.infer<typeof UpdateUserDetailsSchema>) => {
-    setLoading(true)
+  
      try {
         const { error, success , message} = await editUserProfileByAdmin({
            userId: id ,
@@ -101,8 +101,6 @@ const UserDetailsForm = ({
         }
      } catch (error) {
        console.log(error)
-     }finally {
-       setLoading(false)
      }
   }
   const handleDeleteUser = async()=> {
@@ -159,6 +157,7 @@ const UserDetailsForm = ({
                     <FormLabel className="text-sm text-gray-200 font-medium "
                     >Gender</FormLabel>
                     <Select
+                     disabled={formLoading}
                       onValueChange={field.onChange}
                       defaultValue={String(field.value)}
                     >
@@ -187,6 +186,7 @@ const UserDetailsForm = ({
                     <FormLabel className="text-gray-200 font-medium text-sm ">First Name</FormLabel>
                     <FormControl>
                       <Input
+                       disabled={formLoading}
                         className="admin-input no-focus w-full"
                         placeholder="Enter your name"
                         {...field}
@@ -207,6 +207,7 @@ const UserDetailsForm = ({
                     <FormLabel className="text-gray-200 text-sm font-medium">Last Name</FormLabel>
                     <FormControl>
                       <Input
+                       disabled={formLoading}
                         className="admin-input no-focus w-full"
                         placeholder="Enter your last name"
                         {...field}
@@ -229,6 +230,7 @@ const UserDetailsForm = ({
                     <FormLabel className="text-gray-200 font-medium text-sm ">Email Address</FormLabel>
                     <FormControl>
                       <Input
+                       disabled={formLoading}
                         className="admin-input !bg-[(rgb(46,46,46))] no-focus w-full flex-1"
                         placeholder="Enter your valid email address"
                         {...field}
@@ -249,6 +251,7 @@ const UserDetailsForm = ({
                 <FormControl>
                   <Input
                     type="number"
+                     disabled={formLoading}
                     className="admin-input  no-focus"
                     placeholder="Enter Your Phone Number"
                     {...field}
@@ -267,11 +270,12 @@ const UserDetailsForm = ({
     <FormItem>
       <FormLabel className="text-sm font-medium text-gray-200">isAdmin</FormLabel>
       <Select
+       disabled={formLoading}
         onValueChange={(value) => field.onChange(value === "true")}
         defaultValue={String(field.value)}
       >
         <FormControl>
-          <SelectTrigger className="no-focus flex-1 w-full bg-[rgb(46,46,46)] rounded-lg font-medium text-white">
+          <SelectTrigger  disabled={formLoading} className="no-focus flex-1 w-full bg-[rgb(46,46,46)] rounded-lg font-medium text-white">
             <SelectValue placeholder="is Admin" />
           </SelectTrigger>
         </FormControl>
@@ -302,6 +306,7 @@ const UserDetailsForm = ({
                     <FormLabel className="text-gray-200 font-medium text-sm">Address</FormLabel>
                     <FormControl>
                       <Input
+                       disabled={formLoading}
                         type="text"
                         className="admin-input lg:w-[70%] no-focus"
                         {...field}
@@ -322,6 +327,7 @@ const UserDetailsForm = ({
                     <FormControl>
                       <Input
                         type="text"
+                         disabled={formLoading}
                         className="admin-input  no-focus"
                         {...field}
                       />
@@ -341,6 +347,7 @@ const UserDetailsForm = ({
                     <FormControl>
                       <Input
                         type="text"
+                         disabled={formLoading}
                         className="admin-input no-focus"
                         {...field}
                       />
@@ -360,6 +367,7 @@ const UserDetailsForm = ({
                     <FormControl>
                       <Input
                         type="text"
+                         disabled={formLoading}
                         className="admin-input  no-focus"
                         {...field}
                       />
@@ -376,10 +384,10 @@ const UserDetailsForm = ({
 
           {/* <SetPasswordModal open={open} setOpen={setOpen} email={userWithShipping.user.email} /> */}
     <div className="w-full p-4 bg-[#333] flex  rounded-lg items-center justify-between ">
-         <Button disabled={open} className="bg-light_blue text-white" type="submit">
-            {form.formState.isSubmitting ? "Loading..." : <><Save /> Save</>}
+         <Button disabled={open || formLoading} className="bg-light_blue text-white" type="submit">
+            {formLoading ? "Loading..." : <><Save /> Save</>}
           </Button>
-          <Button onClick={() => setOpenConfirmModel(true)} disabled={open || pending} className="bg-red-500 max-sm:bg-transparent
+          <Button onClick={() => setOpenConfirmModel(true)} disabled={open || pending || formLoading} className="bg-red-500 max-sm:bg-transparent
            max-sm:w-fit max-sm:hover:bg-transparent hover:bg-red-600 text-white" type="button">
             
                <>
