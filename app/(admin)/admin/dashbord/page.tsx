@@ -121,7 +121,7 @@ const Page = async() => {
                    <Link href="/" className='flex items-center px-2.5 py-1.5 hover:bg-gray-800 justify-between w-full' key={index}>
                         <div className='flex items-center lg:gap-3 gap-2'>
                            <img className='rounded-full w-[45px] h-[45px] object-contain '
-                            src={order.user.image || ""} alt={order.user.name} />
+                            src={order.user.image || "https://marmelab.com/posters/avatar-98.jpeg?size=32x32"} alt={order.user.name} />
                             <div className='flex flex-col'>
                                 <p className='text-white font-medium text-sm '>
                                    {formatFullDateTime(new Date(order.createdAt))}

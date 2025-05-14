@@ -6,7 +6,7 @@ import Reviews from '@/components/shared/Reviews';
 import YouMayLike from '@/components/shared/YouMayLike';
 import { Button } from '@/components/ui/button';
 import { ArrowRightLeft, ChevronRight, CreditCard, Heart, Minus, Package, Plus, Truck } from 'lucide-react';
-import Link from 'next/link';
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation';
 import React from 'react'
 import CartQtyAdd from '../_components/CartQtyAdd';
@@ -14,6 +14,19 @@ import ParseHtml from '@/components/forms/editor/ParseHtml';
 import { IProduct } from '@/database/models/product.model';
 import CartQtyMobile from '../_components/CartQtyMobile';
 import { products } from '@/constants';
+export async function generateMetadata( { params }: {params:Promise<{id:string}>}):Promise<Metadata> {
+  // read route params
+  const { id } = await params
+ 
+  // fetch data
+  const {data} = await getSingleProduct({productId:id})
+
+ 
+  return {
+     title: data?.product.name || "",
+    description: data?.product.description || ""
+  }
+}
 const ModePaiment = ({isMobile} : {isMobile:boolean}) => {
     return (
         <div className='bg-gray-100 rounded-md  w-full flex flex-col pt-2'>
