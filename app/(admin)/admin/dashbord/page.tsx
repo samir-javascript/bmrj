@@ -161,7 +161,7 @@ const Page = async() => {
                ))}
             </div>
           </div>
-          <div className="lg:flex hidden flex-col w-full">
+          <div className="flex flex-col w-full">
           <StatBox label="New Customers" value={formatPrice(data?.totalSpent as number)} icon={User} blobColor="rgb(100,181,200)" />
             <div style={{
          boxShadow:
