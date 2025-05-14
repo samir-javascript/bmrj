@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Chart } from '../../_components/Chart'
 import { formatFullDateTime, formatPrice } from '@/lib/utils'
-import { getUsers } from '@/actions/user.actions'
+import { getUsers, getUserStats } from '@/actions/user.actions'
 import { ROUTES } from '@/constants/routes'
 import { getOrders } from '@/actions/orders.actions'
 
@@ -56,6 +56,8 @@ const StatBox = ({
 const Page = async() => {
    const {data,error,success} = await getUsers({})
   const { data:dashboardOrders, error:dashboardOrdersError} = await getOrders({})
+  const result = await getUserStats()
+  
   return (
     <div className="w-full px-3 py-8">
       {/* Welcome Section */}
@@ -110,7 +112,7 @@ const Page = async() => {
             {/* <h4 className="text-lg font-semibold mb-2">Revenue Chart</h4> */}
             {/* Add a chart component here */}
             <div className="h-auto flex items-center justify-center text-gray-400">
-                <Chart />
+                <Chart data={result.data!} />
             </div>
           </div>
           <div style={{background: "rgb(18,18,18)"}} className="rounded-lg  shadow mt-3">

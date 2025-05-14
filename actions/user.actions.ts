@@ -628,3 +628,82 @@ export const getUserWithShipping = async (params:GetUserWithShippingParams): Pro
      return handleError(error) as ErrorResponse;
   }
 };
+
+export async function getUserStats(): Promise<ActionResponse<{ date: string; users: number }[]>> {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.id) throw new UnAuthorizedError()
+
+  try {
+    await connectToDb();
+
+    // Only admins should be allowed
+    const admin = await User.findById(session.user.id);
+    if (!admin?.isAdmin) {
+      throw new Error("Forbidden");
+    }
+
+    const today = new Date();
+    const past90Days = new Date(today);
+    past90Days.setDate(today.getDate() - 89);
+
+    const usersByDay = await User.aggregate([
+      {
+        $match: {
+          isAdmin: false,
+          createdAt: { $gte: past90Days },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+            day: { $dayOfMonth: "$createdAt" },
+          },
+          users: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: {
+                $dateFromParts: {
+                  year: "$_id.year",
+                  month: "$_id.month",
+                  day: "$_id.day",
+                },
+              },
+            },
+          },
+          users: 1,
+        },
+      },
+      { $sort: { date: 1 } },
+    ]);
+
+    // Fill missing dates with 0 users
+    const filledData: { date: string; users: number }[] = [];
+    const dateMap = new Map(usersByDay.map((entry) => [entry.date, entry.users]));
+
+    for (let i = 0; i < 90; i++) {
+      const d = new Date(past90Days);
+      d.setDate(past90Days.getDate() + i);
+      const dateStr = d.toISOString().split("T")[0]; // YYYY-MM-DD
+      filledData.push({
+        date: dateStr,
+        users: dateMap.get(dateStr) || 0,
+      });
+    }
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify( filledData)),
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
