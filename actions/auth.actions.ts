@@ -16,7 +16,7 @@ import { sendVerificationEmail } from "@/lib/nodemailer";
 import connectToDb from "@/database/connect";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
-
+import mongoose from "mongoose";
 
 
 
@@ -32,51 +32,55 @@ export async function signUpWithCredentials(
 
   const { name, lastName, email, password, phoneNumber, gender  } = validationResult.params!;
 
- await connectToDb()
+ await connectToDb();
+const session = await mongoose.startSession();
+session.startTransaction();
 
-  try {
-    const existingUser = await User.findOne({ email });
+try {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new ForbiddenError(`You indicated you're a new customer, but an account already exists with the email address ${email}.`);
+  }
 
-    if (existingUser) {
-       throw new ForbiddenError(`You indicated you're a new customer, but an account already exists with the email address ${email}.`)
-    }
-    const checkPhone = await User.findOne({phoneNumber})
-    if(checkPhone) {
-       throw new Error(`${phoneNumber} phone number is already in use!`)
-    }
-    // 
+  const checkPhone = await User.findOne({ phoneNumber });
+  if (checkPhone) {
+    throw new Error(`${phoneNumber} phone number is already in use!`);
+  }
 
-   
+  const hashedPassword = await bcrypt.hash(password, 12);
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+  const [newUser] = await User.create(
+    [{ lastName, name, email, password: hashedPassword, gender, phoneNumber }],
+    { session }
+  );
 
-    const [newUser] = await User.create([{ lastName, name, email, password: hashedPassword, gender, phoneNumber }]);
+  await Account.create(
+    [
+      {
+        userId: newUser._id,
+        name,
+        provider: "credentials",
+        providerAccountId: email,
+        password: hashedPassword,
+      }
+    ],
+    { session }
+  );
 
-    await Account.create(
-      [
-        {
-          userId: newUser._id,
-          name,
-          provider: "credentials",
-          providerAccountId: email,
-          password: hashedPassword,
-        },
-      ],
-    );
-   
-    const token = Math.floor(1000 + Math.random() * 9000).toString(); // Generates a 4-digit code
-    await Token.create({ userId: newUser._id, token });
-    
-     await sendVerificationEmail(newUser.email,token)
+  await session.commitTransaction();
+  session.endSession();
 
-    await signIn("credentials", { email, password, redirect: false });
-    revalidatePath(ROUTES.adminUsersList)
-    
-    return { success: true };
-  } catch (error) {
-     return handleError(error) as ErrorResponse;
-    
-  } 
+  await signIn("credentials", { email, password, redirect: false });
+  revalidatePath(ROUTES.adminUsersList);
+
+  return { success: true };
+
+} catch (error) {
+  await session.abortTransaction();
+  session.endSession();
+  return handleError(error) as ErrorResponse;
+}
+
 }
 export async function signInWithCredentials(
   params:Pick<AuthCredentials, "email" | "password">
@@ -92,6 +96,7 @@ export async function signInWithCredentials(
  
 
   try {
+    await connectToDb()
     const existingUser = await User.findOne({ email }) as IUser
 
     if (!existingUser) {
