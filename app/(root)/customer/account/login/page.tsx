@@ -20,7 +20,7 @@ const page = async() => {
 
     //     </div>
     // </div>
-    <div className='relative flex items-center justify-center min-h-screen px-4 py-10'>
+    <div className='relative flex items-center justify-center min-h-screen px-4 py-10 !overflow-x-hidden'>
   {/* Blurred background image */}
   <div className="absolute inset-0 bg-auth-image bg-center bg-cover bg-no-repeat blur-sm scale-105 z-0"></div>
 
@@ -32,7 +32,7 @@ const page = async() => {
     <div className='w-[60px] h-[60px] flex mx-auto text-center items-center justify-center border-2 border-light_blue rounded-full '>
       <User className='text-light_blue' size={30} />
     </div>
-    <p className="font-bold text-[18px] text-[#333] text-center max-w-[350px] mx-auto">
+    <p className="font-bold text-[18px] text-[#fff] text-center max-w-[350px] mx-auto">
       Connectez-vous ou créez votre compte en toute simplicité!
     </p>
     <LoginForm />
