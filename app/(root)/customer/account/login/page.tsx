@@ -20,7 +20,7 @@ const page = async() => {
 
     //     </div>
     // </div>
-    <div className='relative flex items-center justify-center min-h-screen px-4 py-10 !overflow-x-hidden'>
+    <div className='relative flex items-center justify-center min-h-screen px-4 py-10 overflow-x-hidden'>
   {/* Blurred background image */}
   <div className="absolute inset-0 bg-auth-image bg-center bg-cover bg-no-repeat blur-sm scale-105 z-0"></div>
 
