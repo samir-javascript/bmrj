@@ -25,7 +25,7 @@ const page = async() => {
   <div className="absolute inset-0 bg-auth-image bg-center bg-cover bg-no-repeat blur-sm scale-105 z-0"></div>
 
   {/* Optional: blue overlay tint */}
-  <div className="absolute inset-0 bg-blue-600/30 z-0"></div>
+  {/* <div className="absolute inset-0 bg-blue-600/30 z-0"></div> */}
 
   {/* Content */}
   <div className='relative z-10 sm:shadow-md shadow-none rounded-lg px-5 py-4 flex flex-col gap-3 mx-auto lg:min-w-[600px]'>
