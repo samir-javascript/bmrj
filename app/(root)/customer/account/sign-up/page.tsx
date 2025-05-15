@@ -22,7 +22,7 @@ const page = async() => {
              items-center justify-center border-2 border-light_blue rounded-full '>
                 <User className='text-light_blue' size={30} />
             </div>
-            <p className="font-bold text-[18px] text-[#333] text-center
+            <p className="font-bold text-[18px] text-[#fff] text-center
              max-w-[350px] mx-auto">Connectez-vous ou créez votre compte en toute simplicité!</p>
             <AuthForm  />
         </div>

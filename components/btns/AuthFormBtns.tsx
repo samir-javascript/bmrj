@@ -8,7 +8,7 @@ const AuthFormBtns = () => {
    const searchParams = useSearchParams()
    const route = searchParams.get("shipping")
    const navigate = route ? "/checkout/shipping" : "/"
-     const className="px-4 py-3.5 rounded-2xl flex-1 bg-gray-100 hover:bg-gray-100 text-black body-medium  min-h-12";
+     const className="px-4 py-3.5 rounded-2xl flex-1 bg-[#212734]  text-white body-medium  min-h-12";
     const handleSignIn = async(provider:"google" | "github")=> {
       try {
          await signIn(provider, {redirect: false, redirectTo: navigate})

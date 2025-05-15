@@ -104,7 +104,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>User Name</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your name" {...field} />
+                <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your name" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -118,7 +118,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your lastName" {...field} />
+                <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your lastName" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -132,7 +132,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} type="email" className="input_styles no-focus" placeholder="Enter your valid email address" {...field} />
+                <Input disabled={isSubmitting} type="email" className="admin-input no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -146,7 +146,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} type="password" className="input_styles no-focus" placeholder="Enter a strong password please" {...field} />
+                <Input disabled={isSubmitting} type="password" className="admin-input no-focus" placeholder="Enter a strong password please" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -160,7 +160,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="Enter your valid phone number" {...field} />
+                <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your valid phone number" {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />
@@ -174,7 +174,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>User Gender</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} className="input_styles no-focus" placeholder="what is your gender..." {...field} />
+                <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="what is your gender..." {...field} />
               </FormControl>
               
               <FormMessage className="text-red-500" />

@@ -1,3 +1,4 @@
+"use client"
 import {
     Accordion,
     AccordionContent,
@@ -8,8 +9,11 @@ import { brands, footerCategories } from "@/constants"
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { Facebook, Instagram, Youtube } from "lucide-react"
+import { usePathname } from "next/navigation"
   
   export default function MobileFooter() {
+    const pathname = usePathname()
+    if(pathname === "/customer/account/sign-up" || pathname === "/customer/account/login") return null
     return (
         <footer className="w-full px-4 py-3 bg-secondary lg:hidden flex gap-5 flex-col">
               <Accordion type="single" collapsible >

@@ -1,10 +1,14 @@
+"use client"
 import { brands, footerCategories } from '@/constants'
 import { Facebook, Instagram, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
+import { usePathname } from 'next/navigation'
 
 const Footer = () => {
+ const pathname = usePathname()
+ if(pathname === "/customer/account/sign-up" || pathname === "/customer/account/login") return null
   return (
     <footer className='lg:flex hidden flex-col '>
         <div className='w-full px-4 py-3 bg-secondary flex  flex-col'>
