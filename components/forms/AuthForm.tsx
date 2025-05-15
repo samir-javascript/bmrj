@@ -102,7 +102,7 @@ const AuthForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>User Name</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">User Name</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your name" {...field} />
               </FormControl>
@@ -116,7 +116,7 @@ const AuthForm = () => {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Last Name</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your lastName" {...field} />
               </FormControl>
@@ -130,7 +130,7 @@ const AuthForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Email Address</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} type="email" className="admin-input no-focus" placeholder="Enter your valid email address" {...field} />
               </FormControl>
@@ -144,7 +144,7 @@ const AuthForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Password</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} type="password" className="admin-input no-focus" placeholder="Enter a strong password please" {...field} />
               </FormControl>
@@ -158,7 +158,7 @@ const AuthForm = () => {
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone Number</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Phone Number</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="Enter your valid phone number" {...field} />
               </FormControl>
@@ -172,7 +172,7 @@ const AuthForm = () => {
           name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>User Gender</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">User Gender</FormLabel>
               <FormControl>
                 <Input disabled={isSubmitting} className="admin-input no-focus" placeholder="what is your gender..." {...field} />
               </FormControl>
@@ -186,7 +186,7 @@ const AuthForm = () => {
         </Button>
       </form>
       <div className="mt-3">
-         <p className="text-[#333] font-medium text-[15px] ">Already have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signin}?shipping=true` : ROUTES.signin}>LogIn</Link> </span> </p>
+         <p className="text-[#fff] font-medium text-[15px] ">Already have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signin}?shipping=true` : ROUTES.signin}>LogIn</Link> </span> </p>
       </div>
     </Form>
      <AuthFormBtns />

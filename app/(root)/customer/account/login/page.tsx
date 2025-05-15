@@ -9,7 +9,7 @@ const page = async() => {
   const session = await auth()
   if(session) redirect("/")
   return (
-    <div className='flex items-center justify-center
+    <div className='flex items-center justify-center blur-sm 
      min-h-screen  bg-auth-image bg-center bg-cover px-4 py-10 bg-no-repeat'>
         <div className='sm:shadow-md shadow-none rounded-lg px-5 py-4 flex flex-col gap-3 mx-auto lg:min-w-[600px] '>
             <div className='w-[60px] h-[60px] flex mx-auto text-center items-center justify-center border-2 border-light_blue rounded-full '>

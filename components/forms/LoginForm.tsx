@@ -94,7 +94,7 @@ const LoginForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Email Address</FormLabel>
               <FormControl>
                 <Input
                  className="input_styles no-focus"
@@ -112,7 +112,7 @@ const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-sm font-medium text-white">Password</FormLabel>
               <FormControl>
                 <Input type="password"
                  className="input_styles no-focus"
@@ -131,7 +131,7 @@ const LoginForm = () => {
         </Button>
       </form>
       <div className="mt-3">
-         <p className="text-[#333] font-medium text-[15px] ">Don't have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signup}?shipping=true` : ROUTES.signup}>Sign up</Link> </span> </p>
+         <p className="text-[#fff] font-medium text-[15px] ">Don't have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signup}?shipping=true` : ROUTES.signup}>Sign up</Link> </span> </p>
       </div>
      
     </Form>
