@@ -40,6 +40,10 @@ export async function signUpWithCredentials(
     if (existingUser) {
        throw new ForbiddenError(`You indicated you're a new customer, but an account already exists with the email address ${email}.`)
     }
+    const checkPhone = await User.findOne({phoneNumber})
+    if(checkPhone) {
+       throw new Error(`${phoneNumber} phone number is already in use!`)
+    }
     // 
 
    
