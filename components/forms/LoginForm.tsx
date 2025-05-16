@@ -108,7 +108,7 @@ const LoginForm = () => {
               <FormLabel className="text-sm font-medium text-white">Email Address</FormLabel>
               <FormControl>
                 <Input
-                 className="input_styles no-focus"
+                 className="admin-input no-focus"
                  disabled={isSubmitting}
                   placeholder="Enter your valid email address"
                    {...field} />
@@ -126,7 +126,7 @@ const LoginForm = () => {
               <FormLabel className="text-sm font-medium text-white">Password</FormLabel>
               <FormControl>
                 <Input type="password"
-                 className="input_styles no-focus"
+                 className="admin-input no-focus"
                  disabled={isSubmitting}
                   placeholder="Enter a strong password please" {...field} />
               </FormControl>
