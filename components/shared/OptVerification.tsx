@@ -79,7 +79,7 @@ export function OptVerification({open,setOpen}: {
               <DialogTitle className="text-center text-sm text-gray-600 font-semibold ">Renseignez le code que vous avez reçu par email</DialogTitle>
          </DialogHeader>
          <div className="flex justify-center">
-  <InputOTP  className="flex items-center justify-center" value={value} onChange={handleOtpChange} maxLength={4}>
+  <InputOTP  className="flex items-center justify-center" value={value} onChange={handleOtpChange} maxLength={6}>
     <InputOTPGroup>
       <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={0} />
       <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={1} />
@@ -89,6 +89,7 @@ export function OptVerification({open,setOpen}: {
       <InputOTPSlot className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={2} />
       <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={3} />
     </InputOTPGroup>
+
     <InputOTPGroup>
       <InputOTPSlot className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={4} />
       <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={5} />

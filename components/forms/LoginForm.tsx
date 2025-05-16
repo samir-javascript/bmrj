@@ -74,7 +74,7 @@ const LoginForm = () => {
             return router.push(redirect)
  
          }else {if(error) {
-              // setOpen(true)
+               setOpen(true)
               setError(error.message)
              
               return

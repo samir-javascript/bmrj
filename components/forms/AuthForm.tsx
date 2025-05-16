@@ -68,7 +68,7 @@ const AuthForm = () => {
            lastName: values.lastName
         })
         if(success) {
-        //  setOpenOpt(true)
+         setOpenOpt(true)
           form.reset()
           
           toast({
