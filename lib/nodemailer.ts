@@ -19,9 +19,9 @@ export async function sendVerificationEmail(email: string, token: string) {
     to: email,
     subject: "Verify your email address",
     html: `
-      <h1>Verify your Email</h1>
-      <p>Click the link below to verify your email address:</p>
-      <a href="${verificationUrl}">${verificationUrl}</a>
+      <h1>Your Verification Code is</h1>
+      <h2>${token}</h2>
+       <p>This code expires in 10 minutes. If you did not request this, please ignore.</p>
     `,
   };
 

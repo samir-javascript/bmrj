@@ -21,8 +21,8 @@ const TokenSchema = new Schema<IToken>(
     expiresAt: {
       type: Date,
       required: true,
-      default: () => new Date(Date.now() + 1000 * 60 * 60 * 24),
-      index: { expires: 0 }, // Default expiration: 24 hours
+      default: () => new Date(Date.now() + 1000 * 60 * 10),
+      index: { expires: 0 }, // Default expiration: 10 minutes
     },
   },
   { timestamps: true }
