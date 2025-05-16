@@ -67,7 +67,7 @@ export function OptVerification({open,setOpen}: {
       
   }
   return (
-    <Dialog open={open} onOpenChange={()=> setOpen(false)} >
+    <Dialog open={open}  onOpenChange={()=> setOpen(false)} defaultOpen={false} >
      
       <DialogContent className="bg-white p-0 no-focus sm:max-w-[425px]">
        

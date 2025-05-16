@@ -32,7 +32,7 @@ import { ROUTES } from "@/constants/routes"
 
 
 const AuthForm = () => {
-  const [open,setOpen] = useState<boolean>(false)
+  const [openOpt,setOpenOpt] = useState<boolean>(false)
  
   const [error,setError] = useState<string | undefined>(undefined)
   const searchParams = useSearchParams()
@@ -67,14 +67,14 @@ const AuthForm = () => {
            name: values.name,
            lastName: values.lastName
         })
-        if(!error) {
-          setOpen(true)
-          form.reset()
+        if(success) {
+          setOpenOpt(true)
+          // form.reset()
           
-          toast({
-              title: "account created successfully",
-              description: message
-            })
+          // toast({
+          //     title: "account created successfully",
+          //     description: message
+          //   })
            
           //  return router.push(redirect)
              return
@@ -192,7 +192,7 @@ const AuthForm = () => {
       </div>
     </Form>
      <AuthFormBtns />
-    <OptVerification open={open} setOpen={setOpen} />
+    <OptVerification open={openOpt} setOpen={setOpenOpt} />
     </div>
   
   )
