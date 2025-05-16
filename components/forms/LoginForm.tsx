@@ -30,7 +30,7 @@ import { ROUTES } from "@/constants/routes"
  
 
 const LoginForm = () => {
-  const [open,setOpen] = useState<boolean>(false)
+  const [openOpt,setOpenOpt] = useState<boolean>(false)
   const [error,setError] = useState<string | undefined>(undefined)
   const [verificationError,setVerificationError] = useState<string | undefined>(undefined)
   const searchParams = useSearchParams()
@@ -73,15 +73,19 @@ const LoginForm = () => {
             })
             return router.push(redirect)
  
-         }else {if(error) {
-               setOpen(true)
+         }else if(error) {
+           if(error.message.includes("before logging in.")) {
+               setOpenOpt(true)
+               setVerificationError(error.message)
+               return
+           }else {
               setError(error.message)
-             
-              return
+           }
+              
            }
            
           
-         }
+         
       } catch (error) {
          console.log(error)
       }
@@ -89,7 +93,7 @@ const LoginForm = () => {
    }
   return  (
     <div>
-       {/* {verificationError && <OptVerification open={open} setOpen={setOpen} />} */}
+       {verificationError && <OptVerification open={openOpt} setOpen={setOpenOpt} />}
 {error && <AlertMessage message={error} variant="destructive" />}
 
  <Form {...form}>
