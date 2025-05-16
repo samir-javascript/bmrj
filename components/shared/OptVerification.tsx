@@ -23,6 +23,7 @@ import { useState } from "react";
 import { VerifyEmail } from "@/actions/auth.actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { ROUTES } from "@/constants/routes";
 
 
 
@@ -45,9 +46,10 @@ export function OptVerification({open,setOpen}: {
     setLoading(true)
       try {
          const { success, error } =  await VerifyEmail({token: value})
-         if(!success)  {
+         if(error)  {
            setError(error?.message)
-         }
+           return
+         }else if(success) {
           setOpen(false)
           setValue("")
          toast({
@@ -55,7 +57,9 @@ export function OptVerification({open,setOpen}: {
          })
        
         setLoading(false)
-        router.push("/")
+        router.push(ROUTES.signin)
+         }
+        
       } catch (error) {
          console.log(error)
       }finally{
@@ -84,6 +88,10 @@ export function OptVerification({open,setOpen}: {
     <InputOTPGroup>
       <InputOTPSlot className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={2} />
       <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={3} />
+    </InputOTPGroup>
+    <InputOTPGroup>
+      <InputOTPSlot className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={4} />
+      <InputOTPSlot  className="mx-1 rounded-lg border border-gray-300 w-[60px] text-[20px] font-medium h-[60px] " index={5} />
     </InputOTPGroup>
   </InputOTP>
 </div>

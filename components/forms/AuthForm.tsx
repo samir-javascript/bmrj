@@ -81,7 +81,7 @@ const AuthForm = () => {
           setError(error?.message)
            return  toast({
             title: "Error",
-            description: "Failed to log you in! try again.",
+            description: error?.message,
             variant: "destructive"
           })
         }
