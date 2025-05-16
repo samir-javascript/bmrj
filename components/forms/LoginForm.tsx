@@ -74,8 +74,8 @@ const LoginForm = () => {
             return router.push(redirect)
  
          }else {if(error) {
-               setOpen(true)
-              setVerificationError(error.message)
+              // setOpen(true)
+              setError(error.message)
              
               return
            }
@@ -89,7 +89,7 @@ const LoginForm = () => {
    }
   return  (
     <div>
-       {verificationError && <OptVerification open={open} setOpen={setOpen} />}
+       {/* {verificationError && <OptVerification open={open} setOpen={setOpen} />} */}
 {error && <AlertMessage message={error} variant="destructive" />}
 
  <Form {...form}>
