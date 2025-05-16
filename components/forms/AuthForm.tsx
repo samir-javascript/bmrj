@@ -59,7 +59,7 @@ const AuthForm = () => {
   const isSubmitting = form.formState.isSubmitting === true
   async function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
      try {
-        const { success , data, error } = await signUpWithCredentials({
+        const { success , message, error } = await signUpWithCredentials({
            gender: values.gender,
            email: values.email,
            password: values.password,
@@ -70,11 +70,12 @@ const AuthForm = () => {
         if(success) {
          
           form.reset()
-            toast({
-              title: "success",
-              description: "you've have been signed in successfully"
+          toast({
+              title: "account created successfully",
+              description: message
             })
-           return router.push(redirect)
+            setOpen(true)
+          //  return router.push(redirect)
 
         }else {
           setError(error?.message)
