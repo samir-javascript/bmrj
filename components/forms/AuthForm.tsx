@@ -68,9 +68,9 @@ const AuthForm = () => {
            lastName: values.lastName
         })
         if(!error) {
-         
+          setOpen(true)
           form.reset()
-           setOpen(true)
+          
           toast({
               title: "account created successfully",
               description: message

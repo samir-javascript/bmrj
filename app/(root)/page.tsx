@@ -14,7 +14,7 @@ import TopFlow from "@/components/shared/TopFlow";
 
 export default async function Home() {
 
-  const [result, res] = await Promise.all([
+  const [result,res] = await Promise.all([
     getProducts({}),
     getHeroImages(),
   ]);

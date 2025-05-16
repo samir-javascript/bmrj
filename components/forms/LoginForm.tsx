@@ -73,17 +73,14 @@ const LoginForm = () => {
             })
             return router.push(redirect)
  
-         }else {
-           if(error?.message.includes("before logging in.")) {
+         }else {if(error) {
                setOpen(true)
               setVerificationError(error.message)
              
               return
-           }else {
-               setError(error?.message)
            }
            
-             return
+          
          }
       } catch (error) {
          console.log(error)
