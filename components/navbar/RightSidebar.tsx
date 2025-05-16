@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/hooks/user-redux";
 import LoadingAppState from "../Loaders/LoadingAppState";
 import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
+import { clearShippingAddress } from "@/lib/store/shippingSlice";
 
 const RightSidebar = () => {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ const RightSidebar = () => {
       }
 
       dispatch(clearCart());
+      dispatch(clearShippingAddress())
       localStorage.removeItem("guest_cart");
       await signOut({ callbackUrl: process.env.NEXT_PUBLIC_API_ENDPOINT });
     } catch (error) {

@@ -11,6 +11,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch } from '@/hooks/user-redux'
 import { toggleAdminSidebar } from '@/lib/store/cartSlice'
 import LoadingAppState from "@/components/Loaders/LoadingAppState"
+import { clearShippingAddress } from '@/lib/store/shippingSlice'
 const Navbar = () => {
   const dispatch = useAppDispatch()
   const [loading,setLoading]= useState(false)
@@ -28,6 +29,7 @@ const Navbar = () => {
        }
  
        dispatch(clearCart());
+       dispatch(clearShippingAddress())
        localStorage.removeItem("guest_cart");
        await signOut({ callbackUrl: process.env.NEXT_PUBLIC_API_ENDPOINT });
      } catch (error) {

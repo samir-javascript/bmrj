@@ -10,17 +10,19 @@ import LoadingAppState from '../Loaders/LoadingAppState'
 const  DeleteShippingBtn = ({id}: {id:string}) => {
    const [loading,setLoading] = useState<boolean>(false)
    const{ toast} = useToast()
-   //const { clearShippingAddress , shippingAddress} = useShippingStore()
+  
    const dispatch = useAppDispatch()
     const handleDeleteShipping = async() => {
        setLoading(true)
         try {
           const {error,success} =   await deleteShipping({id})
           if(success) {
-            //  if(shippingAddress?._id === id) {
-            //   clearShippingAddress()
-            //  }
+         
             dispatch(clearShippingAddress())
+            return toast({
+              title: "Success",
+              description: "shipping address has been removed "
+            })
           }else {
             toast({
               title: "Error",

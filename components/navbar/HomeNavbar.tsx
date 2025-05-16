@@ -84,7 +84,7 @@ const HomeNavbar = ({qty}: {
                   <p className='font-medium lg:block hidden text-sm'>Mon compte</p>
                </Link>
                {session.status === "authenticated" && session.data && session.data.user.isAdmin && (
- <Link href={`${ROUTES.userProfile}`} className='flex flex-col cursor-pointer  hover:text-light_blue items-center gap-1'>
+ <Link href={`${ROUTES.adminDashboard}`} className='flex flex-col cursor-pointer  hover:text-light_blue items-center gap-1'>
   
        
                    <UserCheckIcon />

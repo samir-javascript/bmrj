@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/hooks/user-redux";
 import { clearCart } from "@/lib/store/cartSlice";
 import { LogOut } from "lucide-react";
 import LoadingAppState from "../Loaders/LoadingAppState";
+import { clearShippingAddress } from "@/lib/store/shippingSlice";
 
 const ProfileItems = () => {
   const pathname = usePathname();
@@ -27,6 +28,7 @@ const ProfileItems = () => {
        }
  
        dispatch(clearCart());
+       dispatch(clearShippingAddress())
        localStorage.removeItem("guest_cart");
        await signOut({ callbackUrl: process.env.NEXT_PUBLIC_API_ENDPOINT });
      } catch (error) {

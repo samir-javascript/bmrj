@@ -19,7 +19,7 @@ import { editShippingSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import { IShipping } from "@/database/models/shippingAdress.model";
 import { editShippingAddress } from "@/actions/shipping.actions";
-import useShippingStore, { setShippingAddress } from "@/lib/store/shippingSlice";
+import  { setShippingAddress } from "@/lib/store/shippingSlice";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch } from "@/hooks/user-redux";
 
@@ -38,7 +38,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
   const router = useRouter()
   const { toast} = useToast()
   const dispatch = useAppDispatch()
- // const { setShippingAddress , shippingAddress }  = useShippingStore()
+
   const form = useForm<z.infer<typeof editShippingSchema>>({
     resolver: zodResolver (editShippingSchema),
     defaultValues: {
@@ -73,7 +73,7 @@ const EditShippingForm = ({shipping,id,isModal,closeModal}: {
               })
           }
           
-         }else { 
+         }else if(error) { 
           toast({
              title:"Error",
              description: error?.message,
