@@ -75,7 +75,10 @@ const LoginForm = () => {
  
          }else {
            if(error?.message.includes("before logging in.")) {
+               setOpen(true)
               setVerificationError(error.message)
+             
+              return
            }else {
                setError(error?.message)
            }

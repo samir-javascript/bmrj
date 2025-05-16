@@ -67,16 +67,17 @@ const AuthForm = () => {
            name: values.name,
            lastName: values.lastName
         })
-        if(success) {
+        if(!error) {
          
           form.reset()
+           setOpen(true)
           toast({
               title: "account created successfully",
               description: message
             })
-            setOpen(true)
+           
           //  return router.push(redirect)
-
+             return
         }else {
           setError(error?.message)
            return  toast({
