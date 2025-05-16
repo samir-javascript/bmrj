@@ -64,9 +64,9 @@ export default function ProductImages({productId, hasSavedProductPromise,product
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className='lg:hidden flex'>
+      {/* <div className='lg:hidden flex'>
                <SaveProductHeart hasSavedProductPromise={hasSavedProductPromise} productId={productId}  className='absolute lg:hidden flex z-[50] bottom-4 right-4'  /> 
-            </div>
+            </div> */}
                   
     </div>
   );

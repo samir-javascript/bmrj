@@ -72,7 +72,7 @@ const SaveProductHeart = ({className,productId,hasSavedProductPromise}: {
     
     console.log(hasSavedProductPromise, "over here")
   return (
-    <div onClick={handleToggleSaveProduct} className={`rounded-full   w-[45px] h-[45px] bg-gray-100  items-center justify-center ${className}`}>
+    <div onClick={handleToggleSaveProduct} className={`rounded-full flex  w-[45px] h-[45px] bg-gray-100  items-center justify-center ${className}`}>
                   {optimisticSaved ? (
   <img className="w-[30px] cursor-pointer object-contain" src="/red-heart.png" />
 ) : (
