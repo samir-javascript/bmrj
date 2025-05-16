@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast"
 import LoadingAppState from "../Loaders/LoadingAppState"
 
 
-const HeartCart = ({productId, hasSaved = false}:{productId:string, hasSaved?:boolean}) => {
+const HeartCart = ({productId, hasSaved}:{productId:string, hasSaved?:boolean}) => {
   
   const [open,setOpen] = useState<boolean>(false)
   const [loading,setLoading] = useState(false)
@@ -25,8 +25,8 @@ const HeartCart = ({productId, hasSaved = false}:{productId:string, hasSaved?:bo
           if(success) {
             return toast({
                  title: "success",
-                 description: `${hasSaved ? "product has been added to your wishlist" : "product has been removed from your wishlist"}`
-               })
+                 description: `${hasSaved ? "product has been removed from your wishlist" : "product has been added to your wishlist"}`
+            })
             
           }
             else  {

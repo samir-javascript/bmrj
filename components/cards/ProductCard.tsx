@@ -29,7 +29,7 @@ const ProductCard = async({product}: {
             <Image src={product.images[0].url}
              className='object-contain' alt='product_image' width={170} height={170}  />
          </Link>
-       <HeartCart hasSaved={hasSaved.data?.saved || false} productId={product._id} />
+       <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
 
         
         
