@@ -13,13 +13,7 @@ import { Heart } from 'lucide-react';
 import SaveProductHeart from '../btns/SaveProductHeart';
 import { IProduct } from '@/database/models/product.model';
 
-// const images = [
-//   'https://www.marjanemall.ma/media/catalog/product/cache/36c9d346b6653f95ce7222f403adb694/_/p/_pdt2_9_1_6_1_700x700_AAAPD01916.jpg',
-//   'https://www.marjanemall.ma/media/catalog/product/cache/36c9d346b6653f95ce7222f403adb694/_/p/_pdt2_9_1_6_2_700x700_AAAPD01916.jpg',
-//   'https://www.marjanemall.ma/media/catalog/product/cache/36c9d346b6653f95ce7222f403adb694/_/p/_pdt2_9_1_6_4_700x700_AAAPD01916.jpg',
-//   'https://www.marjanemall.ma/media/catalog/product/cache/36c9d346b6653f95ce7222f403adb694/_/p/_pdt2_9_1_6_5_700x700_AAAPD01916.jpg',
 
-// ];
 
 export default function ProductImages({productId, hasSavedProductPromise,product}:
    {productId:string;
@@ -64,9 +58,9 @@ export default function ProductImages({productId, hasSavedProductPromise,product
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* <div className='lg:hidden flex'>
+      <div className='lg:hidden flex'>
                <SaveProductHeart hasSavedProductPromise={hasSavedProductPromise} productId={productId}  className='absolute lg:hidden flex z-[50] bottom-4 right-4'  /> 
-            </div> */}
+            </div>
                   
     </div>
   );

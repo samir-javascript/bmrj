@@ -105,7 +105,7 @@ const page = async({params}: {params: Promise<{id:string}>}) => {
                       </div>
                   </div>
                    
-            <div>
+            <div className='lg:flex hidden'>
                <SaveProductHeart hasSavedProductPromise={hasSavedPromise} productId={product._id}  /> 
             </div>
                     
