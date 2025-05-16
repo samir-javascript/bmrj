@@ -32,6 +32,7 @@ import { ROUTES } from "@/constants/routes"
 const LoginForm = () => {
   const [open,setOpen] = useState<boolean>(false)
   const [error,setError] = useState<string | undefined>(undefined)
+  const [verificationError,setVerificationError] = useState<string | undefined>(undefined)
   const searchParams = useSearchParams()
   const isShipping = searchParams.get("shipping")
   const redirect = isShipping ? "/checkout/shipping" : "/"
@@ -73,7 +74,13 @@ const LoginForm = () => {
             return router.push(redirect)
  
          }else {
-             setError(error?.message)
+           if(error?.message.includes("before logging in.")) {
+              setVerificationError(error.message)
+           }else {
+               setError(error?.message)
+           }
+           
+             return
          }
       } catch (error) {
          console.log(error)
@@ -82,9 +89,9 @@ const LoginForm = () => {
    }
   return  (
     <div>
-       {error && (
-          <AlertMessage message={error} variant="destructive" />
-       )}
+       {verificationError && <OptVerification open={open} setOpen={setOpen} />}
+{error && <AlertMessage message={error} variant="destructive" />}
+
  <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-7 flex flex-col space-y-6">
        
@@ -136,7 +143,7 @@ const LoginForm = () => {
      
     </Form>
     <AuthFormBtns />
-    <OptVerification open={open} setOpen={setOpen} />
+  
     </div>
    
   )
