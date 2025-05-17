@@ -34,7 +34,8 @@ const SearchInput = () => {
         setPending(true)
         try {
            const {success, data} = await getSuggestionResult({
-              query: value
+              query: value,
+              limit: 3
            })
            if(success)  {
               setSuggestions(data?.products || [])

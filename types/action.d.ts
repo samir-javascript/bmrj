@@ -280,6 +280,7 @@ export interface CouponParams {
 
 export interface GetSearchInputResultsParams {
   query: string;
+  limit : number;
 }
 
 export interface GetUserCartParams {

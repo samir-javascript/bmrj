@@ -202,7 +202,7 @@ export async function getSingleProduct(params:GetSingleProductParams): Promise<A
 export async function getSuggestionResult(
   params: GetSearchInputResultsParams
 ): Promise<ActionResponse<{ products: IProduct[] }>> {
-  const { query } = params
+  const { query, limit } = params
 
   if (!query || typeof query !== 'string' || !query.trim()) {
     return { success: false }
@@ -225,7 +225,7 @@ export async function getSuggestionResult(
           },
         },
       },
-      { $limit: 3 },
+      { $limit: limit },
       {
         $project: {
           name: 1,
