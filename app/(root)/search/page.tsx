@@ -26,7 +26,7 @@ const page = async({searchParams}: {searchParams: Promise<{q: string}>}) => {
                   <p className='text-sm font-normal text-[#333] '>Résultats de recherche pour : {q} </p>
              </div>
              <h2 className='mt-3 h2-bold text-black '>Résultats de recherche pour : "{q}"</h2>
-              <div>
+              <div className='mt-5 w-full mx-auto'>
           {data?.products.length as number > 0 ? (
            <div className="flex items-center mx-auto flex-wrap max-sm:gap-1 gap-3">
                      {data?.products.map((product,index) => (
