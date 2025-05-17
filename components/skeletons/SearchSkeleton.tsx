@@ -6,7 +6,7 @@ const SearchSkeleton = () => {
    <div className="flex flex-col space-y-3">
         <Skeleton className="h-4 bg-gray-200 w-[350px]" />
         <Skeleton className="h-4 bg-gray-200 w-[300px]" />
-    <div className='mt-5 w-full mx-auto'>
+    <div className=' w-full '>
         
  <div className="flex items-center mx-auto flex-wrap max-sm:gap-1 gap-3">
                       {[0,1,2,3,4,5,6,7,8,9,10,11,22,58,67].map((_,index) => (
