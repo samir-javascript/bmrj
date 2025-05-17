@@ -73,7 +73,9 @@ export interface DeleteHeroBannerParams {
 export interface CollectionParams {
   productId: string;
 }
-
+export interface RemoveAllWishlistItemsParams {
+   userId:string
+}
 // =======================
 // ORDER INTERFACES
 // =======================

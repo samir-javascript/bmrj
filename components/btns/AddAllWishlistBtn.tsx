@@ -6,23 +6,41 @@ import { CollectionElement } from '@/types/Elements'
 import { addWishlistToCart } from '@/lib/store/cartSlice'
 import LoadingAppState from '../Loaders/LoadingAppState'
 import { useToast } from '@/hooks/use-toast'
+import { removeAllWishlistItems } from '@/actions/collection.actions'
 
-const AddAllWishlistBtn = ({items}: {
+
+const AddAllWishlistBtn = ({items,userId}: {
      items: CollectionElement[]
+     userId:string
 }) => {
     // Explicitly type dispatch to accept thunks
     const dispatch = useAppDispatch()
     const {toast} = useToast()
+  
     const [loading,setLoading] = useState(false)
     const handleAddWishlistItemsToCart = async()=> {
         setLoading(true)
         try {
             // @ts-ignore
           dispatch(addWishlistToCart(items));
-         return toast({
-             title: "Success"
+         // await new Promise((resolve)=> setTimeout(resolve, 3000) )
+          const { success, error } = await removeAllWishlistItems({userId})
+          if(error) {
+             return  toast({
+              title: "An Error occured",
+              description: error.message,
+              variant: "destructive"
+             })
+          }else if(success) {
+           return  toast({
+             title: "Success",
+             description: "your wishlist items have been added to your cart"
           })
-          //TODO:  deleteWishlistItems
+          }
+       
+        
+
+       
         } catch (error) {
              console.log(error)
         }finally {
@@ -34,6 +52,7 @@ const AddAllWishlistBtn = ({items}: {
     {loading && (
          <LoadingAppState />
     )}
+    
         <Button
       type='button'
 

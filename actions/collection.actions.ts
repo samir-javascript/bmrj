@@ -1,4 +1,5 @@
 "use server"
+import { ROUTES } from "@/constants/routes";
 // todo for authentication use the same method you signed up with;
 
 import connectToDb from "@/database/connect";
@@ -7,8 +8,9 @@ import Product, { IProduct } from "@/database/models/product.model";
 
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error"
-import { CollectionSchema, PaginatedSchemaValidation } from "@/lib/zod";
-import { CollectionParams, PaginatedSchemaParams } from "@/types/action";
+import { UnAuthorizedError } from "@/lib/http-errors";
+import { CollectionSchema, PaginatedSchemaValidation, RemoveAllWishlistItemsSchema } from "@/lib/zod";
+import { CollectionParams, PaginatedSchemaParams, RemoveAllWishlistItemsParams } from "@/types/action";
 import { CollectionElement } from "@/types/Elements";
 
 import { revalidatePath } from "next/cache";
@@ -108,5 +110,25 @@ export async function hasSavedProduct(params:CollectionParams):Promise<ActionRes
   } catch (error) {
      return handleError(error) as ErrorResponse
   }
+}
+export async function removeAllWishlistItems(params:RemoveAllWishlistItemsParams): Promise<ActionResponse>  {
+    const validatedResult = await action({params,schema:RemoveAllWishlistItemsSchema,authorize: true})
+    if(validatedResult instanceof Error) {
+         return handleError(validatedResult) as ErrorResponse
+    }
+     const session = validatedResult.session;
+     if(!session) throw new UnAuthorizedError()
+        const { userId } = validatedResult.params!
+    if(!userId) throw new Error("User id is missing")
+     try {
+        await connectToDb()
+        await Collection.deleteMany({userId})
+        revalidatePath(ROUTES.wishlist)
+        return {
+            success: true,
+        }
+     } catch (error) {
+         return handleError(error) as ErrorResponse
+     }
 }
 

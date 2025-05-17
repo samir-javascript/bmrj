@@ -119,7 +119,9 @@ export const SignInWithOAuthSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
   }),
 });
-
+export const RemoveAllWishlistItemsSchema = z.object({
+  userId: z.string().min(1, {message: "user ID is required"})
+})
 export const SignUpValidationSchema = z.object({
   gender: z.enum(["male", "female"], { message: "gender Type is not valid!" }),
   name: z.string().min(1, { message: "name field is required!" }),
