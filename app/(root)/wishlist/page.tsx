@@ -9,10 +9,15 @@ import Alert from '@/components/shared/Alert';
 import { searchParamsProps } from '@/types/action';
 import Pagination from '@/components/pagination/Pagination';
 import AddAllWishlistBtn from '@/components/btns/AddAllWishlistBtn';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
 const Page = async ({searchParams}:searchParamsProps) => {
+   const session = await auth()
+   if(!session) redirect("/")
   const {page, pageSize} = await searchParams
   const result = await getSavedProducts({page: Number(page) || 1, pageSize: Number(pageSize) || 2});
+ 
   console.log(result, "result")
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 max-sm:pb-5 lg:py-8 gap-5'>
@@ -27,7 +32,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
         <div className='flex items-center mb-10 justify-between gap-3'>
           <h2 className='h2-bold max-sm:!text-[15px] whitespace-nowrap'>Ma liste d'envies</h2>
           {result.data?.collection.length! > 0 && (
-<AddAllWishlistBtn items={result.data?.collection || []} />
+<AddAllWishlistBtn items={result.data?.collection || []} userId={session.user.id} />
           )}
            
         </div>
