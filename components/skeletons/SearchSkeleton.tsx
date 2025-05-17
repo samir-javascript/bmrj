@@ -3,7 +3,7 @@ import { Skeleton } from '../ui/skeleton'
 
 const SearchSkeleton = () => {
   return (
-   <div className="flex flex-col overflow-x-hidden space-y-3 max-sm:mx-2 lg:mx-5 py-8">
+   <div className="flex flex-col overflow-x-hidden space-y-3 max-sm:mx-auto lg:mx-5 py-8">
         <Skeleton className="h-4 bg-gray-200 w-[350px]" />
         <Skeleton className="h-4 bg-gray-200 w-[300px]" />
     
@@ -11,7 +11,7 @@ const SearchSkeleton = () => {
  <div className="flex items-center mx-auto flex-wrap max-sm:gap-1 gap-3">
                       {[0,1,2,3,4,5,6,7,8,9,10,11,22,58,67].map((_,index) => (
                          <div key={index}>
-                               <Skeleton className='w-[200px] max-sm:w-[150px] bg-gray-200  h-[280px] rounded-lg ' />
+                               <Skeleton className='w-[200px] max-sm:w-[165px] bg-gray-200  h-[280px] rounded-lg ' />
                          </div>
                      ))}
                      </div>
