@@ -2,6 +2,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import { addToCart, removeFromCart, syncCarts, updateCartItemQuantity } from '@/actions/cart.actions';
+import { CollectionElement } from '@/types/Elements';
 
 export type CartItem = {
   _id: string;
@@ -95,6 +96,32 @@ export const syncWithUser = createAsyncThunk(
     return data?.mergedCart || [];
   }
 );
+export const addWishlistToCart = createAsyncThunk(
+  'cart/addWishlistToCart',
+  async (wishlistItems: CollectionElement[], { getState, dispatch }) => {
+    const state = getState() as { cart: CartState };
+    const guestId = state.cart.guestId || getOrCreateGuestId();
+
+    for (const item of wishlistItems) {
+      await addToCart({
+        guestId,
+        item: { productId: item.productId._id, quantity: 1 },
+      });
+      dispatch(addItemAsync({
+        _id: item.productId._id,
+        brand: item.productId.brand,
+        prevPrice: item.productId.prevPrice,
+        title: item.productId.name,
+        image: item.productId.images[0].url,
+        price: item.productId.price,
+        quantity: 1 // or item.quantity if available
+      })); // Optionally sync to Redux state
+    }
+
+    return wishlistItems;
+  }
+);
+
 
 const cartSlice = createSlice({
   name: 'cart',

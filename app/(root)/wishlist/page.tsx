@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import Alert from '@/components/shared/Alert';
 import { searchParamsProps } from '@/types/action';
 import Pagination from '@/components/pagination/Pagination';
+import AddAllWishlistBtn from '@/components/btns/AddAllWishlistBtn';
 
 const Page = async ({searchParams}:searchParamsProps) => {
   const {page, pageSize} = await searchParams
@@ -26,9 +27,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
         <div className='flex items-center mb-10 justify-between gap-3'>
           <h2 className='h2-bold max-sm:!text-[15px] whitespace-nowrap'>Ma liste d'envies</h2>
           {result.data?.collection.length! > 0 && (
- <Button type='button' className='rounded-2xl max-sm:text-xs bg-light_blue text-white hover:bg-light_blue '>
- Ajouter tous les produits au panier
-</Button>
+<AddAllWishlistBtn items={result.data?.collection || []} />
           )}
            
         </div>
