@@ -103,10 +103,7 @@ export const addWishlistToCart = createAsyncThunk(
     const guestId = state.cart.guestId || getOrCreateGuestId();
 
     for (const item of wishlistItems) {
-      await addToCart({
-        guestId,
-        item: { productId: item.productId._id, quantity: 1 },
-      });
+     
       dispatch(addItemAsync({
         _id: item.productId._id,
         brand: item.productId.brand,
