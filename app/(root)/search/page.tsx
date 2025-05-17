@@ -1,6 +1,7 @@
 import { getSuggestionResult } from '@/actions/product.actions'
 import ProductCard from '@/components/cards/ProductCard'
 import Alert from '@/components/shared/Alert'
+import SearchSkeleton from '@/components/skeletons/SearchSkeleton'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -11,6 +12,12 @@ const page = async({searchParams}: {searchParams: Promise<{q: string}>}) => {
                   query: q,
                   limit: 20
           })
+          const loading = true;
+        if(loading) {
+           return (
+              <SearchSkeleton />
+           )
+        }
   return (
     <section className="flex flex-col w-full  py-8">
        {error && (
