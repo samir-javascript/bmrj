@@ -1,26 +1,24 @@
-import React from 'react'
-import { Skeleton } from '../ui/skeleton'
+import React from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 const SearchSkeleton = () => {
   return (
-   <div className="flex flex-col overflow-x-hidden space-y-3 max-sm:mx-auto lg:mx-5 py-8">
-        <Skeleton className="h-4 bg-gray-200 w-[350px]" />
-        <Skeleton className="h-4 bg-gray-200 w-[300px]" />
-    
-        
- <div className="flex items-center mx-auto flex-wrap max-sm:gap-1 gap-3">
-                      {[0,1,2,3,4,5,6,7,8,9,10,11,22,58,67].map((_,index) => (
-                         <div key={index}>
-                               <Skeleton className='w-[200px] max-sm:w-[165px] bg-gray-200  h-[280px] rounded-lg ' />
-                         </div>
-                     ))}
-                     </div>
-         
-          {/* {result.data?.collection.length! > 0 && <Pagination page={Number(page) || 1} isNext={result.data?.isNext as boolean} />} */}
-       
-    
-    </div>
-  )
-}
+    <div className="flex flex-col space-y-4 py-8 px-4 lg:px-8 max-w-7xl mx-auto">
+      {/* Heading skeletons */}
+      <Skeleton className="h-4 w-[350px] bg-gray-200" />
+      <Skeleton className="h-4 w-[300px] bg-gray-200" />
 
-export default SearchSkeleton
+      {/* Product cards skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
+        {Array.from({ length: 15 }).map((_, index) => (
+          <Skeleton
+            key={index}
+            className="h-[280px] w-full bg-gray-200 rounded-lg"
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default SearchSkeleton;
