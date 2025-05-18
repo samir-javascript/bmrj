@@ -47,7 +47,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
 
         <div>
           {result.data?.collection.length! > 0 ? (
-           <div className="flex items-center mx-auto flex-wrap max-sm:gap-1 gap-3">
+           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
                      {result.data?.collection.map((product,index) => (
                          <div key={index}>
                                <ProductCard product={product.productId} />

@@ -109,7 +109,7 @@ Total spent
 Latest purchase
 </th>
 <th className="px-4 py-3">
-News
+Verified
 </th>
 <th className="px-4 py-3">
 Segments
@@ -164,7 +164,7 @@ Segments
 </td>
 
 <td className="px-4 py-3">
-  {user.hasNewsLetter ?  <Check  className='text-gray-200' /> : <X  className='text-gray-200' />} 
+  {user.isVerified ?  <Check  className='text-gray-200' /> : <X  className='text-gray-200' />} 
 </td>
 <td className="px-4 py-3">
  <div className='rounded-full flex items-center py-[3px] px-[6px] justify-center w-fit bg-[#333]  '>
