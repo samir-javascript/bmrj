@@ -12,12 +12,7 @@ const page = async({searchParams}: {searchParams: Promise<{q: string}>}) => {
                   query: q,
                   limit: 20
           })
-          const loading = true;
-        if(loading) {
-           return (
-              <SearchSkeleton />
-           )
-        }
+        
   return (
     <section className="flex flex-col w-full  py-8">
        {error && (

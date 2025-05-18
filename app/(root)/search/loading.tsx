@@ -5,9 +5,9 @@ import React from 'react'
 const loading = () => {
     // TODO: add loading skeleton
   return (
-    <div>
+    <>
          <SearchSkeleton />
-    </div>
+    </>
   )
 }
 
