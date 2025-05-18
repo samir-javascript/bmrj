@@ -63,7 +63,7 @@ export function OptVerification({
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(false)}>
-      <DialogContent className="bg-white px-4 z-[10] sm:px-6 pt-4 pb-6 sm:max-w-[550px] w-[95%] ">
+      <DialogContent className="bg-white px-4 z-[1000000000] sm:px-6 pt-4 pb-6 sm:max-w-[550px] w-[95%] ">
         <div className="flex justify-center mb-4">
           <img
             className="invert"
