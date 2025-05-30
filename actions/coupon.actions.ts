@@ -30,6 +30,7 @@ export async function createCoupon(params:CouponParams): Promise<ActionResponse<
    
     if(hasUsed) throw new Error("You have already used this coupon.")
     coupon.usedBy.push(userId)
+    await coupon.save()
     return {
         success:true,
         data: {coupon: JSON.parse(JSON.stringify(coupon))}
