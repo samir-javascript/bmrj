@@ -193,6 +193,40 @@ const cartSlice = createSlice({
 export const getTotalItems = (state: { cart: CartState }): number => {
   return state.cart.items.reduce((total, item) => total + item.quantity, 0);
 };
+
+// export const getTotalPrice = ({ cart }: { cart: CartState }): number => {
+//   return cart.items.reduce((total, { price, quantity }) => {
+//     return total + price * quantity;
+//   }, 0);
+// };
+interface Coupon {
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  value: number;
+}
+
+export const getTotalPrice = (
+  cart: CartState,
+  coupon?: Coupon
+): number => {
+  const subtotal = cart.items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  if (!coupon) return subtotal;
+
+  if (coupon.discountType === 'percentage') {
+    return subtotal - (subtotal * coupon.value) / 100;
+  }
+
+  if (coupon.discountType === 'fixed') {
+    return Math.max(0, subtotal - coupon.value);
+  }
+
+  return subtotal;
+};
+
 export const {
   setGuestId,
   startLoadingOrderDetails,

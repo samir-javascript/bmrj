@@ -5,9 +5,9 @@ import { useAppDispatch, useAppSelector } from "@/hooks/user-redux"
 import {  getTotalItems } from "@/lib/store/cartSlice"
 import { FormEvent, useState } from "react"
 
-const CouponBtn = ({userId,totalPrice}: {
+const CouponBtn = ({userId}: {
   userId:string
-  totalPrice:number
+ 
 }) => {
   const [coupon,setCoupon] = useState<string>("")
   const dispatch = useAppDispatch()

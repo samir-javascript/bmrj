@@ -5,8 +5,8 @@ import Features from '@/components/shared/Features'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { useCartItems } from '@/hooks/useCartItems'
-import { useAppDispatch } from '@/hooks/user-redux'
-import { removeItemAsync, updateQuantityAsync } from '@/lib/store/cartSlice'
+import { useAppDispatch, useAppSelector } from '@/hooks/user-redux'
+import { getTotalPrice, removeItemAsync, updateQuantityAsync } from '@/lib/store/cartSlice'
 
 import { formatPrice } from '@/lib/utils'
 import { cartItemsProps, UserCartElement } from '@/types/Elements'
@@ -29,8 +29,17 @@ const CartItems = ({data,isAuthenticated,userId}: {
 
    
     const totalQty = cartItems?.reduce((acc:number, item:{quantity:number}) => acc + item.quantity, 0);
-    const totalPrice = cartItems?.reduce((acc:number, item:{quantity:number,price:number}) => acc + item.price * item.quantity, 0);
+   //  const totalPrice = cartItems?.reduce((acc:number, item:{quantity:number,price:number}) => acc + item.price * item.quantity, 0);
      const dispatch = useAppDispatch()
+     const coupon: { code: string; discountType: "fixed" | "percentage"; value: number } = {
+       code: "GET",
+       discountType: "fixed",
+       value: 50
+     }
+      const cart = useAppSelector((state) => state.cart);
+
+
+  const totalPrice = getTotalPrice(cart, coupon);
      const handleRemoveItem = async(productId:string)=> {
       try {
          setPending(true)
@@ -160,7 +169,7 @@ const CartItems = ({data,isAuthenticated,userId}: {
         <>
            <div className='flex flex-col max-lg:w-full px-3 space-y-3 lg:sticky lg:top-[10px] '>
            {/* checkout total */}
-           <CouponBtn totalPrice={totalPrice} userId={userId} />
+           <CouponBtn  userId={userId} />
         <div className='border w-full  lg:w-[450px] flex flex-col   border-gray-200 rounded-lg px-3 py-10 '>
              <div className='flex items-center justify-between border-b border-gray-100 pb-5'>
                   <p className='text-sm text-[14px] text-[#555] font-semibold '>
