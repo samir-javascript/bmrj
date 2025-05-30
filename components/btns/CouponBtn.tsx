@@ -47,12 +47,12 @@ const CouponBtn = ({userId,totalPrice}: {
                 {Loading ? "Loading" : "Valider"}
              </button>
         </form>
-        {textMessage && (
+        {!error && textMessage && (
            <p className="text-green-500 text-sm font-medium">
              {textMessage}
            </p>
         )}
-         {error && (
+         {error && !textMessage && (
            <p className="text-red-500 text-sm font-medium">
              {error}
            </p>
