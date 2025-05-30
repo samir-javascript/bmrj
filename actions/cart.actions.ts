@@ -8,6 +8,7 @@
 // TODO: DONE cache mechanism;
 // sync user cart in localstrage,
 import { auth } from '@/auth';
+
 import connectToDb from '@/database/connect';
 import { Cart, ICart } from '@/database/models/cart.model';
 import Product, { IProduct } from '@/database/models/product.model';
@@ -39,7 +40,7 @@ export async function addToCart({ guestId, item }: AddToCartParams): Promise<Act
     const userId = session?.user.id;
     await connectToDb();
 
-    let cart;
+    let cart
 
     // ✅ 1. Find or create the cart (user or guest)
     if (userId) {
@@ -58,7 +59,7 @@ export async function addToCart({ guestId, item }: AddToCartParams): Promise<Act
 
     // ✅ 2. Check if the product already exists in the cart
     const existingItemIndex = cart.items.findIndex(
-      (cartItem: any) => cartItem.productId.toString() === item.productId
+      (cartItem: {productId:string;quantity:number}) => cartItem.productId.toString() === item.productId
     );
 
     // ✅ 3. If it exists, increase quantity; otherwise, add the item
@@ -119,7 +120,7 @@ export async function removeFromCart({
     await cart.save();
     revalidatePath('/cart');
     revalidatePath("/")
-    return { success: true, cart: JSON.parse(JSON.stringify(cart)) };
+    return { success: true, cart: JSON.parse(JSON.stringify(cart)), message: "product has been removed from your cart" };
   } catch (error) {
      return handleError(error) as ErrorResponse
   }

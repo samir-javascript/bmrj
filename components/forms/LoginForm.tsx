@@ -94,7 +94,7 @@ const LoginForm = () => {
   return  (
     <div>
        {verificationError && <OptVerification open={openOpt} setOpen={setOpenOpt} />}
-{error && <AlertMessage message={error} variant="destructive" />}
+{error && <AlertMessage isAuth message={error} variant="destructive" />}
 
  <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-7 flex flex-col space-y-6">

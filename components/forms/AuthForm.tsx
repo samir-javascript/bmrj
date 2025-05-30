@@ -94,7 +94,7 @@ const AuthForm = () => {
   return  (
     <div>
        {error && (
-          <AlertMessage message={error} variant="destructive"  />
+          <AlertMessage isAuth message={error} variant="destructive"  />
        )}
   <Form {...form}>
 
@@ -187,8 +187,12 @@ const AuthForm = () => {
            {form.formState.isSubmitting ? "Loading" : "Sign up"} 
         </Button>
       </form>
-      <div className="mt-3">
+      <div className="my-5">
+         <p className="text-sm font-normal text-gray-100 ">By creating an account, you agree to Marjanemall's Conditions of Use and Privacy Notice.</p>
+      </div>
+      <div className="mt-3 flex items-center justify-between">
          <p className="text-[#fff] font-medium text-[15px] ">Already have an account? <span className="underline text-light_blue"><Link href={isShipping ? `${ROUTES.signin}?shipping=true` : ROUTES.signin}>LogIn</Link> </span> </p>
+          <p className="text-[#fff] font-medium text-[15px] ">Forgot password? <span className="underline text-light_blue"><Link href={"/forgot-password"}>Reset</Link> </span> </p>
       </div>
     </Form>
      <AuthFormBtns />
