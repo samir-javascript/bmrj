@@ -29,17 +29,17 @@ const CartItems = ({data,isAuthenticated,userId}: {
 
    
     const totalQty = cartItems?.reduce((acc:number, item:{quantity:number}) => acc + item.quantity, 0);
-   //  const totalPrice = cartItems?.reduce((acc:number, item:{quantity:number,price:number}) => acc + item.price * item.quantity, 0);
+    const totalPrice = cartItems?.reduce((acc:number, item:{quantity:number,price:number}) => acc + item.price * item.quantity, 0);
      const dispatch = useAppDispatch()
-     const coupon: { code: string; discountType: "fixed" | "percentage"; value: number } = {
-       code: "GET",
-       discountType: "fixed",
-       value: 50
-     }
-      const cart = useAppSelector((state) => state.cart);
+  //    const coupon: { code: string; discountType: "fixed" | "percentage"; value: number } = {
+  //      code: "GET",
+  //      discountType: "fixed",
+  //      value: 50
+  //    }
+  //     const cart = useAppSelector((state) => state.cart);
 
 
-  const totalPrice = getTotalPrice(cart, coupon);
+  // const totalPrice = getTotalPrice(cart, coupon);
      const handleRemoveItem = async(productId:string)=> {
       try {
          setPending(true)
