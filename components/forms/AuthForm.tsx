@@ -282,7 +282,7 @@ const AuthForm = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 px-4">
-      <div className="bg-white dark:bg-[#1c1c1e] p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+      <div className="w-full max-w-md mx-auto mt-10 px-6 py-8 bg-white/5 rounded-2xl shadow-lg backdrop-blur-sm border border-white/10">
         {error && (
           <AlertMessage isAuth message={error} variant="destructive" />
         )}
