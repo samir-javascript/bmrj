@@ -287,7 +287,7 @@ const AuthForm = () => {
           <AlertMessage isAuth message={error} variant="destructive" />
         )}
 
-        <h2 className="text-2xl font-semibold text-center text-gray-900 dark:text-white">
+        <h2 className="text-2xl font-bold text-center text-white mb-6">
           Create your account
         </h2>
 
@@ -303,7 +303,7 @@ const AuthForm = () => {
                 name={fieldName as keyof z.infer<typeof SignUpValidationSchema>}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-800 dark:text-gray-200 capitalize">
+                    <FormLabel className="text-sm font-medium text-white capitalize">
                       {fieldName === "phoneNumber" ? "Phone Number" : fieldName}
                     </FormLabel>
                     <FormControl>
@@ -331,13 +331,13 @@ const AuthForm = () => {
           </form>
         </Form>
 
-        <p className="text-xs text-center text-gray-600 dark:text-gray-400">
+        <p className="text-xs text-center my-5 text-gray-100 dark:text-gray-400">
           By creating an account, you agree to Marjanemall's{" "}
           <span className="underline cursor-pointer">Terms</span> and{" "}
           <span className="underline cursor-pointer">Privacy Policy</span>.
         </p>
 
-        <div className="text-sm text-center text-gray-700 dark:text-gray-300 space-y-2">
+        <div className="text-sm text-center text-white  space-y-2">
           <p>
             Already have an account?{" "}
             <Link

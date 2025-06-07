@@ -9,7 +9,7 @@
      @apply border-2 border-gray-200 rounded-lg
   }
   .admin-input {
-    @apply h-10 px-4 bg-white text-black placeholder:text-gray-500 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-light_blue
+    @apply h-10 px-4 !bg-white text-black placeholder:text-gray-500 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-light_blue
   }
   .h1-bold {
     @apply text-[30px] font-bold leading-[42px] tracking-tighter;
