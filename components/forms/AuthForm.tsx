@@ -355,7 +355,11 @@ const AuthForm = () => {
           </p>
         </div>
       </div>
-
+ <div className="flex items-center gap-2 my-5">
+        <div className="flex-1 h-px bg-white/20" />
+        <span className="text-xs text-white/60">or</span>
+        <div className="flex-1 h-px bg-white/20" />
+      </div>
       <AuthFormBtns />
       <OptVerification open={openOpt} setOpen={setOpenOpt} />
     </div>
