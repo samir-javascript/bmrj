@@ -347,12 +347,7 @@ const AuthForm = () => {
               Log in
             </Link>
           </p>
-          <p>
-            Forgot password?{" "}
-            <Link href="/forgot-password" className="text-light_blue underline">
-              Reset
-            </Link>
-          </p>
+          
         </div>
       </div>
  <div className="flex items-center gap-2 my-5">

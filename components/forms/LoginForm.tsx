@@ -310,6 +310,12 @@ const LoginForm = () => {
         >
           Sign up
         </Link>
+        <p>
+            Forgot password?{" "}
+            <Link href="/forgot-password" className="text-light_blue underline">
+              Reset
+            </Link>
+          </p>
       </div>
 
       <div className="flex items-center gap-2 my-5">
