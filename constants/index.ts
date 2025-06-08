@@ -121,7 +121,7 @@ export const useCategoryNames = () => {
      {
        id: "545458783212121",
        image: 'https://www.marjanemall.ma/media/wysiwyg/category/HOMEPAGE/homepage_desktop_webp/output_image_5__1.webp',
-       name: 'Maison - Cuisine - Deco',
+       name: 'Maison',
        imageBanner: isMobile
          ? 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_maison/output_image_30_.webp'
          : 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_maison/output_image_29_.webp',
@@ -137,7 +137,7 @@ export const useCategoryNames = () => {
      {
        id: "45554489663333660000zzdsdsd9890",
        image: 'https://www.marjanemall.ma/media/wysiwyg/category/HOMEPAGE/homepage_desktop_webp/output_image_6__1.webp',
-       name :'Tv - Son - Photo',
+       name :'TV-SON',
        imageBanner: isMobile ? 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_tv/Mobile_tv-son_image_22_.webp'  :  "https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_tv/desktiop_tv_son_image_21_.webp"
       
     },
@@ -168,20 +168,20 @@ export const useCategoryNames = () => {
     {
      id: "0022559694454549889",
      image: 'https://www.marjanemall.ma/media/wysiwyg/category/HOMEPAGE/homepage_desktop_webp/output_image_9__1.webp',
-     name :'Beauté - Santé',
+     name :'Beauté',
      imageBanner: isMobile ? 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_beaute/output_image_13_.webp' : "https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_beaute/output_image_14_.webp"
   },
   
   {
      id: "0022559694",
      image: 'https://www.marjanemall.ma/media/wysiwyg/category/HOMEPAGE/homepage_desktop_webp/output_image_7__1.webp',
-     name :'vetements',
+     name :'Mode',
      imageBanner: isMobile ? 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_mode/output_image_26_.webp' : "https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_mode/output_image_25_.webp"
   },
   {
     id: "002887iiuiuip2559694",
     image: 'https://www.marjanemall.ma/media/wysiwyg/category/HOMEPAGE/homepage_desktop_webp/output_image_7__1.webp',
-    name :'Brico - Jardin - Animalerie',
+    name :'Bricolage',
     imageBanner: isMobile ? 'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_bricolage/output_image_24_.webp' : "https://www.marjanemall.ma/media/wysiwyg/offre_vedd/N1_bricolage/output_image_23_.webp"
  },
    ];
