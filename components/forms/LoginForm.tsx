@@ -310,7 +310,7 @@ const LoginForm = () => {
         >
           Sign up
         </Link>
-        <p>
+        <p className="mt-2">
             Forgot password?{" "}
             <Link href="/forgot-password" className="text-light_blue underline">
               Reset
