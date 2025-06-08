@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 
@@ -29,7 +29,33 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
-  
+  const [hasSaved, setHasSaved] = useState<boolean>(false);
+  const [savedProducts, setSavedProducts] = useState<{ [key: string]: boolean }>({});
+
+useEffect(() => {
+  const fetchSavedStatuses = async () => {
+    if (!data) return;
+
+    const results: { [key: string]: boolean } = {};
+
+    await Promise.all(
+      data.map(async (product) => {
+        const res = await fetch('/api/collection/hasSavedProduct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId: product._id }),
+        });
+        const json = await res.json();
+        results[product._id] = json.saved;
+      })
+    );
+
+    setSavedProducts(results);
+  };
+
+  fetchSavedStatuses();
+}, [data]);
+
   const handleAddToCart = async (product: IProduct) => {
     const data = {
       image: product.images[0]?.url,
@@ -85,7 +111,11 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
             <Image src={product.images[0].url} loading='lazy'
              className='object-contain' alt={product.name} width={170} height={170} />
          </Link>
-       <HeartCart productId={product._id} />
+     <HeartCart
+  productId={product._id}
+  hasSaved={savedProducts[product._id]}
+/>
+
  
         
         

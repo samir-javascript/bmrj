@@ -1,12 +1,7 @@
 import { IProduct } from '@/database/models/product.model'
 import { CollectionElement } from '@/types/Elements'
 import { Heart, ShoppingCart } from 'lucide-react'
-import {
-   Tooltip,
-   TooltipContent,
-   TooltipProvider,
-   TooltipTrigger,
- } from "@/components/ui/tooltip"
+
  
 import Image from 'next/image'
 import Link from 'next/link'

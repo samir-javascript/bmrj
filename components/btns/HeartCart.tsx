@@ -12,6 +12,8 @@ const HeartCart = ({productId, hasSaved}:{productId:string, hasSaved?:boolean}) 
   
   const [open,setOpen] = useState<boolean>(false)
   const [loading,setLoading] = useState(false)
+ 
+
   const session = useSession()
   const {toast} = useToast()
       const handleToggleSaveProduct = async()=> {
@@ -50,7 +52,7 @@ const HeartCart = ({productId, hasSaved}:{productId:string, hasSaved?:boolean}) 
          {loading  && (
           <LoadingAppState />
          )}
-               {hasSaved === true ? <img className='w-[24px] h-[24px] cursor-pointer ' src="/red-heart.png" alt="" /> :  <Heart size={24} className='text-secondary cursor-pointer' />} 
+               {hasSaved  ? <img className='w-[24px] h-[24px] cursor-pointer ' src="/red-heart.png" alt="" /> :  <Heart size={24} className='text-secondary cursor-pointer' />} 
                <AuthModal open={open} setOpen={() => setOpen} />
             </div>
   )

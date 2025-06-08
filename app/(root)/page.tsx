@@ -21,6 +21,7 @@ export default async function Home() {
   
    const  items  = res.data?.items;
    const { products} = result.data!;
+   
   
   return (
     <div className="w-full">
