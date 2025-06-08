@@ -40,7 +40,7 @@ useEffect(() => {
 
     await Promise.all(
       data.map(async (product) => {
-        const res = await fetch('/api/collection/hasSavedProduct', {
+        const res = await fetch('/api/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ productId: product._id }),
@@ -177,7 +177,7 @@ useEffect(() => {
          <Link href={`/products/${product._id}`}>
             <Image src="/mi.png" className='object-contain' alt='product_image' width={170} height={170} />
          </Link>
-       <HeartCart  productId={product._id as string} />
+       <HeartCart hasSaved={false} productId={product._id as string} />
 
         
         
