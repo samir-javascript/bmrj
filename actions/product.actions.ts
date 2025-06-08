@@ -8,7 +8,7 @@ import cloudinary from "@/lib/cloudinary"
 import { action } from "@/lib/handlers/action"
 import handleError from "@/lib/handlers/error"
 import { DeleteProductValidationSchema, EditProductSchema, PaginatedSchemaValidation, ProductSchemaValidation, ReviewSchemaValidation, SignleProductSchema } from "@/lib/zod"
-import { DeleteProductParams, EditProductParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams } from "@/types/action"
+import { DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams } from "@/types/action"
 import { FilterQuery, ObjectId } from "mongoose"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
@@ -298,3 +298,35 @@ export async function addProductReview(prevState:any,formData:FormData): Promise
         return handleError(error) as ErrorResponse
     }
 }
+
+export async function getProductsByCategory(
+  params: GetProductsByCategoryParams
+): Promise<ActionResponse<{ products: IProduct[] }>> {
+  const { categoryName } = params;
+
+  if (!categoryName || typeof categoryName !== 'string') {
+    return {
+      success: false,
+      message: 'Invalid category name provided',
+    };
+  }
+
+  try {
+    await connectToDb();
+
+    const escapeRegex = (str: string) =>
+      str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    const products = await Product.find({
+      category: { $regex: new RegExp(escapeRegex(categoryName), 'i') },
+    })
+
+    return {
+      success: true,
+      data: { products: JSON.parse(JSON.stringify(products)) },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+

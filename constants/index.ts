@@ -531,3 +531,62 @@ export const footerCategories = [
     "Librairie",
     "Epicerie fine"
 ];
+
+// export const useBrands =  () => {
+//    const [isMobile, setIsMobile] = useState(false);
+ 
+//    useEffect(() => {
+//      const mediaQuery = window.matchMedia('(max-width: 768px)');
+//      setIsMobile(mediaQuery.matches);
+ 
+//      const handleMediaQueryChange = (event:any) => {
+//        setIsMobile(event.matches);
+//      };
+ 
+//      mediaQuery.addEventListener('change', handleMediaQueryChange);
+//      return () => {
+//        mediaQuery.removeEventListener('change', handleMediaQueryChange);
+//      };
+//    }, []);
+   // <source media="(max-width:768px)" data-srcset="https://www.marjanemall.ma/media/wysiwyg/offre_vedd/brand_banner/output_image_7_.webp" srcset="https://www.marjanemall.ma/media/wysiwyg/offre_vedd/brand_banner/output_image_7_.webp">
+//    const brands = [
+//       {
+//          url: "aeg",
+//          src: '/images/aeg-brand.png',
+//          imageBanner: isMobile ?  'https://www.marjanemall.ma/media/wysiwyg/offre_vedd/brand_banner/output_image_7_.webp' : "https://www.marjanemall.ma/media/wysiwyg/offre_vedd/brand_banner/output_image_5_.webp"
+         
+//       },
+//       {
+//          url: 'bella maison',
+//          src:  '/images/bella-maison-brand.png',
+//          imageBanner: ""
+//       },
+//       {
+//          url: 'kitea',
+//          src:  '/images/kitea-brand-me.png',
+//          imageBanner: isMobile ? 'https://www.marjanemall.ma/media/wysiwyg/category/Kitea/banner-mobile-kitea_2_.webp' : 'https://www.marjanemall.ma/media/wysiwyg/category/Kitea/banner-web-kitea_2_.webp'
+//       },
+//       {
+//          url: 'bosch',
+//          src:  '/images/bosch-brand.png',
+//          imageBanner: ""
+//       },
+//       {
+//          url: 'tefal',
+//          src:  '/images/tefal-brand.png',
+//          imageBanner: ""
+//       },
+     
+//       {
+//          url: 'taurus',
+//          src:  '/images/taurus-brand.png',
+//          imageBanner: ""
+//       },
+   
+//    ]
+//    const updatedBrands = brands.map(brand => ({
+//       ...brand,
+//     }));
+  
+//     return updatedBrands;
+// }

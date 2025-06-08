@@ -282,7 +282,9 @@ export interface GetSearchInputResultsParams {
   query: string;
   limit : number;
 }
-
+export interface  GetProductsByCategoryParams  {
+  categoryName:string
+}
 export interface GetUserCartParams {
   userId: string;
 }
