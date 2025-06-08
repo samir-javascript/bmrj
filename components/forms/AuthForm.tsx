@@ -281,7 +281,7 @@ const AuthForm = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 px-4">
+    <>
       <div className="w-full max-w-md mx-auto mt-10 px-6 py-8 bg-white/5 rounded-2xl shadow-lg backdrop-blur-sm border border-white/10">
         {error && (
           <AlertMessage isAuth message={error} variant="destructive" />
@@ -362,7 +362,7 @@ const AuthForm = () => {
       </div>
       <AuthFormBtns />
       <OptVerification open={openOpt} setOpen={setOpenOpt} />
-    </div>
+ </>
   )
 }
 
