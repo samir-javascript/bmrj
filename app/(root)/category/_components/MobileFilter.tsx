@@ -77,7 +77,7 @@ const MobileFilterColumn = () => {
           <Button variant="outline" className="w-full">Filter</Button>
         </SheetTrigger>
 
-        <SheetContent side="right" className="w-[90vw] overflow-y-auto">
+        <SheetContent side="right" className="w-[90vw] bg-white overflow-y-auto">
           <SheetHeader className="mb-4">
             <SheetTitle className="text-xl">Filters</SheetTitle>
           </SheetHeader>
