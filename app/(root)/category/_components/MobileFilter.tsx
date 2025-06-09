@@ -73,7 +73,7 @@ const MobileFilterColumn = () => {
   return (
     <div className="lg:hidden w-full">
       <Sheet open={open} onOpenChange={setOpen}>
-       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 z-[500] lg:hidden">
+       <div className="fixed bottom-0 left-0 w-full  border-t border-gray-200  z-[40] lg:hidden">
     <SheetTrigger asChild>
       <Button variant="outline" className="w-full bg-light_blue text-white !rounded-none ">
         Filter
@@ -81,7 +81,7 @@ const MobileFilterColumn = () => {
     </SheetTrigger>
   </div>
 
-        <SheetContent side="right" className="w-[90vw] bg-white overflow-y-auto">
+        <SheetContent side="right" className="w-[90vw] z-[50] bg-white overflow-y-auto">
           <SheetHeader className="mb-4">
             <SheetTitle className="text-xl">Filters</SheetTitle>
           </SheetHeader>
