@@ -41,34 +41,35 @@ const CouponBtn = ({userId}: {
   <h2 className="text-lg font-semibold text-gray-800">Do you have a coupon code?</h2>
 
   <form
-    onSubmit={handleApplyCoupon}
-    className="relative flex items-center overflow-hidden rounded-xl border-2 border-blue-100 shadow-sm focus-within:ring-2 focus-within:ring-blue-200 transition-all"
-  >
-    <input
-      value={coupon.toUpperCase()}
-      onChange={(e) => setCoupon(e.target.value.toUpperCase())}
-      type="text"
-      name="code"
-      id="code"
-      placeholder="Enter your promo code"
-      className="w-full px-5 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 bg-white outline-none border-none"
-    />
+  onSubmit={handleApplyCoupon}
+  className="flex items-stretch overflow-hidden rounded-xl border-2 border-blue-100 shadow-sm focus-within:ring-2 focus-within:ring-blue-200 transition-all"
+>
+  <input
+    value={coupon.toUpperCase()}
+    onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+    type="text"
+    name="code"
+    id="code"
+    placeholder="Enter your promo code"
+    className="flex-1 px-5 text-sm font-medium text-gray-800 placeholder-gray-400 bg-white outline-none border-none"
+  />
 
-    <Button
-      type="submit"
-      disabled={!coupon}
-      className="h-full bg-gradient-to-r   from-yellow-400 to-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-200 text-white text-sm font-semibold px-5 transition-all duration-200 disabled:cursor-not-allowed"
-    >
-      {Loading ? (
-        <div className="flex items-center gap-1">
-          <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-          Loading
-        </div>
-      ) : (
-        "Apply"
-      )}
-    </Button>
-  </form>
+  <Button
+    type="submit"
+    disabled={!coupon}
+    className="h-full px-5 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-200 text-white text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed"
+  >
+    {Loading ? (
+      <div className="flex items-center gap-1">
+        <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+        Loading
+      </div>
+    ) : (
+      "Apply"
+    )}
+  </Button>
+</form>
+
 
   {textMessage && !error && (
     <p className="text-green-500 text-sm font-medium animate-fade-in">{textMessage}</p>
