@@ -45,7 +45,7 @@ const FilterColumn = () => {
   }, [checkedColors, checkedCategories, sortOrder, checkedSizes]);
 
   useEffect(() => {
-    if (searchParams) router.push(`/all-articles?${searchParams}`);
+    if (searchParams) router.push(`?${searchParams}`);
   }, [searchParams, router]);
 
   const handleToggle = (

@@ -51,7 +51,7 @@ const MobileFilterColumn = () => {
       sortOrder,
       checkedSizes
     );
-    router.push(`/all-articles?${query}`);
+    router.push(`?${query}`);
     setOpen(false); // close sheet after apply
   };
 
@@ -143,7 +143,7 @@ const MobileFilterColumn = () => {
               <AccordionTrigger className="text-base font-semibold">Category</AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col gap-2">
-                  {categories.map(({ name }) => (
+                   {[...new Set(categories.map((item)=> item.name ))].map(( name ) => (
                     <label
                       key={name}
                       className="flex items-center gap-2 text-sm cursor-pointer"
