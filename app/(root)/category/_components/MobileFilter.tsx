@@ -201,7 +201,7 @@ const MobileFilterColumn = () => {
               Clear All
             </Button>
             <SheetClose asChild>
-              <Button onClick={applyFilters} className="w-full">
+              <Button onClick={applyFilters} className="w-full text-white bg-light_blue">
                 Apply Filters
               </Button>
             </SheetClose>

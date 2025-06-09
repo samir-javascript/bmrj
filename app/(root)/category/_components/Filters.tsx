@@ -129,23 +129,24 @@ const FilterColumn = () => {
           </AccordionTrigger>
           <AccordionContent className="px-3 py-2">
             <div className="flex flex-col gap-2 max-h-[240px] overflow-y-auto">
-              {categories.map(({ name }) => (
-                <label
-                  key={name}
-                  className="flex items-center gap-2 cursor-pointer text-sm"
-                  onClick={() =>
-                    handleToggle(name, checkedCategories, setCheckedCategories)
-                  }
-                >
-                  <input
-                    type="checkbox"
-                    checked={checkedCategories.includes(name)}
-                    onChange={() => {}}
-                    className="accent-black"
-                  />
-                  <span className="capitalize">{name}</span>
-                </label>
-              ))}
+             {[...new Set(categories.map(item => item.name))].map((name) => (
+  <label
+    key={name}
+    className="flex items-center gap-2 cursor-pointer text-sm"
+    onClick={() =>
+      handleToggle(name, checkedCategories, setCheckedCategories)
+    }
+  >
+    <input
+      type="checkbox"
+      checked={checkedCategories.includes(name)}
+      onChange={() => {}}
+      className="accent-black"
+    />
+    <span className="capitalize">{name}</span>
+  </label>
+))}
+
             </div>
           </AccordionContent>
         </AccordionItem>
