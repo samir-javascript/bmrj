@@ -24,10 +24,11 @@ const page = async({params}: {params: Promise<{categoryName:string}>}) => {
              </p>
         </div>
          <CategoryImage categoryName={categoryName}  />
-         <div className='flex flex-col gap-8 lg:flex-row items-start'>
+          <h2 className='h2-bold my-7'>Notre sélection</h2>
+         <div className='flex px-5 flex-col gap-8 lg:flex-row items-start'>
           <FilterColumn />
-  <div className='px-3 flex mt-5 flex-col space-x-7'>
-            <h2 className='h2-bold mb-3'>Notre sélection</h2>
+  <div className=' flex mt-5 flex-col space-x-7'>
+           
              <div>
           {data?.products.length! > 0 ? (
            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">

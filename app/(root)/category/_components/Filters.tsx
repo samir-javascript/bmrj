@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { categories, colorsFilter, sizes } from "@/constants";
 import { useRouter } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 const FilterColumn = () => {
   const [checkedColors, setCheckedColors] = useState<string[]>([]);
@@ -79,11 +80,12 @@ const FilterColumn = () => {
   }, [searchParams, router]);
 
   return (
-    <div className="w-[191px] max-lg:hidden">
+    <div className="w-[400px] max-lg:hidden">
       <Accordion type="multiple">
         <AccordionItem value={`item 1`}>
-          <AccordionTrigger className="bg-white px-3 font-bold">
-            SIZE
+          <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
+            <p> Size</p>
+            <ChevronDown size={16} color="gray" />
           </AccordionTrigger>
           <AccordionContent className="px-3 py-1.5">
             <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
@@ -105,8 +107,9 @@ const FilterColumn = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value={`item 2`}>
-          <AccordionTrigger className="bg-white px-3 font-bold">
-            COLOR
+         <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
+            <p>Color</p>
+            <ChevronDown size={16} color="gray" />
           </AccordionTrigger>
           <AccordionContent className="py-1.5 px-3">
             <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
@@ -135,8 +138,9 @@ const FilterColumn = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value={`item 3`}>
-          <AccordionTrigger className="bg-white px-3 font-bold">
-            CATEGORY
+           <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
+            <p>Category</p>
+            <ChevronDown size={16} color="gray" />
           </AccordionTrigger>
           <AccordionContent className="px-3 py-1.5">
             <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
@@ -159,8 +163,9 @@ const FilterColumn = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value={`item 4`}>
-          <AccordionTrigger className="bg-white px-3 font-bold">
-            SORT BY
+          <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
+            <p>Sort By</p>
+            <ChevronDown size={16} color="gray" />
           </AccordionTrigger>
           <AccordionContent className="px-3 py-1.5">
             <div className="flex flex-col gap-3">
