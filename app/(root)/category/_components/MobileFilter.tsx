@@ -17,13 +17,14 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { categories, colorsFilter, sizes } from "@/constants";
+import { brands, categories, colorsFilter, sizes } from "@/constants";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const MobileFilterColumn = () => {
   const [open, setOpen] = useState(false);
   const [checkedColors, setCheckedColors] = useState<string[]>([]);
+  const [checkedBrands,setCheckedBrands] = useState<string[]>([]);
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
   const [checkedSizes, setCheckedSizes] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<string>("");
@@ -33,12 +34,14 @@ const MobileFilterColumn = () => {
   const generateSearchParams = (
     colors: string[],
     categories: string[],
+    brands: string[],
     sort: string,
     sizes: string[]
   ) => {
     const params = new URLSearchParams();
     colors.forEach((c) => params.append("color", c));
     categories.forEach((c) => params.append("category", c));
+    brands.forEach((b) => params.append("category", b));
     sizes.forEach((s) => params.append("size", s));
     if (sort) params.append("sort", sort);
     return params.toString();
@@ -48,6 +51,7 @@ const MobileFilterColumn = () => {
     const query = generateSearchParams(
       checkedColors,
       checkedCategories,
+      checkedBrands,
       sortOrder,
       checkedSizes
     );
@@ -163,7 +167,34 @@ const MobileFilterColumn = () => {
                 </div>
               </AccordionContent>
             </AccordionItem>
+ {/** BRAND */}
+         <AccordionItem value="brand">
+          <AccordionTrigger className="rounded-md px-3 py-2 bg-muted font-semibold">
+            Brand
+          </AccordionTrigger>
+          <AccordionContent className="px-3 py-2">
+            <div className="flex flex-col gap-2 max-h-[240px] overflow-y-auto">
+             {brands.map((brandName,index) => (
+  <label
+    key={index}
+    className="flex items-center gap-2 cursor-pointer text-sm"
+    onClick={() =>
+      toggle(brandName, checkedBrands, setCheckedBrands)
+    }
+  >
+    <input
+      type="checkbox"
+      checked={checkedCategories.includes(brandName)}
+      onChange={() => {}}
+      className="accent-black"
+    />
+    <span className="capitalize">{brandName}</span>
+  </label>
+))}
 
+            </div>
+          </AccordionContent>
+        </AccordionItem>
             {/* Sort Filter */}
             <AccordionItem value="sort">
               <AccordionTrigger className="text-base font-semibold">Sort By</AccordionTrigger>
