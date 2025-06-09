@@ -24,7 +24,7 @@ const page = async({params}: {params: Promise<{categoryName:string}>}) => {
              </p>
         </div>
          <CategoryImage categoryName={categoryName}  />
-          <h2 className='h2-bold my-7'>Notre sélection</h2>
+          <h2 className='h2-bold px-5 my-7'>Notre sélection</h2>
          <div className='flex px-5 flex-col gap-8 lg:flex-row items-start'>
           <FilterColumn />
   <div className=' flex mt-5 flex-col space-x-7'>

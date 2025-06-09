@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { categories, colorsFilter, sizes } from "@/constants";
 import { useRouter } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils"; // utility for conditional classNames
 
 const FilterColumn = () => {
   const [checkedColors, setCheckedColors] = useState<string[]>([]);
@@ -17,188 +17,170 @@ const FilterColumn = () => {
   const [checkedSizes, setCheckedSizes] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<string>("");
 
-  // Function to generate search parameters
-  const generateSearchParams = (colors: string[], categories: string[], sort: string,sizes: string[]) => {
+  const generateSearchParams = (
+    colors: string[],
+    categories: string[],
+    sort: string,
+    sizes: string[]
+  ) => {
     const params = new URLSearchParams();
-    colors.forEach((color) => {
-      params.append("color", color);
-    });
-    categories.forEach((category) => {
-      params.append("category", category);
-    });
-    sizes.forEach((size) => {
-       params.append("size", size)
-    })
-
-    if (sort) {
-      params.append("sort", sort);
-    }
+    colors.forEach((color) => params.append("color", color));
+    categories.forEach((category) => params.append("category", category));
+    sizes.forEach((size) => params.append("size", size));
+    if (sort) params.append("sort", sort);
     return params.toString();
   };
 
-  // State to hold the current search parameters
   const [searchParams, setSearchParams] = useState("");
   const router = useRouter();
 
-  // Effect to update searchParams whenever colors, categories, or sort order change
   useEffect(() => {
-    const paramsString = generateSearchParams(checkedColors, checkedCategories, sortOrder, checkedSizes);
-    setSearchParams(paramsString);
-  }, [checkedColors, checkedCategories, sortOrder,checkedSizes]);
-
-  const handleColorChange = (color: string) => {
-    if (checkedColors.includes(color)) {
-      setCheckedColors(checkedColors.filter((c) => c !== color));
-    } else {
-      setCheckedColors([...checkedColors, color]);
-    }
-  };
-
-  const handleCategoryChange = (category: string) => {
-    if (checkedCategories.includes(category)) {
-      setCheckedCategories(checkedCategories.filter((c) => c !== category));
-    } else {
-      setCheckedCategories([...checkedCategories, category]);
-    }
-  };
-  const handleSizeChange = (size: string) => {
-    if (checkedSizes.includes(size)) {
-      setCheckedSizes(checkedSizes.filter((s) => s !== size));
-    } else {
-      setCheckedSizes([...checkedSizes, size]);
-    }
-  };
-
-  const handleSortChange = (sort: string) => {
-    setSortOrder(sort);
-  };
+    const params = generateSearchParams(
+      checkedColors,
+      checkedCategories,
+      sortOrder,
+      checkedSizes
+    );
+    setSearchParams(params);
+  }, [checkedColors, checkedCategories, sortOrder, checkedSizes]);
 
   useEffect(() => {
-    if (searchParams) {
-      router.push(`/all-articles?${searchParams}`);
-    }
+    if (searchParams) router.push(`/all-articles?${searchParams}`);
   }, [searchParams, router]);
 
+  const handleToggle = (
+    item: string,
+    list: string[],
+    setList: (val: string[]) => void
+  ) => {
+    if (list.includes(item)) {
+      setList(list.filter((i) => i !== item));
+    } else {
+      setList([...list, item]);
+    }
+  };
+
   return (
-    <div className="w-[400px] max-lg:hidden">
-      <Accordion type="multiple">
-        <AccordionItem value={`item 1`}>
-          <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
-            <p> Size</p>
-            <ChevronDown size={16} color="gray" />
+    <aside className="w-[360px] max-lg:hidden space-y-4">
+      <Accordion type="multiple" className="space-y-3">
+        {/* SIZE */}
+        <AccordionItem value="size">
+          <AccordionTrigger className="rounded-md px-3 py-2 bg-muted font-semibold">
+            Size
           </AccordionTrigger>
-          <AccordionContent className="px-3 py-1.5">
-            <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
-              {sizes.map((item) => (
-                <div
-                  className="flex items-center border-b border-gray-300 pb-3 gap-1.5"
-                  key={item.size}
+          <AccordionContent className="px-3 py-2">
+            <div className="grid grid-cols-3 gap-3 max-h-[240px] overflow-y-auto">
+              {sizes.map(({ size }) => (
+                <label
+                  key={size}
+                  className={cn(
+                    "cursor-pointer py-1.5 px-3 text-center rounded-md border text-sm capitalize transition-all",
+                    checkedSizes.includes(size)
+                      ? "bg-black text-white border-black"
+                      : "border-gray-300 text-gray-700 hover:border-black"
+                  )}
+                  onClick={() =>
+                    handleToggle(size, checkedSizes, setCheckedSizes)
+                  }
                 >
-                  <input type="checkbox" 
-                  checked={checkedSizes.includes(item.size)}
-                  onChange={() => handleSizeChange(item.size)}
+                  {size}
+                </label>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* COLOR */}
+        <AccordionItem value="color">
+          <AccordionTrigger className="rounded-md px-3 py-2 bg-muted font-semibold">
+            Color
+          </AccordionTrigger>
+          <AccordionContent className="px-3 py-2">
+            <div className="flex flex-wrap gap-3 max-h-[240px] overflow-y-auto">
+              {colorsFilter.map(({ name, color }) => (
+                <div
+                  key={name}
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() =>
+                    handleToggle(name, checkedColors, setCheckedColors)
+                  }
+                >
+                  <div
+                    className={cn(
+                      "w-7 h-7 rounded-full border-2 transition-all",
+                      checkedColors.includes(name)
+                        ? "border-black scale-105"
+                        : "border-gray-300"
+                    )}
+                    style={{ backgroundColor: color }}
+                    title={name}
                   />
-                  <p className="whitespace-nowrap text-sm text-[#111] capitalize font-normal">
-                    {item.size}
-                  </p>
+                  <span className="text-sm capitalize">{name}</span>
                 </div>
               ))}
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value={`item 2`}>
-         <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
-            <p>Color</p>
-            <ChevronDown size={16} color="gray" />
+
+        {/* CATEGORY */}
+        <AccordionItem value="category">
+          <AccordionTrigger className="rounded-md px-3 py-2 bg-muted font-semibold">
+            Category
           </AccordionTrigger>
-          <AccordionContent className="py-1.5 px-3">
-            <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
-              {colorsFilter.map((item) => (
-                <div
-                  className="flex items-center border-b border-gray-300 pb-3 gap-1.5"
-                  key={item.color}
+          <AccordionContent className="px-3 py-2">
+            <div className="flex flex-col gap-2 max-h-[240px] overflow-y-auto">
+              {categories.map(({ name }) => (
+                <label
+                  key={name}
+                  className="flex items-center gap-2 cursor-pointer text-sm"
+                  onClick={() =>
+                    handleToggle(name, checkedCategories, setCheckedCategories)
+                  }
                 >
                   <input
                     type="checkbox"
-                    checked={checkedColors.includes(item.name)}
-                    onChange={() => handleColorChange(item.name)}
+                    checked={checkedCategories.includes(name)}
+                    onChange={() => {}}
+                    className="accent-black"
                   />
-                  <div className="flex items-center justify-center rounded-full w-[28px] h-[28px] p-[1px] border-2 border-gray-300">
-                    <div
-                      style={{ backgroundColor: item.color }}
-                      className="w-full h-full rounded-full"
-                    />
-                  </div>
-                  <p className="whitespace-nowrap text-sm text-[#111] capitalize font-normal">
-                    {item.name}
-                  </p>
-                </div>
+                  <span className="capitalize">{name}</span>
+                </label>
               ))}
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value={`item 3`}>
-           <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
-            <p>Category</p>
-            <ChevronDown size={16} color="gray" />
+
+        {/* SORT BY */}
+        <AccordionItem value="sort">
+          <AccordionTrigger className="rounded-md px-3 py-2 bg-muted font-semibold">
+            Sort By
           </AccordionTrigger>
-          <AccordionContent className="px-3 py-1.5">
-            <div className="h-[300px] overflow-y-auto flex flex-col gap-3">
-              {categories.map((item,index) => (
-                <div
-                  className="flex items-center border-b border-gray-300 pb-3 gap-1.5"
-                  key={index}
+          <AccordionContent className="px-3 py-2">
+            <div className="flex flex-col gap-2">
+              {[
+                { label: "price - low to high", value: "asc" },
+                { label: "price - high to low", value: "desc" },
+              ].map((sort) => (
+                <label
+                  key={sort.value}
+                  className={cn(
+                    "cursor-pointer px-3 py-1.5 rounded-full border text-sm text-center transition-all",
+                    sortOrder === sort.value
+                      ? "bg-black text-white border-black"
+                      : "border-gray-300 hover:border-black"
+                  )}
+                  onClick={() => setSortOrder(sort.value)}
                 >
-                  <input
-                    type="checkbox"
-                    checked={checkedCategories.includes(item.name)}
-                    onChange={() => handleCategoryChange(item.name)}
-                  />
-                  <p className="whitespace-nowrap text-sm text-[#111] capitalize font-normal">
-                    {item.name}
-                  </p>
-                </div>
+                  {sort.label}
+                </label>
               ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value={`item 4`}>
-          <AccordionTrigger className="bg-gray-100 flex items-center justify-between w-full rounded-lg px-3 font-bold">
-            <p>Sort By</p>
-            <ChevronDown size={16} color="gray" />
-          </AccordionTrigger>
-          <AccordionContent className="px-3 py-1.5">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center border-b border-gray-300 pb-3 gap-1.5">
-                <input 
-                  type="radio" 
-                  name="sort" 
-                  value="asc"
-                  checked={sortOrder === "asc"}
-                  onChange={() => handleSortChange("asc")}
-                />
-                <p className="whitespace-nowrap text-sm text-[#111] capitalize font-normal">
-                  price - low to high
-                </p>
-              </div>
-              <div className="flex items-center pb-3 gap-1.5">
-                <input 
-                  type="radio" 
-                  name="sort" 
-                  value="desc"
-                  checked={sortOrder === "desc"}
-                  onChange={() => handleSortChange("desc")}
-                />
-                <p className="whitespace-nowrap text-sm text-[#111] capitalize font-normal">
-                  price - high to low
-                </p>
-              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </aside>
   );
 };
 
 export default FilterColumn;
+
