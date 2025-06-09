@@ -531,7 +531,50 @@ export const footerCategories = [
     "Librairie",
     "Epicerie fine"
 ];
+export const colorsFilter = [{
+   name: "red",
+   color: "#EF4444",
+}, {
+   name:"yellow",
+   color:  "#F59E0B", // yellow-500
+}, {
+   name: "blue",
+   color:  "#3B82F6", // blue-500
+}, {
+  name: "light_blue",
+  color: "#00afaa"
+}, {
+    name: "gray",
+    color:  "#9CA3AF"  // gray-400
+}]
+export const sizes = [
+    {
+      size: "s (36)",
+      outOfStock: true
+    },
+    {
+      size:  "m (38)",
+      outOfStock: true
+    },
+    {
+      size:   "l (40)",
+      outOfStock: false
+    },
+    {
+      size:    "xl (42)",
+      outOfStock: false
+    },
+    {
+      size:    "2xl (44)",
+      outOfStock: false
+    },
+    {
+      size:     '3xl (46)',
+      outOfStock: false
+    },
 
+
+]
 // export const useBrands =  () => {
 //    const [isMobile, setIsMobile] = useState(false);
  

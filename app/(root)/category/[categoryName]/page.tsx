@@ -5,6 +5,7 @@ import CategoryImage from '@/components/shared/CategoryImage';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
+import FilterColumn from '../_components/Filters';
 
 const page = async({params}: {params: Promise<{categoryName:string}>}) => {
     const { categoryName} = await params;
@@ -23,7 +24,9 @@ const page = async({params}: {params: Promise<{categoryName:string}>}) => {
              </p>
         </div>
          <CategoryImage categoryName={categoryName}  />
-         <div className='px-3 flex mt-5 flex-col space-x-7'>
+         <div className='flex flex-col gap-8 lg:flex-row items-start'>
+          <FilterColumn />
+  <div className='px-3 flex mt-5 flex-col space-x-7'>
             <h2 className='h2-bold mb-3'>Notre sélection</h2>
              <div>
           {data?.products.length! > 0 ? (
@@ -42,6 +45,8 @@ const page = async({params}: {params: Promise<{categoryName:string}>}) => {
          )}
         </div>
          </div>
+         </div>
+       
     </div>
   )
 }
