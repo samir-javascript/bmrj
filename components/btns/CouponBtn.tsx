@@ -36,28 +36,47 @@ const CouponBtn = ({userId}: {
     }
   }
   return (
-    <div className="flex flex-col space-y-3">
-        <h2 className="h2-bold !text-[18px]">Do you have a coupon code ?</h2>
-        <form onSubmit={handleApplyCoupon} className="flex items-center h-[50px] py-2.5 rounded-xl border-2 border-light_blue justify-between">
-             <input value={coupon.toUpperCase()}
-              onChange={(e)=> setCoupon(e.target.value)}
-               className="flex-1 text-semibold placeholder:text-normal bg-transparent
-                text-gray-700  no-focus outline-none border-none indent-5 " type="text" name="code" id="code" placeholder="code promo" />
-             <button type="submit" disabled={!coupon}  className="bg-yellow-400 disabled:bg-gray-200 text-white rounded-lg h-auto my-[4px] px-4 text-[17px] font-medium py-2.5 ">
-                {Loading ? "Loading" : "Valider"}
-             </button>
-        </form>
-        {!error && textMessage && (
-           <p className="text-green-500 text-sm font-medium">
-             {textMessage}
-           </p>
-        )}
-         {error && !textMessage && (
-           <p className="text-red-500 text-sm font-medium">
-             {error}
-           </p>
-        )}
-    </div>
+   <div className="flex flex-col gap-4">
+  <h2 className="text-lg font-semibold text-gray-800">Do you have a coupon code?</h2>
+
+  <form
+    onSubmit={handleApplyCoupon}
+    className="relative flex items-center overflow-hidden rounded-xl border-2 border-blue-100 shadow-sm focus-within:ring-2 focus-within:ring-blue-200 transition-all"
+  >
+    <input
+      value={coupon.toUpperCase()}
+      onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+      type="text"
+      name="code"
+      id="code"
+      placeholder="Enter your promo code"
+      className="w-full px-5 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 bg-white outline-none border-none"
+    />
+
+    <button
+      type="submit"
+      disabled={!coupon}
+      className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-200 text-white text-sm font-semibold px-5 transition-all duration-200 disabled:cursor-not-allowed"
+    >
+      {Loading ? (
+        <div className="flex items-center gap-1">
+          <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+          Loading
+        </div>
+      ) : (
+        "Apply"
+      )}
+    </button>
+  </form>
+
+  {textMessage && !error && (
+    <p className="text-green-500 text-sm font-medium animate-fade-in">{textMessage}</p>
+  )}
+  {error && (
+    <p className="text-red-500 text-sm font-medium animate-fade-in">{error}</p>
+  )}
+</div>
+
   )
 }
 
