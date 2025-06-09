@@ -4,6 +4,7 @@ import { createCoupon } from "@/actions/coupon.actions"
 import { useAppDispatch, useAppSelector } from "@/hooks/user-redux"
 import {  getTotalItems } from "@/lib/store/cartSlice"
 import { FormEvent, useState } from "react"
+import { Button } from "../ui/button"
 
 const CouponBtn = ({userId}: {
   userId:string
@@ -53,10 +54,10 @@ const CouponBtn = ({userId}: {
       className="w-full px-5 py-3 text-sm font-medium text-gray-800 placeholder-gray-400 bg-white outline-none border-none"
     />
 
-    <button
+    <Button
       type="submit"
       disabled={!coupon}
-      className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-200 text-white text-sm font-semibold px-5 transition-all duration-200 disabled:cursor-not-allowed"
+      className="h-full bg-gradient-to-r   from-yellow-400 to-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-200 text-white text-sm font-semibold px-5 transition-all duration-200 disabled:cursor-not-allowed"
     >
       {Loading ? (
         <div className="flex items-center gap-1">
@@ -66,7 +67,7 @@ const CouponBtn = ({userId}: {
       ) : (
         "Apply"
       )}
-    </button>
+    </Button>
   </form>
 
   {textMessage && !error && (
