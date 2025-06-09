@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import FilterColumn from '../_components/Filters';
+import MobileFilterColumn from '../_components/MobileFilter';
 
 const page = async({params}: {params: Promise<{categoryName:string}>}) => {
     const { categoryName} = await params;
@@ -27,6 +28,7 @@ const page = async({params}: {params: Promise<{categoryName:string}>}) => {
           <h2 className='h2-bold px-5 my-7'>Notre sélection</h2>
          <div className='flex px-5 flex-col gap-8 lg:flex-row items-start'>
           <FilterColumn />
+          <MobileFilterColumn />
   <div className=' flex mt-5 flex-col space-x-7'>
            
              <div>
