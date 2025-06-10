@@ -1,60 +1,80 @@
-import { IProduct } from '@/database/models/product.model'
-import { CollectionElement } from '@/types/Elements'
-import { Heart, ShoppingCart } from 'lucide-react'
+'use client'
 
- 
+import { IProduct } from '@/database/models/product.model'
+import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
-import { hasSavedProduct } from '@/actions/collection.actions'
 import HeartCart from '../btns/HeartCart'
-// authentication;
-// cart functionality (global state management);
-// admin dashbord;
-// payment process;
-// user profile;
-const ProductCard = async({product}: {
-   product:IProduct
-}) => {
-  const hasSaved = await hasSavedProduct({productId:product._id})
-  return (
-    <div className="w-[180px] max-sm:w-[165px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
-       <div  className='w-full relative bg-gray-100 rounded-tr-lg rounded-tl-lg' >
-         <Link href={`/products/${product._id}`}>
-            <Image src={product.images[0].url}
-             className='object-contain' alt='product_image' width={170} height={170}  />
-         </Link>
-       <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
+import { hasSavedProduct } from '@/actions/collection.actions'
 
-        
-        
-       </div>
-       <div className='p-3 flex flex-col justify-between'>
-        <div>
-        <Link href={`/products/${product._id}`}>
-          <p className='line-clamp-3 text-[#555] font-medium text-[13px]
-           hover:text-light_blue hover:underline'>
-             {product.name}
-           </p>
-           </Link>
-           <p className='text-[12px] font-light text-gray-400 '>Vendu par <span className='text-light_blue font-medium '>
-             {product.brand}
-             </span></p>
+const ProductCard = async ({ product }: { product: IProduct }) => {
+  const hasSaved = await hasSavedProduct({ productId: product._id })
+
+  const discount =
+    product.prevPrice && product.prevPrice > product.price
+      ? Math.round(((product.prevPrice - product.price) / product.prevPrice) * 100)
+      : null
+
+  return (
+    <div className="group relative flex h-[340px] w-[185px] max-sm:w-[165px] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+      {/* Image & Heart */}
+      <div className="relative bg-gray-50 w-full h-[180px] flex items-center justify-center overflow-hidden">
+        <Link href={`/products/${product._id}`} className="block w-full h-full">
+          <Image
+            src={product.images[0].url}
+            alt={product.name}
+            width={185}
+            height={180}
+            className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-[1.05]"
+          />
+        </Link>
+
+        <div className="absolute top-2 right-2 z-10">
+          <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
         </div>
-         <div className="flex items-center mt-5 justify-between gap-2">
-              <div className='flex flex-col'>
-                    <p className='text-light_blue font-medium text-[14px]'>{product.price} Dh</p>
-                    <p className='text-[12px] font-light text-gray-400 line-through'>{product.prevPrice} Dh</p>
-              </div>
-              <div className='rounded-[3px] bg-[#d70073] w-[45px]  h-[18px] flex items-center justify-center px-[2px] py-[4px] '>
-                 <span className='text-white font-medium text-[14px]'>-22%</span>
-              </div>
-              <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
-                 <ShoppingCart size={20} />
-              </div>
-         </div>
-       </div>
-       
+      </div>
+
+      {/* Details */}
+      <div className="flex flex-col justify-between p-3 flex-1">
+        <div className="space-y-1">
+          <Link href={`/products/${product._id}`}>
+            <h3 className="line-clamp-2 text-[13px] font-medium text-gray-700 hover:text-light_blue transition-colors">
+              {product.name}
+            </h3>
+          </Link>
+          <p className="text-xs text-gray-400">
+            Vendu par{' '}
+            <span className="font-medium text-light_blue">{product.brand}</span>
+          </p>
+        </div>
+
+        <div className="mt-4 flex items-end justify-between">
+          {/* Pricing */}
+          <div className="space-y-[2px]">
+            <p className="text-[14px] font-semibold text-light_blue">{product.price} Dh</p>
+            {product.prevPrice && (
+              <p className="text-[12px] font-light text-gray-400 line-through">
+                {product.prevPrice} Dh
+              </p>
+            )}
+          </div>
+
+          {/* Discount */}
+          {discount && (
+            <div className="rounded-md bg-rose-500 px-2 py-[2px] text-xs font-semibold text-white">
+              -{discount}%
+            </div>
+          )}
+
+          {/* Cart Icon */}
+          <button
+            title="Add to cart"
+            className="ml-2 flex h-[35px] w-[35px] items-center justify-center rounded-full bg-light_blue text-white hover:bg-light_blue/90 transition-all"
+          >
+            <ShoppingCart size={18} />
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
