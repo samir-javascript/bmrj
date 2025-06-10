@@ -18,7 +18,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
   const {page, pageSize} = await searchParams
   const result = await getSavedProducts({page: Number(page) || 1, pageSize: Number(pageSize) || 2});
  
-  console.log(result, "result")
+ 
   return (
     <div className='flex lg:flex-row flex-col lg:px-10 max-sm:pb-5 lg:py-8 gap-5'>
       <ProfileItems />
@@ -46,7 +46,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
       
 
         <div>
-          {result.data?.collection.length! > 0 ? (
+          {result.data?.collection.length as number  > 0 ? (
            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
                      {result.data?.collection.map((product,index) => (
                          <div key={index}>

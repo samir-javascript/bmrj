@@ -1,10 +1,9 @@
 'use client'
 
 import { IProduct } from '@/database/models/product.model'
-import { Heart, ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
 import HeartCart from '../btns/HeartCart'
 import { hasSavedProduct } from '@/actions/collection.actions'
 
@@ -12,71 +11,49 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
   const hasSaved = await hasSavedProduct({ productId: product._id })
 
   return (
-    <div className="group relative w-[190px] max-sm:w-[165px] h-[340px] rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-      {/* Image + Heart */}
-      <div className="relative w-full h-[190px] bg-gray-100 rounded-t-xl overflow-hidden">
+    <div className="group w-[210px] max-sm:w-[180px] h-[360px] rounded-2xl border border-gray-200 shadow-md overflow-hidden bg-white transition hover:shadow-xl hover:scale-[1.015]">
+      <div className="relative w-full h-[200px] bg-gray-50">
         <Link href={`/products/${product._id}`}>
           <Image
             src={product.images[0].url}
             alt="product image"
-            width={180}
-            height={180}
-            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-contain p-4 transition-transform duration-300 ease-in-out group-hover:scale-105"
           />
         </Link>
-        {/* Wishlist Button */}
+
         <div className="absolute top-2 right-2 z-10">
-          <HeartCart
-            hasSaved={hasSaved.data?.saved as boolean}
-            productId={product._id}
-          />
+          <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-3 flex flex-col justify-between h-[150px]">
-        {/* Name & Brand */}
-        <div className="space-y-1">
+      <div className="p-4 flex flex-col justify-between h-[160px]">
+        <div className="flex flex-col gap-1">
           <Link href={`/products/${product._id}`}>
-            <p className="line-clamp-2 text-sm text-gray-800 font-semibold group-hover:text-light_blue transition-colors duration-200">
+            <h3 className="text-sm font-semibold text-gray-800 group-hover:text-light_blue line-clamp-2 transition">
               {product.name}
-            </p>
+            </h3>
           </Link>
-          <p className="text-[12px] text-gray-400">
+          <p className="text-xs text-gray-400">
             Vendu par{' '}
-            <span className="text-light_blue font-medium">
-              {product.brand}
-            </span>
+            <span className="text-light_blue font-medium">{product.brand}</span>
           </p>
         </div>
 
-        {/* Price & Cart */}
-        <div className="flex items-center justify-between mt-4">
-          {/* Pricing */}
-          <div className="flex flex-col">
-            <p className="text-[15px] text-light_blue font-bold">
-              {product.price} Dh
-            </p>
-            {product.prevPrice && (
-              <p className="text-[12px] text-gray-400 line-through">
-                {product.prevPrice} Dh
-              </p>
-            )}
+        <div className="mt-3 flex items-end justify-between">
+          <div>
+            <p className="text-[15px] font-bold text-light_blue">{product.price} Dh</p>
+            <p className="text-xs text-gray-400 line-through">{product.prevPrice} Dh</p>
           </div>
 
-          {/* Discount */}
-          {product.prevPrice && (
-            <div className="bg-pink-600 text-white text-[12px] px-2 py-[2px] rounded-md font-semibold">
-              {`-${Math.round(
-                ((product.prevPrice - product.price) / product.prevPrice) * 100
-              )}%`}
+          <div className="flex items-center gap-1">
+            <div className="bg-[#d70073] px-2 py-[2px] rounded-md text-white text-xs font-bold">
+              -22%
             </div>
-          )}
-
-          {/* Cart Icon */}
-          <button className="ml-2 p-2 rounded-full bg-light_blue hover:bg-light_blue/90 transition-colors text-white">
-            <ShoppingCart size={18} />
-          </button>
+            <button className="bg-light_blue hover:bg-blue-600 transition p-2 rounded-full text-white">
+              <ShoppingCart size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
