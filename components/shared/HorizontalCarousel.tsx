@@ -29,7 +29,6 @@ const HorizontalCarousel = ({title,showPagination = false, data}: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
-  const [hasSaved, setHasSaved] = useState<boolean>(false);
   const [savedProducts, setSavedProducts] = useState<{ [key: string]: boolean }>({});
 
 useEffect(() => {

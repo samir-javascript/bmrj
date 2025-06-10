@@ -33,7 +33,7 @@ const page = async({searchParams}: {searchParams: Promise<{q: string}>}) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
                      {data?.products.map((product,index) => (
                          <div key={index}>
-                               product Card
+                               <ProductCard  product={product} />
                          </div>
                      ))}
                      </div>

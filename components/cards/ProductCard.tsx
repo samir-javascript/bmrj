@@ -1,4 +1,3 @@
-'use client'
 
 import { IProduct } from '@/database/models/product.model'
 import { ShoppingCart } from 'lucide-react'
