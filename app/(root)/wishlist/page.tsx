@@ -32,7 +32,7 @@ const Page = async ({searchParams}:searchParamsProps) => {
         <div className='flex items-center mb-10 justify-between gap-3'>
           <h2 className='h2-bold max-sm:!text-[15px] whitespace-nowrap'>Ma liste d'envies</h2>
           {result.data?.collection.length! > 0 && (
-<AddAllWishlistBtn items={result.data?.collection || []} userId={session.user.id} />
+            <AddAllWishlistBtn items={result.data?.collection || []} userId={session.user.id} />
           )}
            
         </div>
