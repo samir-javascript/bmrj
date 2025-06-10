@@ -47,13 +47,19 @@ const Page = async ({searchParams}:searchParamsProps) => {
 
         <div>
           {result.data?.collection.length as number  > 0 ? (
-           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
-                     {result.data?.collection.map((product,index) => (
-                         <div key={index}>
-                               <ProductCard product={product.productId} />
-                         </div>
-                     ))}
-                     </div>
+          //  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
+          //            {result.data?.collection.map((product,index) => (
+          //                <div key={index}>
+          //                      <ProductCard product={product.productId} />
+          //                </div>
+          //            ))}
+          //            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 pt-4">
+  {result.data?.collection.map((product, index) => (
+    <ProductCard key={index} product={product.productId} />
+  ))}
+</div>
+
           ) : (
             <Alert message="Il n’y a aucun article dans votre liste d’envies." />
           )}

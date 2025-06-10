@@ -10,7 +10,7 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
   const hasSaved = await hasSavedProduct({ productId: product._id })
 
   return (
-    <div className="group w-[210px] max-sm:w-[180px] h-[360px] rounded-2xl border border-gray-200 shadow-md overflow-hidden bg-white transition hover:shadow-xl hover:scale-[1.015]">
+    <div className="group w-full  h-[360px] rounded-2xl border border-gray-200 shadow-md overflow-hidden bg-white transition hover:shadow-xl hover:scale-[1.015]">
       <div className="relative w-full h-[200px] bg-gray-50">
         <Link href={`/products/${product._id}`}>
           <Image
