@@ -1,76 +1,80 @@
 'use client'
 
 import { IProduct } from '@/database/models/product.model'
-import { ShoppingCart } from 'lucide-react'
+import { Heart, ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react'
 import HeartCart from '../btns/HeartCart'
 import { hasSavedProduct } from '@/actions/collection.actions'
 
 const ProductCard = async ({ product }: { product: IProduct }) => {
   const hasSaved = await hasSavedProduct({ productId: product._id })
 
-  const discount =
-    product.prevPrice && product.prevPrice > product.price
-      ? Math.round(((product.prevPrice - product.price) / product.prevPrice) * 100)
-      : null
-
   return (
-    <div className="group relative flex h-[340px] w-[185px] max-sm:w-[165px] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
-      {/* Image & Heart */}
-      <div className="relative bg-gray-50 w-full h-[180px] flex items-center justify-center overflow-hidden">
-        <Link href={`/products/${product._id}`} className="block w-full h-full">
+    <div className="group relative w-[190px] max-sm:w-[165px] h-[340px] rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+      {/* Image + Heart */}
+      <div className="relative w-full h-[190px] bg-gray-100 rounded-t-xl overflow-hidden">
+        <Link href={`/products/${product._id}`}>
           <Image
             src={product.images[0].url}
-            alt={product.name}
-            width={185}
+            alt="product image"
+            width={180}
             height={180}
-            className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-[1.05]"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
-
+        {/* Wishlist Button */}
         <div className="absolute top-2 right-2 z-10">
-          <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
+          <HeartCart
+            hasSaved={hasSaved.data?.saved as boolean}
+            productId={product._id}
+          />
         </div>
       </div>
 
-      {/* Details */}
-      <div className="flex flex-col justify-between p-3 flex-1">
+      {/* Content */}
+      <div className="p-3 flex flex-col justify-between h-[150px]">
+        {/* Name & Brand */}
         <div className="space-y-1">
           <Link href={`/products/${product._id}`}>
-            <h3 className="line-clamp-2 text-[13px] font-medium text-gray-700 hover:text-light_blue transition-colors">
+            <p className="line-clamp-2 text-sm text-gray-800 font-semibold group-hover:text-light_blue transition-colors duration-200">
               {product.name}
-            </h3>
+            </p>
           </Link>
-          <p className="text-xs text-gray-400">
+          <p className="text-[12px] text-gray-400">
             Vendu par{' '}
-            <span className="font-medium text-light_blue">{product.brand}</span>
+            <span className="text-light_blue font-medium">
+              {product.brand}
+            </span>
           </p>
         </div>
 
-        <div className="mt-4 flex items-end justify-between">
+        {/* Price & Cart */}
+        <div className="flex items-center justify-between mt-4">
           {/* Pricing */}
-          <div className="space-y-[2px]">
-            <p className="text-[14px] font-semibold text-light_blue">{product.price} Dh</p>
+          <div className="flex flex-col">
+            <p className="text-[15px] text-light_blue font-bold">
+              {product.price} Dh
+            </p>
             {product.prevPrice && (
-              <p className="text-[12px] font-light text-gray-400 line-through">
+              <p className="text-[12px] text-gray-400 line-through">
                 {product.prevPrice} Dh
               </p>
             )}
           </div>
 
           {/* Discount */}
-          {discount && (
-            <div className="rounded-md bg-rose-500 px-2 py-[2px] text-xs font-semibold text-white">
-              -{discount}%
+          {product.prevPrice && (
+            <div className="bg-pink-600 text-white text-[12px] px-2 py-[2px] rounded-md font-semibold">
+              {`-${Math.round(
+                ((product.prevPrice - product.price) / product.prevPrice) * 100
+              )}%`}
             </div>
           )}
 
           {/* Cart Icon */}
-          <button
-            title="Add to cart"
-            className="ml-2 flex h-[35px] w-[35px] items-center justify-center rounded-full bg-light_blue text-white hover:bg-light_blue/90 transition-all"
-          >
+          <button className="ml-2 p-2 rounded-full bg-light_blue hover:bg-light_blue/90 transition-colors text-white">
             <ShoppingCart size={18} />
           </button>
         </div>
