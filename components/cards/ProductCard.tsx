@@ -21,7 +21,7 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
           />
         </Link>
 
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute top-2 right-2 z-[50] ">
           <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
         </div>
       </div>

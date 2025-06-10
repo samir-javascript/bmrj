@@ -30,7 +30,7 @@ const page = async({searchParams}: {searchParams: Promise<{q: string}>}) => {
              <h2 className='mt-3 h2-bold text-black '>Résultats de recherche pour : "{q}"</h2>
               <div className='mt-5 w-full mx-auto'>
           {data?.products.length as number > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 w-full md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
                      {data?.products.map((product,index) => (
                          <div key={index}>
                                <ProductCard  product={product} />
