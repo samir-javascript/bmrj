@@ -104,7 +104,7 @@ useEffect(() => {
            //const { data } = use(hasSavedProduct({productId:product._id}))
               return (
                 <SwiperSlide key={product._id}>
-                <div className="w-[180px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
+                {/* <div className="w-[180px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
        <div  className='w-full relative bg-gray-100 rounded-tr-lg rounded-tl-lg' >
          <Link href={`/products/${product._id}`}>
             <Image src={product.images[0].url} loading='lazy'
@@ -139,9 +139,9 @@ useEffect(() => {
               <div className='rounded-[3px] bg-[#d70073] w-[45px]  h-[18px] flex items-center justify-center px-[2px] py-[4px] '>
                  <span className='text-white font-medium text-[14px]'>-22%</span>
               </div>
-              {/* <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
+              <div className='flex w-[35px] h-[35px] ml-[3px] items-center justify-center bg-light_blue rounded-full text-white'>
                  <ShoppingCart size={20} />
-              </div> */}
+              </div>
               <button
   onClick={() => handleAddToCart(product)}
   disabled={loadingProductId === product._id}
@@ -162,7 +162,53 @@ useEffect(() => {
          </div>
        </div>
        
-    </div>
+    </div> */}
+      <div className="group w-full  h-[360px] rounded-2xl border border-gray-200 shadow-md overflow-hidden bg-white transition hover:shadow-xl hover:scale-[1.015]">
+          <div className="relative w-full h-[200px] bg-gray-50">
+            <Link href={`/products/${product._id}`}>
+              <Image
+                src={product.images[0].url}
+                alt="product image"
+                fill
+                className="object-contain p-4 transition-transform duration-300 ease-in-out group-hover:scale-105"
+              />
+            </Link>
+    
+            
+              <HeartCart   hasSaved={savedProducts[product._id]} productId={product._id} />
+            
+          </div>
+    
+          <div className="p-4 flex flex-col justify-between h-[160px]">
+            <div className="flex flex-col gap-1">
+              <Link href={`/products/${product._id}`}>
+                <h3 className="text-sm font-semibold text-gray-800 group-hover:text-light_blue line-clamp-3 transition">
+                  {product.name}
+                </h3>
+              </Link>
+              <p className="text-xs text-gray-400 whitespace-nowrap">
+                Vendu par{' '}
+                <span className="text-light_blue font-medium">{product.brand}</span>
+              </p>
+            </div>
+    
+            <div className="mt-3 flex items-end justify-between">
+              <div>
+                <p className="text-[15px] font-bold text-light_blue whitespace-nowrap">{product.price}Dh</p>
+                <p className="text-xs text-gray-400 line-through whitespace-nowrap">{product.prevPrice}Dh</p>
+              </div>
+    
+              <div className="flex items-center gap-1">
+                <div className="bg-[#d70073] px-2 py-[2px] rounded-md text-white text-xs font-bold">
+                  -22%
+                </div>
+                <button className="bg-light_blue hover:bg-blue-600 transition p-2 rounded-full text-white">
+                  <ShoppingCart size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
               </SwiperSlide>
               )
             }
