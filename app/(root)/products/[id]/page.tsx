@@ -212,8 +212,8 @@ import CartQtyAdd from '../_components/CartQtyAdd';
 import ParseHtml from '@/components/forms/editor/ParseHtml';
 import CartQtyMobile from '../_components/CartQtyMobile';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { id } = params;
+export async function generateMetadata({ params }: { params:  Promise<{id: string}>  }): Promise<Metadata> {
+  const { id } = await params;
   const { data } = await getSingleProduct({ productId: id });
 
   return {
@@ -259,8 +259,8 @@ const ModePaiment = ({ isMobile }: { isMobile: boolean }) => (
   </div>
 );
 
-const Page = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const Page = async ({ params }: { params:  Promise<{id: string}>  }) => {
+  const { id } = await params;
   const result = await getSingleProduct({ productId: id });
   const hasSavedPromise = await hasSavedProduct({ productId: id });
 
