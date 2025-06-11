@@ -19,7 +19,7 @@ const YouMayAlsoLike = () => {
 
       <Swiper
         modules={[Navigation, Pagination]}
-        spaceBetween={16}
+        spaceBetween={8}
         slidesPerView={5}
         navigation
         pagination={{ clickable: true }}
@@ -28,7 +28,7 @@ const YouMayAlsoLike = () => {
           480: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 4 },
-          1280: { slidesPerView: 5 },
+          1280: { slidesPerView: 6 },
         }}
         className="!pb-8"
       >
@@ -37,7 +37,7 @@ const YouMayAlsoLike = () => {
             <div className="group w-[90%] sm:w-[85%] bg-white rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.03] hover:shadow-lg">
               <div className="aspect-[4/5] overflow-hidden">
                 <img
-                  src={product.image}
+                  src={"https://www.marjanemall.ma/media/catalog/product/cache/2d24969db123d312c3d8c8732be47ef4/_/p/_pdt2_3_7_1_1_700x700_cer3337875597371_1.jpg"}
                   alt={product.name}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
