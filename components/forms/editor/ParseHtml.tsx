@@ -10,7 +10,7 @@ Code.theme = {
 
 const ParseHtml = ({ data }: { data: string }) => {
   return (
-    <section className='prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none break-words text-[#222] dark:text-[#ddd] leading-relaxed'>
+    <section className='prose prose-sm sm:prose-base  dark:prose-invert max-w-none break-words text-[#333] dark:text-[#ddd] leading-relaxed'>
       <MDXRemote
         source={data}
         components={{
@@ -18,7 +18,7 @@ const ParseHtml = ({ data }: { data: string }) => {
             <div className='my-4 overflow-auto rounded-lg shadow-md bg-white dark:bg-[#1e1e1e]'>
               <Code
                 {...props}
-                className='!p-4 !text-sm !font-mono !leading-snug'
+                className='!p-4 !text-sm  !leading-snug'
               />
             </div>
           ),
