@@ -231,6 +231,7 @@ export async function getSuggestionResult(
           name: 1,
           price: 1,
           prevPrice: 1,
+          brand: 1,
           images: 1,
           description: 1,
           category: 1,
