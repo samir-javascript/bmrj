@@ -86,7 +86,7 @@ useEffect(() => {
           </h2>
           <Swiper
             modules={[Navigation, Pagination]}
-            spaceBetween={1}
+            spaceBetween={4}
 
             slidesPerView={6.5}
              pagination={showPagination}
