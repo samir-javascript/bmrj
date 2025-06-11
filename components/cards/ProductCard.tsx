@@ -29,7 +29,7 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
       <div className="p-4 flex flex-col justify-between h-[160px]">
         <div className="flex flex-col gap-1">
           <Link href={`/products/${product._id}`}>
-            <h3 className="text-sm font-semibold text-gray-800 group-hover:text-light_blue line-clamp-2 transition">
+            <h3 className="text-sm font-semibold text-gray-800 group-hover:text-light_blue line-clamp-3 transition">
               {product.name}
             </h3>
           </Link>
@@ -41,8 +41,8 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-[15px] font-bold text-light_blue">{product.price} Dh</p>
-            <p className="text-xs text-gray-400 line-through">{product.prevPrice} Dh</p>
+            <p className="text-[15px] font-bold text-light_blue whitespace-nowrap">{product.price}Dh</p>
+            <p className="text-xs text-gray-400 line-through whitespace-nowrap">{product.prevPrice}Dh</p>
           </div>
 
           <div className="flex items-center gap-1">
