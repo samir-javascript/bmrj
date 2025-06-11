@@ -21,9 +21,9 @@ const ProductCard = async ({ product }: { product: IProduct }) => {
           />
         </Link>
 
-        <div className="absolute top-2 right-2 z-[50] ">
+        
           <HeartCart hasSaved={hasSaved.data?.saved as boolean} productId={product._id} />
-        </div>
+        
       </div>
 
       <div className="p-4 flex flex-col justify-between h-[160px]">

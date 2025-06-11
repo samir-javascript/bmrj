@@ -48,7 +48,7 @@ const HeartCart = ({productId, hasSaved}:{productId:string, hasSaved:boolean}) =
    
   return (  
      <div onClick={handleToggleSaveProduct} className="absolute w-[35px] h-[35px]
-      right-0 bottom-0 m-3 bg-white rounded-full flex items-center justify-center ">
+      right-0 bottom-0 m-3 z-[1000] bg-white rounded-full flex items-center justify-center ">
          {loading  && (
           <LoadingAppState />
          )}
