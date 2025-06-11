@@ -218,13 +218,13 @@ useEffect(() => {
     loadingProductId === product._id ? 'opacity-60 pointer-events-none' : ''
   }`}
 >
-  <div
+  {/* <div
     className={`cart-spinner-wrapper ${
       loadingProductId === product._id ? 'loading' : ''
     }`}
   >
     <ShoppingCart size={20} />
-  </div>
+  </div> */}
 </button>
 
          </div>
