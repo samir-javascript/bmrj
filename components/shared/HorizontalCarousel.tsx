@@ -171,7 +171,7 @@ useEffect(() => {
             
              ) : products.map((product,index) => (
               <SwiperSlide key={index}>
-                <div className="w-[180px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
+                {/* <div className="w-[180px] h-[330px] shadow-sm flex flex-col border rounded-lg border-gray-200 ">
        <div  className='w-full relative bg-gray-100 rounded-tr-lg rounded-tl-lg' >
          <Link href={`/products/${product._id}`}>
             <Image src="/mi.png" className='object-contain' alt='product_image' width={170} height={170} />
@@ -209,7 +209,13 @@ useEffect(() => {
          </div>
        </div>
        
-    </div>
+    </div> */}
+   {/* // @ts-ignore */}
+    <ProductCard product={{
+      ...product,
+      // @ts-ignore
+      reviews: product.reviews && product.reviews.length > 0 ? [product.reviews[0]] : [/* provide a default IReview object if needed */]
+    }} />
               </SwiperSlide>
             ))}
           </Swiper>
