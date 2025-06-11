@@ -22,7 +22,7 @@ export interface IProduct  {
     countInStock: number;
     numReviews: number;
     rating: number;
-    reviews: [IReview];
+    reviews: IReview[];
 }
 const reviewsSchema = new mongoose.Schema<IReview>({
    user: {

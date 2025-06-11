@@ -9,6 +9,7 @@ import { Tv, ShoppingCart,ThumbsUp , UserRound, ChartNoAxesCombined,
       import { PiLineSegmentsFill } from "react-icons/pi";
 import { ROUTES } from "./routes"
 import { useEffect, useState } from "react";
+import { IReview } from "@/database/models/product.model";
 
 export const categories = [
     {
@@ -367,8 +368,9 @@ export const sidebarLinks = [
   
 export const products = [
     {
+      _id: "kfk",
         brand: "Nike",
-        _id: "kkjdkfjdk",
+       
         description: "Compleu din satin albastru cu elastic in talie si maneci bufante Compleu din satin albastru cu elastic in talie si maneci bufante",
         prevPrice: 280.00,
         position: "top",
@@ -377,15 +379,7 @@ export const products = [
         countInStock: 5,
         numReviews: 0,
         rating: 0,
-      reviews: [
-  {
-    user: "54545454dfdf",
-    name: "soufiane",
-    title: "amazing product",
-    comment: "very helpful saves time and money",
-    rating: 5
-  }
-],
+        reviews: [] as IReview[],
         name: "Compleu din satin albastru cu elastic in talie si maneci bufante",
         image: "https://photos.starshiners.com/112731/compleu-din-satin-albastru-cu-elastic-in-talie-si-maneci-bufante-S062223-3-724916.jpg",
         price: 152.00
