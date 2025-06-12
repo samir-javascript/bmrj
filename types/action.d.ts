@@ -282,6 +282,13 @@ export interface GetSearchInputResultsParams {
   query: string;
   limit : number;
 }
+export interface AddReviewParams {
+  user:string,
+   comment:string,
+   productId: string,
+    title: string,
+     rating: number
+}
 export interface  GetProductsByCategoryParams  {
   categoryName:string
 }

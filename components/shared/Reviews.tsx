@@ -5,7 +5,7 @@ import { Button } from "../ui/button"
 import ReviewModal from "../modals/ReviewModal"
 import { IProduct } from "@/database/models/product.model"
 
-const Reviews = ({ product }: { product: IProduct }) => {
+const Reviews = ({ product, userId }: { product: IProduct, userId:string }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   return (
@@ -81,7 +81,7 @@ const Reviews = ({ product }: { product: IProduct }) => {
       )}
 
       {/* Modal */}
-      <ReviewModal open={open} setOpen={setOpen} product={product} />
+      <ReviewModal userId={userId} open={open} setOpen={setOpen} product={product} />
     </div>
   )
 }

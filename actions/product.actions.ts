@@ -8,7 +8,7 @@ import cloudinary from "@/lib/cloudinary"
 import { action } from "@/lib/handlers/action"
 import handleError from "@/lib/handlers/error"
 import { DeleteProductValidationSchema, EditProductSchema, PaginatedSchemaValidation, ProductSchemaValidation, ReviewSchemaValidation, SignleProductSchema } from "@/lib/zod"
-import { DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams } from "@/types/action"
+import { AddReviewParams, DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams } from "@/types/action"
 import { FilterQuery, ObjectId } from "mongoose"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
@@ -248,17 +248,10 @@ export async function getSuggestionResult(
     return handleError(error) as ErrorResponse
   }
 }
-export async function addProductReview(prevState:any,formData:FormData): Promise<ActionResponse> {
+export async function addProductReview(params:AddReviewParams): Promise<ActionResponse> {
 
-  const rawData: ReviewParams = {
-    user: formData.get('userId') as string,
-    title: formData.get('title') as string,
-    comment: formData.get('comment') as string,
-    rating: formData.get('rating') as unknown as string,
-    productId: formData.get('productId') as string
-  }
-
-  const validatedResult = await action({params:rawData, schema: ReviewSchemaValidation,authorize:true })
+ 
+  const validatedResult = await action({params, schema: ReviewSchemaValidation,authorize:true })
   
    if(validatedResult instanceof Error) {
       return handleError(validatedResult) as ErrorResponse

@@ -5,6 +5,7 @@ export interface IReview  {
    title: string;
    comment: string;
    rating: number;
+   isVerified:boolean
 }
 export interface IProduct  {
    _id:string;
@@ -47,6 +48,10 @@ const reviewsSchema = new mongoose.Schema<IReview>({
       min: 1,
       max: 5,
       required: true
+   },
+   isVerified: {
+      type: Boolean,
+      default: false
    }
 }, {timestamps: true})
 const ProductSchema = new mongoose.Schema<IProduct> ({

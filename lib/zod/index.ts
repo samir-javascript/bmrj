@@ -326,7 +326,7 @@ export const ReviewSchemaValidation = z.object({
   user: z.string().min(1, { message: "user ID is required" }),
   title: z.string().min(1, { message: "title is required" }),
   comment: z.string().min(1, { message: "comment is required" }),
-  rating: z.string().min(1).max(5),
+  rating: z.number().min(1).max(5),
   productId: z.string().min(1, { message: "PRODUCT IS IS REQUIRED" }),
 });
 
