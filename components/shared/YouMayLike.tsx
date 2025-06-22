@@ -9,6 +9,8 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 
 import { products } from "@/constants"
+import ProductCard from "../cards/ProductCard"
+import { IProduct } from "@/database/models/product.model"
 
 const YouMayAlsoLike = () => {
   return (
@@ -33,7 +35,7 @@ const YouMayAlsoLike = () => {
       >
         {products.map((product, index) => (
           <SwiperSlide key={index} className="flex justify-center">
-            <div className="group w-[90%] sm:w-[85%] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+            {/* <div className="group w-[90%] sm:w-[85%] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
               <div className="relative overflow-hidden aspect-[4/5]">
                 <img
                   src={product.image || "https://via.placeholder.com/300x400.png?text=Product"}
@@ -50,7 +52,8 @@ const YouMayAlsoLike = () => {
                   {product.price} Dh
                 </p>
               </div>
-            </div>
+            </div> */}
+            <ProductCard product={product as unknown as IProduct} />
           </SwiperSlide>
         ))}
       </Swiper>

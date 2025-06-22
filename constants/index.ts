@@ -368,14 +368,14 @@ export const sidebarLinks = [
   
 export const products = [
     {
-      _id: "kfk",
+        _id: "kfk",
         brand: "Nike",
        
         description: "Compleu din satin albastru cu elastic in talie si maneci bufante Compleu din satin albastru cu elastic in talie si maneci bufante",
         prevPrice: 280.00,
         position: "top",
         category: "phone",
-        images: [],
+        images: ["https://www.marjanemall.ma/media/catalog/product/cache/2d24969db123d312c3d8c8732be47ef4/_/p/_pdt2_0_6_1_1_700x700_AAADW21061_2.jpg"],
         countInStock: 5,
         numReviews: 0,
         rating: 0,
