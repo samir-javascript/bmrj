@@ -1,6 +1,6 @@
 
 import { hasSavedProduct } from '@/actions/collection.actions';
-import { getSingleProduct } from '@/actions/product.actions';
+import { getProducts, getSingleProduct } from '@/actions/product.actions';
 import SaveProductHeart from '@/components/btns/SaveProductHeart';
 import ProductImages from '@/components/shared/ProductImages';
 import Reviews from '@/components/shared/Reviews';
@@ -65,6 +65,7 @@ const Page = async ({ params }: { params:  Promise<{id: string}>  }) => {
   const { id } = await params;
   const result = await getSingleProduct({ productId: id });
   const hasSavedPromise = await hasSavedProduct({ productId: id });
+  const Res = await getProducts({})
   const user = await auth()
   const product = result.data?.product;
   if (!product) return notFound();
@@ -170,7 +171,7 @@ const Page = async ({ params }: { params:  Promise<{id: string}>  }) => {
       </div>
 
       <div className="h-[10px] w-full bg-gray-100 mt-5" />
-      <YouMayLike />
+      <YouMayLike products={Res.data?.products || []} />
       <div className="h-[10px] w-full bg-gray-100 mt-5" />
       <Reviews userId={user?.user.id || ""} product={product} />
     </>

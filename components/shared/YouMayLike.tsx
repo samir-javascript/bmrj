@@ -8,11 +8,13 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-import { products } from "@/constants"
+
 import ProductCard from "../cards/ProductCard"
 import { IProduct } from "@/database/models/product.model"
 
-const YouMayAlsoLike = () => {
+const YouMayAlsoLike = ({products}: {
+  products: IProduct[]
+}) => {
   return (
     <section className="w-full bg-gradient-to-b from-[#faf7f4] to-[#f3eee9] py-12 px-4 md:px-12">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10 tracking-tight">
@@ -53,7 +55,7 @@ const YouMayAlsoLike = () => {
                 </p>
               </div>
             </div> */}
-            <ProductCard product={product as unknown as IProduct} />
+            <ProductCard product={product} />
           </SwiperSlide>
         ))}
       </Swiper>
