@@ -289,6 +289,11 @@ export interface AddReviewParams {
     title: string,
      rating: number
 }
+export interface ValidateCommentParams {
+  userId: string;
+  productId: string
+  reviewId:string
+}
 export interface  GetProductsByCategoryParams  {
   categoryName:string
 }

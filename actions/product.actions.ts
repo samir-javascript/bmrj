@@ -1,14 +1,17 @@
 "use server"
+import { ROUTES } from "@/constants/routes"
 // TODO: in edit or delete product delete them also from cloudinary;
 import connectToDb from "@/database/connect"
+import Order from "@/database/models/order.model"
 import Product, { IProduct, IReview } from "@/database/models/product.model"
 import User, { IUser } from "@/database/models/user.model"
 import { cache } from "@/lib/cache"
 import cloudinary from "@/lib/cloudinary"
 import { action } from "@/lib/handlers/action"
 import handleError from "@/lib/handlers/error"
-import { DeleteProductValidationSchema, EditProductSchema, PaginatedSchemaValidation, ProductSchemaValidation, ReviewSchemaValidation, SignleProductSchema } from "@/lib/zod"
-import { AddReviewParams, DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams } from "@/types/action"
+import { UnAuthorizedError } from "@/lib/http-errors"
+import { DeleteProductValidationSchema, EditProductSchema, PaginatedSchemaValidation, ProductSchemaValidation, ReviewSchemaValidation, SignleProductSchema, ValidateCommentSchema } from "@/lib/zod"
+import { AddReviewParams, DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams, ValidateCommentParams } from "@/types/action"
 import { FilterQuery, ObjectId } from "mongoose"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
@@ -291,6 +294,41 @@ export async function addProductReview(params:AddReviewParams): Promise<ActionRe
        console.log(error)
         return handleError(error) as ErrorResponse
     }
+}
+
+export async function validateComment(params:ValidateCommentParams): Promise<ActionResponse> {
+  const validatedResult = await action({params,schema:ValidateCommentSchema,authorize: true})
+   if(validatedResult instanceof Error) {
+     return handleError(validatedResult) as ErrorResponse
+   }
+   const { userId, productId, reviewId } = params;
+   const session = validatedResult.session?.user.id;
+   if(!session) throw new UnAuthorizedError()
+  try {
+      const isAdminUser = await User.findById(session) as IUser;
+      if(!isAdminUser.isAdmin) throw new Error("UNAUTHORIZED, Only admin users can perform this action")
+      const product = await Product.findById(productId) 
+      if(!product) throw new Error("Product not found")
+        const review = product.reviews.find((r:IReview) => r._id.toString() === reviewId);
+
+        if(!review) throw new Error('review not found')
+        const hasPurchased = await Order.exists({
+          user: userId,
+          orderStatus: "delivered",
+          orderItems: { $elemMatch: {productId: productId}}
+        })
+        if(!hasPurchased) throw new Error("User has not purchased this product. Cannot verify review")
+          review.isVerified = true;
+        await product.save()
+        revalidatePath(ROUTES.products)
+        return {
+          success: true,
+          message: "review has been successfuly verified"
+        }
+      
+  } catch (error) {
+     return handleError(error) as ErrorResponse
+  }
 }
 
 export async function getProductsByCategory(

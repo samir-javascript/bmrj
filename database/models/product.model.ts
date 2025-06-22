@@ -1,11 +1,13 @@
 import mongoose, { model, models, Schema } from "mongoose";
 export interface IReview  {
+   _id:string;
    user:string | Schema.Types.ObjectId;
    name:string;
    title: string;
    comment: string;
    rating: number;
-   isVerified:boolean
+   isVerified:boolean;
+   createdAt: Date
 }
 export interface IProduct  {
    _id:string;
