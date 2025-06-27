@@ -10,6 +10,7 @@ import cloudinary from "@/lib/cloudinary"
 import { action } from "@/lib/handlers/action"
 import handleError from "@/lib/handlers/error"
 import { UnAuthorizedError } from "@/lib/http-errors"
+import redis from "@/lib/redis"
 import { DeleteProductValidationSchema, EditProductSchema, PaginatedSchemaValidation, ProductSchemaValidation, ReviewSchemaValidation, SignleProductSchema, ValidateCommentSchema } from "@/lib/zod"
 import { AddReviewParams, DeleteProductParams, EditProductParams, GetProductsByCategoryParams, GetSearchInputResultsParams, GetSingleProductParams, PaginatedSchemaParams, ProductParams, ReviewParams, ValidateCommentParams } from "@/types/action"
 import { FilterQuery, ObjectId } from "mongoose"
@@ -183,22 +184,64 @@ export async function getProductByIdAdmin(params:GetSingleProductParams): Promis
       return handleError(error) as ErrorResponse;
    }
 }
-export async function getSingleProduct(params:GetSingleProductParams): Promise<ActionResponse<{product:IProduct}>> {
-  const validatedResult = await action({params,schema:SignleProductSchema})
-  if(validatedResult instanceof Error) {
-     return handleError(validatedResult) as ErrorResponse;
+// export async function getSingleProduct(params:GetSingleProductParams): Promise<ActionResponse<{product:IProduct}>> {
+//   const validatedResult = await action({params,schema:SignleProductSchema})
+//   if(validatedResult instanceof Error) {
+//      return handleError(validatedResult) as ErrorResponse;
+//   }
+//    const {productId} = validatedResult.params!;
+//   try {
+//      await connectToDb()
+//      const product = await Product.findById(productId)
+//      if(!product) throw new Error('Product Not Found')
+//         return {
+//           success: true,
+//           data: {product: JSON.parse(JSON.stringify(product))}
+//         }
+//   } catch (error) {
+//      return handleError(error) as ErrorResponse;
+//   }
+// }
+
+
+export async function getSingleProduct(
+  params: GetSingleProductParams
+): Promise<ActionResponse<{ product: IProduct }>> {
+  const validatedResult = await action({ params, schema: SignleProductSchema })
+
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse
   }
-   const {productId} = validatedResult.params!;
+
+  const { productId } = validatedResult.params!
+  const cacheKey = `product:${productId}`
+
   try {
-     await connectToDb()
-     const product = await Product.findById(productId)
-     if(!product) throw new Error('Product Not Found')
-        return {
-          success: true,
-          data: {product: JSON.parse(JSON.stringify(product))}
-        }
+    await connectToDb()
+
+    // 1. Try Redis first
+    const cached = await redis.get(cacheKey)
+    if (cached) {
+      const product = JSON.parse(cached)
+      return { success: true, data: { product } }
+    }
+
+    // 2. Fallback to DB
+    const product = await Product.findById(productId)
+    if (!product) throw new Error('Product Not Found')
+
+    const serializedProduct = JSON.stringify(product)
+
+    // 3. Cache it in Redis for 1 hour
+    await redis.set(cacheKey, serializedProduct, { EX: 3600 })
+
+    return {
+      success: true,
+      data: { product: JSON.parse(serializedProduct) }
+    }
+
   } catch (error) {
-     return handleError(error) as ErrorResponse;
+    return handleError(error) as ErrorResponse
   }
 }
 
