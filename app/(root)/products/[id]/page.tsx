@@ -171,7 +171,7 @@ const Page = async ({ params }: { params:  Promise<{id: string}>  }) => {
       </div>
 
       <div className="h-[10px] w-full bg-gray-100 mt-5" />
-      <YouMayLike products={Res.data?.products || []} />
+      {/* <YouMayLike products={Res.data?.products || []} /> */}
       <div className="h-[10px] w-full bg-gray-100 mt-5" />
       <Reviews userId={user?.user.id || ""} product={product} />
     </>
