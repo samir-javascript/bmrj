@@ -263,6 +263,11 @@ export async function SendResetPasswordCode(email:string): Promise<ActionRespons
     //   userId: user._id,
     //   expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
     // })
+    await ResetToken.create({
+       userId: user._id,
+       expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
+       resetCode
+    })
      sendSetPasswordCode(email,resetCode)
      return {
       success: true,
