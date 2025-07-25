@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage
 } from '../ui/form'
-import { SendSetPasswordCode } from '@/actions/user.actions'
+
 import { SendResetPasswordCode } from '@/actions/auth.actions'
 import { OptVerification } from '../shared/OptVerification'
 import { useToast } from '@/hooks/use-toast'
