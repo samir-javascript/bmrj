@@ -13,7 +13,8 @@ import User, { IUser } from "@/database/models/user.model";
 import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, UnAuthorizedError } from "@/lib/http-errors";
-import { sendSetPasswordVerificationCode } from "@/lib/nodemailer";
+import { sendSetPasswordCode } from "@/lib/nodemailer";
+
 import { DeleteSelectedUsersSchema, DeleteUserValidationSchema, editProfileSchema, GetSetPasswordCodeSchema, GetUserInfoSchema, GetUserWithShippingSchema, PaginatedSchemaValidation, UpdateUserDetailsSchema } from "@/lib/zod";
 import { DeleteSelectedUsersParams, DeleteUserParams, EditProfileParams, EditUserProfileByAdmin, GetUserInfoParams, GetUserWithShippingParams, IUserWithShipping, PaginatedSchemaParams, VerifyCodeAndSetPasswordParams } from "@/types/action";
 import { Order as OrderType } from "@/types/Elements";
@@ -184,7 +185,7 @@ export async function SendSetPasswordCode(): Promise<ActionResponse> {
     await tokenDoc.save();
 
     // Example: Send token to user's email
-    await sendSetPasswordVerificationCode(session.user.email as string,plainToken);
+    await sendSetPasswordCode(session.user.email as string,plainToken);
 
     return {
       success: true,
