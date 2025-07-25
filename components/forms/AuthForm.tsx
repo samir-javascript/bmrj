@@ -312,7 +312,7 @@ const AuthForm = () => {
                         type={fieldName === "password" ? "password" : "text"}
                         placeholder={`Enter your ${fieldName}`}
                         disabled={isSubmitting}
-                        className="admin-input no-focus"
+                        className="admin-input !text-black no-focus"
                       />
                     </FormControl>
                     <FormMessage className="text-sm text-red-500" />
