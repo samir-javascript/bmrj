@@ -16,9 +16,10 @@ import {
   FormMessage
 } from '../ui/form'
 
-import { SendResetPasswordCode } from '@/actions/auth.actions'
+import { SendResetPasswordCode, VerifyResetPasswordCode } from '@/actions/auth.actions'
 import { OptVerification } from '../shared/OptVerification'
 import { useToast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 const ResetPasswordForm = () => {
   const form = useForm<z.infer<typeof SendResetPasswordSchema>>({
@@ -30,6 +31,7 @@ const ResetPasswordForm = () => {
 
   const isSubmitting = form.formState.isSubmitting
   const [open,setOpen] = useState<boolean>(false)
+  const router = useRouter()
   const [error,setError] = useState("")
   const {toast} = useToast()
   async function onSubmit(values: z.infer<typeof SendResetPasswordSchema>) {
@@ -56,7 +58,31 @@ const ResetPasswordForm = () => {
       console.log(error)
     }
   }
-
+  const [value,setValue] = useState("")
+  const [isLoading,setIsLoading] = useState(false)
+  const handleVerifyResetPasswordCode = async()=>  {
+    setIsLoading(true)
+    try {
+        // CALL YOUR API...
+        const { success, error } = await VerifyResetPasswordCode(value)
+        if(error) {
+           alert(error.message)
+           return
+        }else if(success) {
+           setOpen(false)
+           router.replace("/reset-password")
+           toast({
+             title: "Success",
+             description: "Reset Code has been verified successfuly"
+           })
+           return
+        }
+    } catch (error) {
+        console.log(error)
+    }finally {
+       setIsLoading(false)
+    }
+  }
   return (
     <Form {...form}  >
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-1 w-full flex-col gap-5">
@@ -88,7 +114,13 @@ const ResetPasswordForm = () => {
         Reset your password
       </Button>
       </form>
-     <OptVerification open={open} setOpen={setOpen} />
+     <OptVerification 
+     value={value}
+     setValue={setValue}
+     isLoading={isLoading}
+      handleSubmit={handleVerifyResetPasswordCode}
+      open={open}
+      setOpen={setOpen} />
     </Form>
   )
 }

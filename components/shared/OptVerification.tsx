@@ -23,41 +23,30 @@ import { ROUTES } from "@/constants/routes";
 export function OptVerification({
   open,
   setOpen,
+  handleSubmit,
+  isLoading,
+  value,
+  setValue
 }: {
   open: boolean;
   setOpen: (value: boolean) => void;
+  handleSubmit: () => Promise<void>;
+  value:string;
+  setValue: (v:string)=> void;
+  isLoading:boolean
+
 }) {
   const router = useRouter();
-  const [value, setValue] = useState("");
+ 
   const { toast } = useToast();
-  const [isLoading, setLoading] = useState(false);
+ 
   const [error, setError] = useState<string | null>(null);
 
   const handleOtpChange = (val: string) => {
     setValue(val.replace(/\D/g, ""));
   };
 
-  const handleEmailVerification = async () => {
-    setLoading(true);
-    try {
-      const { success, error } = await VerifyEmail({ token: value });
-      if (error) {
-        setError(error.message);
-        alert(error.message)
-        return;
-      }
-      if (success) {
-        toast({ title: "Succès", description: "Email vérifié avec succès." });
-        setOpen(false);
-        setValue("");
-        router.push(ROUTES.signin);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const slotClasses =
     "mx-1 sm:mx-2 rounded-lg border border-gray-300 w-12 sm:w-[60px] text-xl sm:text-2xl font-medium h-12 sm:h-[60px]";
@@ -102,7 +91,7 @@ export function OptVerification({
         <DialogFooter className="mt-6 border-t border-gray-200 pt-4">
           <div className="flex flex-col w-full gap-3">
             <Button
-              onClick={handleEmailVerification}
+              onClick={handleSubmit}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
               disabled={isLoading || value.length !== 6}
               type="button"

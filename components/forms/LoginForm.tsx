@@ -19,7 +19,7 @@ import Link from "next/link"
 import { OptVerification } from "../shared/OptVerification"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signInWithCredentials } from "@/actions/auth.actions"
+import { signInWithCredentials, VerifyEmail } from "@/actions/auth.actions"
 import AuthFormBtns from "../btns/AuthFormBtns"
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
@@ -86,12 +86,40 @@ const LoginForm = () => {
       console.log(error)
     }
   }
-
+ const [value,setValue] = useState("")
+  const [isLoading, setLoading] = useState(false);
+  const handleEmailVerification = async () => {
+      setLoading(true);
+      try {
+        const { success, error } = await VerifyEmail({ token: value });
+        if (error) {
+          setError(error.message);
+          alert(error.message)
+          return;
+        }
+        if (success) {
+          toast({ title: "Succès", description: "Email vérifié avec succès." });
+          setOpenOpt(false);
+          setValue("");
+          router.push(ROUTES.signin);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
   return (
     <div className="w-full max-w-md mx-auto mt-10 px-6 py-8 bg-white/5 rounded-2xl shadow-lg backdrop-blur-sm border border-white/10">
       <h2 className="text-2xl font-bold text-center text-white mb-6">Welcome Back</h2>
 
-      {verificationError && <OptVerification open={openOpt} setOpen={setOpenOpt} />}
+      {verificationError && <OptVerification
+       value={value}
+       isLoading={isLoading}
+       setValue={setValue}
+       handleSubmit={handleEmailVerification}
+       open={openOpt}
+       setOpen={setOpenOpt} />}
       {error && <AlertMessage isAuth message={error} variant="destructive" />}
 
       <Form {...form}>

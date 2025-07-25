@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { SignUpValidationSchema } from "@/lib/zod"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signUpWithCredentials } from "@/actions/auth.actions"
+import { signUpWithCredentials, VerifyEmail } from "@/actions/auth.actions"
 import { useEffect, useState } from "react"
 import { OptVerification } from "../shared/OptVerification"
 import AuthFormBtns from "../btns/AuthFormBtns"
@@ -74,7 +74,29 @@ const AuthForm = () => {
       console.error(error)
     }
   }
-
+  const [value,setValue] = useState("")
+  const [isLoading, setLoading] = useState(false);
+const handleEmailVerification = async () => {
+    setLoading(true);
+    try {
+      const { success, error } = await VerifyEmail({ token: value });
+      if (error) {
+        setError(error.message);
+        alert(error.message)
+        return;
+      }
+      if (success) {
+        toast({ title: "Succès", description: "Email vérifié avec succès." });
+        setOpenOpt(false);
+        setValue("");
+        router.push(ROUTES.signin);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="w-full max-w-md mx-auto mt-10 px-6 py-8 bg-white/5 rounded-2xl shadow-lg backdrop-blur-sm border border-white/10">
@@ -151,7 +173,13 @@ const AuthForm = () => {
         <div className="flex-1 h-px bg-white/20" />
       </div>
       <AuthFormBtns />
-      <OptVerification open={openOpt} setOpen={setOpenOpt} />
+      <OptVerification
+       value={value}
+       isLoading={isLoading}
+       setValue={setValue}
+       handleSubmit={handleEmailVerification}
+       open={openOpt}
+       setOpen={setOpenOpt} />
  </>
   )
 }

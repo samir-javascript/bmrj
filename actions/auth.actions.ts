@@ -11,13 +11,14 @@ import Token, { IToken } from "@/database/models/token.model";
 import { ForbiddenError } from "@/lib/http-errors";
 import handleError from "@/lib/handlers/error";
 import { action } from "@/lib/handlers/action";
-import { EmailVerificationValidationSchema, LoginValidationSchema, SendResetPasswordSchema, SignUpValidationSchema } from "@/lib/zod";
+import { EmailVerificationValidationSchema, LoginValidationSchema, ResetPasswordVerificationValidationSchema, SendResetPasswordSchema, SignUpValidationSchema } from "@/lib/zod";
 import { sendSetPasswordCode, sendVerificationEmail } from "@/lib/nodemailer";
 import connectToDb from "@/database/connect";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import mongoose from "mongoose";
-import ResetCode from "@/database/models/resetCode";
+import ResetCode, { IResetCode } from "@/database/models/resetCode";
+import { redirect } from "next/navigation";
 
 
 
@@ -243,7 +244,45 @@ export async function VerifyEmail(params: EmailVerificationParams): Promise<Acti
     return handleError(error) as ErrorResponse;
   }
 }
+export async function VerifyResetPasswordCode(code: string): Promise<ActionResponse> {
+  const validatedResult = await action({
+    params: { code },
+    schema: ResetPasswordVerificationValidationSchema,
+  });
 
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  await connectToDb();
+
+  try {
+    const candidates = await ResetCode.find({
+      expiresAt: { $gt: new Date() },
+    });
+
+    let matchedCode = null;
+
+    for (const candidate of candidates) {
+      const isMatch = await bcrypt.compare(code, candidate.code);
+      if (isMatch) {
+        matchedCode = candidate;
+        break;
+      }
+    }
+
+    if (!matchedCode) {
+      throw new ForbiddenError("This reset code is invalid or has expired.");
+    }
+
+    return {
+      success: true,
+      message: "Code verified successfully.",
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
 export async function SendResetPasswordCode(email: string): Promise<ActionResponse> {
   const validatedResult = await action({ params: { email }, schema: SendResetPasswordSchema });
   if (validatedResult instanceof Error) {
@@ -260,7 +299,7 @@ export async function SendResetPasswordCode(email: string): Promise<ActionRespon
     await ResetCode.deleteMany({ userId: user._id });
 
     // Generate and hash 4-digit reset code
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
+   const code = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedCode = await bcrypt.hash(code, 10);
 
     // Save code to DB with expiration
