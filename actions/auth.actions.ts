@@ -17,8 +17,9 @@ import connectToDb from "@/database/connect";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import mongoose from "mongoose";
+import ResetCode from "@/database/models/resetCode";
 
-import ResetToken, { IResetToken } from "@/database/models/ResetPasswordToken";
+
 
 // export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
 //   const validationResult = await action({ params, schema: SignUpValidationSchema });
@@ -243,38 +244,40 @@ export async function VerifyEmail(params: EmailVerificationParams): Promise<Acti
   }
 }
 
-export async function SendResetPasswordCode(email:string): Promise<ActionResponse> {
-   const validatedResult = await action({ params: { email }, schema: SendResetPasswordSchema });
+export async function SendResetPasswordCode(email: string): Promise<ActionResponse> {
+  const validatedResult = await action({ params: { email }, schema: SendResetPasswordSchema });
   if (validatedResult instanceof Error) {
     return handleError(validatedResult) as ErrorResponse;
   }
 
-  
   await connectToDb();
 
   try {
-     const user = await User.findOne({email}) as IUser;
-     if(!user) throw new Error('User not found')
-       // Clean previous tokens and create new one
-      const resetCode =  Math.floor(1000 + Math.random() * 9000);
-    // await ResetToken.deleteMany({ userId: user._id });
-    // await ResetToken.create({
-    //   resetCode: resetCode,
-    //   userId: user._id,
-    //   expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
-    // })
-    await ResetToken.create({
-       userId: user._id,
-       expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
-       resetCode
-    })
-     sendSetPasswordCode(email,resetCode)
-     return {
-      success: true,
-      message: 'Please check your email inbox to reset your current password.',
-    };
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("User not found");
 
+    // Clean up any previous reset code
+    await ResetCode.deleteMany({ userId: user._id });
+
+    // Generate and hash 4-digit reset code
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+    const hashedCode = await bcrypt.hash(code, 10);
+
+    // Save code to DB with expiration
+    await ResetCode.create({
+      userId: user._id,
+      code: hashedCode,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+    });
+
+    // Send email with the plain code
+    await sendSetPasswordCode(email, code);
+
+    return {
+      success: true,
+      message: "Please check your email inbox to reset your current password.",
+    };
   } catch (error) {
-     return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }

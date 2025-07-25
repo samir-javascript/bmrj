@@ -27,7 +27,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   await transporter.sendMail(mailOptions);
 }
-export async function sendSetPasswordCode(email:string,plainToken:number) {
+export async function sendSetPasswordCode(email:string,plainToken:string) {
   const mailOptions = {
     from: 'soufianehmamou92@gmail.com',
     to: email,
