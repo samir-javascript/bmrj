@@ -63,55 +63,55 @@ export const addHeroImage = async(params:AddHeroImageParams):Promise<ActionRespo
      }
 }
 
-// export const getHeroImages = cache(async(): Promise<ActionResponse<{items: IHero[]}>> => {
-//    try {
-//        await connectToDb()
-//        const items = await HeroImage.find({isActive: true})
-//        .sort({createdAt: -1})
-//        return {
-//          success:true,
-//          data: {items: JSON.parse(JSON.stringify(items))}
-//        }
-//    } catch (error) {
-//        return handleError(error) as ErrorResponse
-//    }
-// },["getHoroImages", "/admin/productsManagement/add_hero"], {revalidate: 1060 * 60 * 24})
+export const getHeroImages = cache(async(): Promise<ActionResponse<{items: IHero[]}>> => {
+   try {
+       await connectToDb()
+       const items = await HeroImage.find({isActive: true})
+       .sort({createdAt: -1})
+       return {
+         success:true,
+         data: {items: JSON.parse(JSON.stringify(items))}
+       }
+   } catch (error) {
+       return handleError(error) as ErrorResponse
+   }
+},["getHoroImages", "/admin/productsManagement/add_hero"], {revalidate: 1060 * 60 * 24})
 
 
-export const getHeroImages = cache(
-  async (): Promise<ActionResponse<{ items: IHero[] }>> => {
-    const cacheKey = 'heroImages:active'
+// export const getHeroImages = cache(
+//   async (): Promise<ActionResponse<{ items: IHero[] }>> => {
+//     const cacheKey = 'heroImages:active'
 
-    try {
-      // 1. Check Redis first
-      const cached = await redis.get(cacheKey)
-      if (cached) {
-        const items = JSON.parse(cached)
-        return {
-          success: true,
-          data: { items }
-        }
-      }
+//     try {
+//       // 1. Check Redis first
+//       const cached = await redis.get(cacheKey)
+//       if (cached) {
+//         const items = JSON.parse(cached)
+//         return {
+//           success: true,
+//           data: { items }
+//         }
+//       }
 
-      // 2. Fetch from DB
-      await connectToDb()
-      const items = await HeroImage.find({ isActive: true }).sort({ createdAt: -1 })
-      const serialized = JSON.stringify(items)
+//       // 2. Fetch from DB
+//       await connectToDb()
+//       const items = await HeroImage.find({ isActive: true }).sort({ createdAt: -1 })
+//       const serialized = JSON.stringify(items)
 
-      // 3. Cache in Redis (24 hours)
-      await redis.set(cacheKey, serialized, { EX: 60 * 60 * 24 })
+//       // 3. Cache in Redis (24 hours)
+//       await redis.set(cacheKey, serialized, { EX: 60 * 60 * 24 })
 
-      return {
-        success: true,
-        data: { items: JSON.parse(serialized) }
-      }
-    } catch (error) {
-      return handleError(error) as ErrorResponse
-    }
-  },
-  ['getHeroImages', '/admin/productsManagement/add_hero'],
-  { revalidate: 60 * 60 * 24 } // ISR: revalidate daily
-)
+//       return {
+//         success: true,
+//         data: { items: JSON.parse(serialized) }
+//       }
+//     } catch (error) {
+//       return handleError(error) as ErrorResponse
+//     }
+//   },
+//   ['getHeroImages', '/admin/productsManagement/add_hero'],
+//   { revalidate: 60 * 60 * 24 } // ISR: revalidate daily
+// )
 
 
 export const deleteHeroBanner = async(params:DeleteHeroBannerParams): Promise<ActionResponse>=> {
