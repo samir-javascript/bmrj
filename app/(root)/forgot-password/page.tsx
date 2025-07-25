@@ -1,3 +1,4 @@
+import ResetPasswordForm from '@/components/forms/ResetPasswordForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { User } from 'lucide-react'
@@ -18,18 +19,7 @@ const page = () => {
                    <User size={22} className='text-light_blue font-bold' />
               </div>
               <p className='font-bold text-black text-[18px] '>Mot de passe oublié ?</p>
-              <form action="" className='flex flex-1 w-full flex-col gap-5'>
-                  <Input
-                   type="email"
-                    required
-                    placeholder='Enter your Email address'
-                    className='h-10 px-4 !bg-white/50 border-light_blue border-[2px] no-focus  placeholder:text-gray-500  rounded-lg focus:outline-none    !text-black'
-            
-                  />
-                  <Button type="submit" className="text-white rounded-full hover:bg-light_blue ">
-                     Reset your password
-                  </Button>
-              </form>
+             <ResetPasswordForm />
         </div>
     </div>
   )

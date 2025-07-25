@@ -329,7 +329,9 @@ export const ReviewSchemaValidation = z.object({
   rating: z.number().min(1).max(5),
   productId: z.string().min(1, { message: "PRODUCT ID IS REQUIRED" }),
 });
-
+export const SendResetPasswordSchema = z.object({
+   email: z.string().email({message: "Please Provide a valid Email address"})
+})
 export const ValidateCommentSchema = z.object({
   userId: z.string().min(1, {message: "user ID is required"}),
   productId: z.string().min(1, { message: "PRODUCT ID IS REQUIRED" }),

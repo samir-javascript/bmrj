@@ -27,15 +27,16 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   await transporter.sendMail(mailOptions);
 }
-export async function sendSetPasswordVerificationCode(email:string,plainToken:string) {
+export async function sendSetPasswordCode(email:string,plainToken:number) {
   const mailOptions = {
     from: 'soufianehmamou92@gmail.com',
     to: email,
     subject: "Your Password Reset Code.",
     html: `
       <h1>Your Password Reset Code</h1>
-      <p>Click the link below to verify your email address:</p>
-      <p>Your code is <strong>${plainToken}</strong>. It will expire in 15 minutes.</p>
+     
+      <p>Your code is <strong>${plainToken}</strong>.</p>
+        <p>This code expires in 10 minutes. If you did not request this, please ignore.</p>
     `,
   };
 

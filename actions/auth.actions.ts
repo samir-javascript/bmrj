@@ -11,13 +11,14 @@ import Token, { IToken } from "@/database/models/token.model";
 import { ForbiddenError } from "@/lib/http-errors";
 import handleError from "@/lib/handlers/error";
 import { action } from "@/lib/handlers/action";
-import { EmailVerificationValidationSchema, LoginValidationSchema, SignUpValidationSchema } from "@/lib/zod";
-import { sendVerificationEmail } from "@/lib/nodemailer";
+import { EmailVerificationValidationSchema, LoginValidationSchema, SendResetPasswordSchema, SignUpValidationSchema } from "@/lib/zod";
+import { sendSetPasswordCode, sendVerificationEmail } from "@/lib/nodemailer";
 import connectToDb from "@/database/connect";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import mongoose from "mongoose";
 import { redirect } from "next/navigation";
+import ResetToken from "@/database/models/ResetPasswordToken";
 
 // export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
 //   const validationResult = await action({ params, schema: SignUpValidationSchema });
@@ -239,5 +240,36 @@ export async function VerifyEmail(params: EmailVerificationParams): Promise<Acti
 
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function SendResetPasswordCode(email:string): Promise<ActionResponse> {
+   const validatedResult = await action({ params: { email }, schema: SendResetPasswordSchema });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  
+  await connectToDb();
+
+  try {
+     const user = await User.findOne({email}) as IUser
+     if(!user) throw new Error('User not found')
+       // Clean previous tokens and create new one
+      const resetCode =  Math.floor(1000 + Math.random() * 9000);
+    await ResetToken.deleteMany({ userId: user._id });
+    await ResetToken.create({
+      resetCode,
+      userId: user._id,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
+    });
+    await sendSetPasswordCode(email,resetCode)
+     return {
+      success: true,
+      message: 'Please check your email inbox to reset your current password.',
+    };
+
+  } catch (error) {
+     return handleError(error) as ErrorResponse
   }
 }

@@ -43,6 +43,7 @@ export function OptVerification({
       const { success, error } = await VerifyEmail({ token: value });
       if (error) {
         setError(error.message);
+        alert(error.message)
         return;
       }
       if (success) {

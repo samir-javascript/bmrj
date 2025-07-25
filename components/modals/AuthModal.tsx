@@ -12,7 +12,7 @@ import {
 
 import { Mail, User } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
+
 import Image from "next/image";
 interface Props  {
     open:boolean;
