@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
@@ -15,6 +15,10 @@ import {
   FormLabel,
   FormMessage
 } from '../ui/form'
+import { SendSetPasswordCode } from '@/actions/user.actions'
+import { SendResetPasswordCode } from '@/actions/auth.actions'
+import { OptVerification } from '../shared/OptVerification'
+import { useToast } from '@/hooks/use-toast'
 
 const ResetPasswordForm = () => {
   const form = useForm<z.infer<typeof SendResetPasswordSchema>>({
@@ -25,10 +29,28 @@ const ResetPasswordForm = () => {
   })
 
   const isSubmitting = form.formState.isSubmitting
-
+  const [open,setOpen] = useState<boolean>(false)
+  const [error,setError] = useState("")
+  const {toast} = useToast()
   async function onSubmit(values: z.infer<typeof SendResetPasswordSchema>) {
     try {
       // call your API
+      const  {error,success} = await SendResetPasswordCode(values.email) 
+     if(error) {
+       setError(error?.message)
+        toast({
+          title: "Error",
+          description: error?.message,
+          variant: "destructive"
+        })
+         return
+      }else if(success) {
+         setOpen(true)
+         form.reset()
+         return
+       }
+     
+     
       console.log(values)
     } catch (error) {
       console.log(error)
@@ -66,7 +88,7 @@ const ResetPasswordForm = () => {
         Reset your password
       </Button>
       </form>
-     
+     <OptVerification open={open} setOpen={setOpen} />
     </Form>
   )
 }
