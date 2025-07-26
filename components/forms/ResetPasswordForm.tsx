@@ -70,7 +70,7 @@ const ResetPasswordForm = () => {
            return
         }else if(success) {
            setOpen(false)
-           router.replace("/reset-password")
+           router.replace(`/reset-password?code=${value}`)
            toast({
              title: "Success",
              description: "Reset Code has been verified successfuly"
