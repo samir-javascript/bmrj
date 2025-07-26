@@ -13,7 +13,7 @@ import { revalidatePath } from "next/cache";
 import { cache } from "@/lib/cache";
 import User, { IUser } from "@/database/models/user.model";
 import { Order as OrderType } from "@/types/Elements";
-import { redirect } from "next/navigation";
+
 import { ROUTES } from "@/constants/routes";
 
 export async function createCODorder(params:CreateOrderParams): Promise<ActionResponse<{order:IOrder}>> {

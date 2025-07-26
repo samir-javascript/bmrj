@@ -6,7 +6,7 @@ import { action } from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
 import { CouponSchema } from "@/lib/zod";
 import { CouponParams } from "@/types/action";
-import { Action } from "@reduxjs/toolkit";
+
 
 
 export async function createCoupon(params:CouponParams): Promise<ActionResponse<{coupon:ICoupon}>> {

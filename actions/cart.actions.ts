@@ -1,28 +1,18 @@
 'use server';
 
-// update prose styles;
 
-// TODO: DONE: still one issue on process | upload product images,
-// TODO: DONE password configuration;
-
-// TODO: DONE cache mechanism;
-// sync user cart in localstrage,
 import { auth } from '@/auth';
 
 import connectToDb from '@/database/connect';
 import { Cart, ICart } from '@/database/models/cart.model';
-import Product, { IProduct } from '@/database/models/product.model';
 import { action } from '@/lib/handlers/action';
 import handleError from '@/lib/handlers/error';
-import { CartItem } from '@/lib/store/cartSlice';
-import { ClearCartSchema, GetUserCartSchema } from '@/lib/zod';
+
+import { ClearCartSchema, } from '@/lib/zod';
 import { ClearUserCartParams, GetUserCartParams } from '@/types/action';
-import { CartElement, UserCartElement } from '@/types/Elements';
+import {  UserCartElement } from '@/types/Elements';
 import { revalidatePath } from 'next/cache'; // Optional, if you're revalidating pages
 
-
-
-// Adjust path as needed
 
 interface AddToCartParams {
   guestId?: string;
@@ -83,9 +73,6 @@ export async function addToCart({ guestId, item }: AddToCartParams): Promise<Act
     return handleError(err) as ErrorResponse;
   }
 }
-// /actions/cart.actions.ts
-
-
 
 export async function removeFromCart({
   
@@ -125,9 +112,6 @@ export async function removeFromCart({
      return handleError(error) as ErrorResponse
   }
 }
-// /actions/cart.actions.ts
-
-
 
 export async function updateCartItemQuantity({
 
@@ -249,18 +233,7 @@ export const syncCarts = async (guestId: string | null): Promise<ActionResponse<
     }
 
 
-    // 5. Format cart items for the frontend
-
-    // const formattedCart = {
-    //   _id: populatedCart._id,
-    //   items: populatedCart.items.map((item: any) => ({
-    //     _id: item.productId._id,
-    //     title: item.productId.name,
-    //     image: item.productId.images[0] || "", // Get the first image or an empty string
-    //     price: item.productId.price,
-    //     quantity: item.quantity,
-    //   })),
-    // };
+    
     const formattedItems = populatedCart.items.map((item:any) => ({
          _id: item.productId._id,
           title: item.productId.name,
@@ -295,17 +268,7 @@ export const getAuthenticatedUserCart = async(params:GetUserCartParams)
     });
        if(!userCart) throw new Error('USER CART NOT FOUND')
         const qty:number = userCart.items.reduce((current:number,item: {quantity:number}) => current + item.quantity,0)
-    //    const formattedItems = userCart.items.map((item:any) => ({
-    //     _id: item.productId._id,
-    //     title: item.productId.name,
-    //         image: item.productId.images[0] || "",
-    //         price: item.productId.price,
-    //         brand: item.productId.brand,
-    //          quantity: item.quantity,
-          
-    //          prevPrice: item.productId.prevPrice
-           
-    //  }))
+   
         return {
         success:true,
        data: {userCart: JSON.parse(JSON.stringify(userCart)), qty}

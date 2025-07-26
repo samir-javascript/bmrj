@@ -11,88 +11,14 @@ import Token, { IToken } from "@/database/models/token.model";
 import { ForbiddenError } from "@/lib/http-errors";
 import handleError from "@/lib/handlers/error";
 import { action } from "@/lib/handlers/action";
-import { EmailVerificationValidationSchema, LoginValidationSchema, ResetPasswordVerificationValidationSchema, SendResetPasswordSchema, SignUpValidationSchema } from "@/lib/zod";
+import { EmailVerificationValidationSchema, LoginValidationSchema, ResetPasswordSchema, ResetPasswordVerificationValidationSchema, SendResetPasswordSchema, SignUpValidationSchema } from "@/lib/zod";
 import { sendSetPasswordCode, sendVerificationEmail } from "@/lib/nodemailer";
 import connectToDb from "@/database/connect";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import mongoose from "mongoose";
 import ResetCode, { IResetCode } from "@/database/models/resetCode";
-import { redirect } from "next/navigation";
 
-
-
-// export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
-//   const validationResult = await action({ params, schema: SignUpValidationSchema });
-
-//   if (validationResult instanceof Error) {
-//     return handleError(validationResult) as ErrorResponse;
-//   }
-
-//   const { name, lastName, email, password, phoneNumber, gender } = validationResult.params!;
-//   const normalizedEmail = email.toLowerCase().trim();
-
-//   await connectToDb();
-//   const session = await mongoose.startSession();
-//   session.startTransaction();
-
-//   try {
-//     const existingUser = await User.findOne({ email: normalizedEmail });
-//     if (existingUser) {
-//       throw new ForbiddenError(`You indicated you're a new customer, but an account already exists with the email address ${normalizedEmail}.`);
-//     }
-
-//     const phoneExists = await User.findOne({ phoneNumber });
-//     if (phoneExists) {
-//       throw new ForbiddenError(`${phoneNumber} is already associated with another account.`);
-//     }
-
-//     const hashedPassword = await bcrypt.hash(password, 12);
-
-//     const [newUser] = await User.create(
-//       [{ lastName, name, email: normalizedEmail, password: hashedPassword, gender, phoneNumber }],
-//       { session }
-//     );
-
-//     await Account.create(
-//       [{
-//         userId: newUser._id,
-//         name,
-//         provider: "credentials",
-//         providerAccountId: normalizedEmail,
-//         password: hashedPassword,
-//       }],
-//       { session }
-//     );
-//   // Send email verification
-//    // Delete any existing tokens for this user to avoid duplicates
-// await Token.deleteMany({ userId: newUser._id });
-
-// // Generate a new verification code
-// const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-// await Token.create({
-//   token: verificationCode,
-//   userId: newUser._id,
-//   expiresAt: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
-// });
-
-
-//     await sendVerificationEmail(normalizedEmail, verificationCode);
-//     await session.commitTransaction();
-
-  
-//     revalidatePath(ROUTES.adminUsersList);
-
-//     return { success: true, message: "please check out your email to verify" };
-
-//   } catch (error) {
-//     await session.abortTransaction();
-//     return handleError(error) as ErrorResponse;
-//   } finally {
-//     session.endSession();
-//   }
-// }
 export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
   const validationResult = await action({ params, schema: SignUpValidationSchema });
 
@@ -283,6 +209,67 @@ export async function VerifyResetPasswordCode(code: string): Promise<ActionRespo
     return handleError(error) as ErrorResponse;
   }
 }
+// ALLOW USER TO RESET PASSWORD.
+interface ResetPasswordParams {
+  code: string;
+  password: string;
+}
+
+export async function resetPassword(params: ResetPasswordParams): Promise<ActionResponse> {
+  const validatedResult = await action({ params, schema: ResetPasswordSchema });
+
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+
+  const { code, password } = params;
+
+  try {
+    await connectToDb();
+
+    const candidates = await ResetCode.find({
+      expiresAt: { $gt: new Date() },
+    });
+
+    let matchedCode = null;
+
+    for (const candidate of candidates) {
+      const isMatch = await bcrypt.compare(code, candidate.code);
+      if (isMatch) {
+        matchedCode = candidate;
+        break;
+      }
+    }
+
+    if (!matchedCode) {
+      throw new ForbiddenError("This reset code is invalid or has expired.");
+    }
+
+    // Find the associated user
+    const user = await User.findOne({ _id: matchedCode.userId });
+
+    if (!user) {
+      throw new ForbiddenError("User not found.");
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Invalidate the used reset code
+    await ResetCode.deleteOne({ _id: matchedCode._id });
+
+    return {
+      success: true,
+      message: "Password has been successfully reset.",
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
 export async function SendResetPasswordCode(email: string): Promise<ActionResponse> {
   const validatedResult = await action({ params: { email }, schema: SendResetPasswordSchema });
   if (validatedResult instanceof Error) {
@@ -320,3 +307,4 @@ export async function SendResetPasswordCode(email: string): Promise<ActionRespon
     return handleError(error) as ErrorResponse;
   }
 }
+
