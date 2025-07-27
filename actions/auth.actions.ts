@@ -5,7 +5,7 @@ import { signIn } from "@/auth";
 import { AuthCredentials, EmailVerificationParams } from "@/types/action";
 
 import User, { IUser } from "@/database/models/user.model";
-import Account from "@/database/models/account.model";
+import Account, { IAccount } from "@/database/models/account.model";
 import Token, { IToken } from "@/database/models/token.model";
 
 import { ForbiddenError } from "@/lib/http-errors";
@@ -18,6 +18,7 @@ import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import mongoose from "mongoose";
 import ResetCode, { IResetCode } from "@/database/models/resetCode";
+
 
 export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
   const validationResult = await action({ params, schema: SignUpValidationSchema });
@@ -251,14 +252,15 @@ export async function resetPassword(params: ResetPasswordParams): Promise<Action
     if (!user) {
       throw new ForbiddenError("User not found.");
     }
-
+    const userAccount = await Account.findOne({userId: user._id}) 
     // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update user's password
     user.password = hashedPassword;
+    userAccount.password = hashedPassword
     await user.save();
-
+    await userAccount.save()
     // Invalidate the used reset code
     await ResetCode.deleteOne({ _id: matchedCode._id });
 
