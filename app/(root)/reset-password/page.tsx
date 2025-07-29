@@ -10,7 +10,7 @@ const page = async({searchParams}: {searchParams: Promise<{code:string}>}) => {
         <div className='shadow-xl lg:w-[500px] w-[95%] mx-auto rounded-lg
          items-center
          gap-3
-          justify-center text-center px-4 pt-3 pb-7 flex flex-col '>
+           text-center px-4 pt-3 pb-7 flex flex-col '>
               <div className='rounded-full border-[3px] border-light_blue
                flex items-center justify-center
                p-3 
