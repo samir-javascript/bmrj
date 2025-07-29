@@ -69,13 +69,13 @@ const ResetAccountPassword = ({code}: {code:string}) => {
         name='password'
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-medium text-white">Email Address</FormLabel>
+            <FormLabel className="text-sm font-medium !text-right text-black">New Password</FormLabel>
             <FormControl>
               <Input
                 type="password"
                 disabled={isSubmitting}
                 className="h-10 px-4 !bg-white/50 border-light_blue border-[2px] no-focus placeholder:text-gray-500 rounded-lg focus:outline-none !text-black"
-                placeholder="Enter your valid email address"
+                
                 {...field}
               />
             </FormControl>
@@ -88,13 +88,13 @@ const ResetAccountPassword = ({code}: {code:string}) => {
         name="confirmPassword"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm font-medium text-white">Email Address</FormLabel>
+            <FormLabel className="text-sm !text-right font-medium text-black">Confirm New Password</FormLabel>
             <FormControl>
               <Input
                 type="password"
                 disabled={isSubmitting}
                 className="h-10 px-4 !bg-white/50 border-light_blue border-[2px] no-focus placeholder:text-gray-500 rounded-lg focus:outline-none !text-black"
-                placeholder="Enter your valid email address"
+               
                 {...field}
               />
             </FormControl>
