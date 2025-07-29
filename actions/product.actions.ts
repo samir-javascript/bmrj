@@ -214,17 +214,14 @@ export async function getSingleProduct(
   }
 
   const { productId } = validatedResult.params!
-  const cacheKey = `product:${productId}`
+  // const cacheKey = `product:${productId}`
 
   try {
     await connectToDb()
 
     // 1. Try Redis first
-    const cached = await redis.get(cacheKey)
-    if (cached) {
-      const product = JSON.parse(cached)
-      return { success: true, data: { product } }
-    }
+   
+    
 
     // 2. Fallback to DB
     const product = await Product.findById(productId)
@@ -232,8 +229,7 @@ export async function getSingleProduct(
 
     const serializedProduct = JSON.stringify(product)
 
-    // 3. Cache it in Redis for 1 hour
-    await redis.set(cacheKey, serializedProduct, { EX: 3600 })
+   
 
     return {
       success: true,

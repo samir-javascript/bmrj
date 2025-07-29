@@ -65,7 +65,7 @@ const Page = async ({ params }: { params:  Promise<{id: string}>  }) => {
   const { id } = await params;
   const result = await getSingleProduct({ productId: id });
   const hasSavedPromise = await hasSavedProduct({ productId: id });
-  const Res = await getProducts({})
+ 
   const user = await auth()
   const product = result.data?.product;
   if (!product) return notFound();
